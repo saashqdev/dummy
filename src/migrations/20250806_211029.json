@@ -338,12 +338,8 @@
           "name": "credit_tenant_id_fk",
           "tableFrom": "credit",
           "tableTo": "tenant",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -351,12 +347,8 @@
           "name": "credit_user_id_fk",
           "tableFrom": "credit",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -560,12 +552,8 @@
           "name": "role_permission_permission_id_fk",
           "tableFrom": "role_permission",
           "tableTo": "permission",
-          "columnsFrom": [
-            "permission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["permission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -573,12 +561,8 @@
           "name": "role_permission_role_id_fk",
           "tableFrom": "role_permission",
           "tableTo": "role",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["role_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -661,12 +645,8 @@
           "name": "subscription_feature_subscription_product_id_fk",
           "tableFrom": "subscription_feature",
           "tableTo": "subscription_product",
-          "columnsFrom": [
-            "subscription_product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_product_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -742,12 +722,8 @@
           "name": "subscription_price_subscription_product_id_fk",
           "tableFrom": "subscription_price",
           "tableTo": "subscription_product",
-          "columnsFrom": [
-            "subscription_product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_product_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -941,12 +917,8 @@
           "name": "subscription_usage_based_price_subscription_product_id_fk",
           "tableFrom": "subscription_usage_based_price",
           "tableTo": "subscription_product",
-          "columnsFrom": [
-            "subscription_product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_product_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -985,14 +957,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "perUnitPrice": {
-          "name": "perUnitPrice",
+        "per_unit_price": {
+          "name": "per_unit_price",
           "type": "double precision",
           "primaryKey": false,
           "notNull": false
         },
-        "flatFeePrice": {
-          "name": "flatFeePrice",
+        "flat_fee_price": {
+          "name": "flat_fee_price",
           "type": "double precision",
           "primaryKey": false,
           "notNull": false
@@ -1004,12 +976,8 @@
           "name": "subscription_usage_based_tier_subscription_usage_based_price_id_fk",
           "tableFrom": "subscription_usage_based_tier",
           "tableTo": "subscription_usage_based_price",
-          "columnsFrom": [
-            "subscription_usage_based_price_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_usage_based_price_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1162,12 +1130,8 @@
           "name": "tenant_subscription_tenant_id_fk",
           "tableFrom": "tenant_subscription",
           "tableTo": "tenant",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1256,12 +1220,8 @@
           "name": "tenant_subscription_product_tenant_subscription_id_fk",
           "tableFrom": "tenant_subscription_product",
           "tableTo": "tenant_subscription",
-          "columnsFrom": [
-            "tenant_subscription_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_subscription_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -1269,12 +1229,8 @@
           "name": "tenant_subscription_product_subscription_product_id_fk",
           "tableFrom": "tenant_subscription_product",
           "tableTo": "subscription_product",
-          "columnsFrom": [
-            "subscription_product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_product_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         }
@@ -1320,12 +1276,8 @@
           "name": "tenant_subscription_product_price_tenant_subscription_product_id_fk",
           "tableFrom": "tenant_subscription_product_price",
           "tableTo": "tenant_subscription_product",
-          "columnsFrom": [
-            "tenant_subscription_product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_subscription_product_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -1333,12 +1285,8 @@
           "name": "tenant_subscription_product_price_subscription_price_id_fk",
           "tableFrom": "tenant_subscription_product_price",
           "tableTo": "subscription_price",
-          "columnsFrom": [
-            "subscription_price_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_price_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         },
@@ -1346,12 +1294,8 @@
           "name": "tenant_subscription_product_price_subscription_usage_based_price_fk",
           "tableFrom": "tenant_subscription_product_price",
           "tableTo": "subscription_usage_based_price",
-          "columnsFrom": [
-            "subscription_usage_based_price_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["subscription_usage_based_price_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -1403,12 +1347,8 @@
           "name": "tenant_subscription_usage_record_tenant_subscription_product_price_fk",
           "tableFrom": "tenant_subscription_usage_record",
           "tableTo": "tenant_subscription_product_price",
-          "columnsFrom": [
-            "tenant_subscription_product_price_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_subscription_product_price_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1479,12 +1419,8 @@
           "name": "tenant_user_tenant_id_fk",
           "tableFrom": "tenant_user",
           "tableTo": "tenant",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -1492,12 +1428,8 @@
           "name": "tenant_user_user_id_fk",
           "tableFrom": "tenant_user",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1584,12 +1516,8 @@
           "name": "tenant_user_invitation_from_user_id_fk",
           "tableFrom": "tenant_user_invitation",
           "tableTo": "user",
-          "columnsFrom": [
-            "from_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["from_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         },
@@ -1597,12 +1525,8 @@
           "name": "tenant_user_invitation_created_user_id_fk",
           "tableFrom": "tenant_user_invitation",
           "tableTo": "user",
-          "columnsFrom": [
-            "created_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         },
@@ -1610,12 +1534,8 @@
           "name": "tenant_user_invitation_tenant_id_fk",
           "tableFrom": "tenant_user_invitation",
           "tableTo": "tenant",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1864,12 +1784,8 @@
           "name": "user_registration_attempt_created_tenant_id_fk",
           "tableFrom": "user_registration_attempt",
           "tableTo": "tenant",
-          "columnsFrom": [
-            "created_tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1922,12 +1838,8 @@
           "name": "user_role_role_id_fk",
           "tableFrom": "user_role",
           "tableTo": "role",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["role_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -1935,12 +1847,8 @@
           "name": "user_role_tenant_id_fk",
           "tableFrom": "user_role",
           "tableTo": "tenant",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -1948,12 +1856,8 @@
           "name": "user_role_user_id_fk",
           "tableFrom": "user_role",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -2036,12 +1940,8 @@
           "name": "users_sessions_parent_id_fk",
           "tableFrom": "users_sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["_parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2417,12 +2317,8 @@
           "name": "payload_locked_documents_rels_parent_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_locked_documents",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2430,12 +2326,8 @@
           "name": "payload_locked_documents_rels_users_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2639,12 +2531,8 @@
           "name": "payload_preferences_rels_parent_fk",
           "tableFrom": "payload_preferences_rels",
           "tableTo": "payload_preferences",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2652,12 +2540,8 @@
           "name": "payload_preferences_rels_users_fk",
           "tableFrom": "payload_preferences_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

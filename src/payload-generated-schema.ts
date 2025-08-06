@@ -28,7 +28,7 @@ export const users_sessions = pgTable(
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
     expiresAt: timestamp('expires_at', {
       mode: 'string',
       withTimezone: true,
@@ -59,10 +59,10 @@ export const users = pgTable(
     verify_token: varchar('verify_token'),
     active: boolean('active').default(false),
     admin: boolean('admin').default(false),
-    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+    updated_at: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
     email: varchar('email').notNull(),
@@ -78,8 +78,8 @@ export const users = pgTable(
     lockUntil: timestamp('lock_until', { mode: 'string', withTimezone: true, precision: 3 }),
   },
   (columns) => ({
-    users_updated_at_idx: index('users_updated_at_idx').on(columns.updatedAt),
-    users_created_at_idx: index('users_created_at_idx').on(columns.createdAt),
+    users_updated_at_idx: index('users_updated_at_idx').on(columns.updated_at),
+    users_created_at_idx: index('users_created_at_idx').on(columns.created_at),
     users_email_idx: uniqueIndex('users_email_idx').on(columns.email),
   }),
 )
@@ -89,10 +89,10 @@ export const payload_locked_documents = pgTable(
   {
     id: serial('id').primaryKey(),
     globalSlug: varchar('global_slug'),
-    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+    updated_at: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
   },
@@ -101,10 +101,10 @@ export const payload_locked_documents = pgTable(
       columns.globalSlug,
     ),
     payload_locked_documents_updated_at_idx: index('payload_locked_documents_updated_at_idx').on(
-      columns.updatedAt,
+      columns.updated_at,
     ),
     payload_locked_documents_created_at_idx: index('payload_locked_documents_created_at_idx').on(
-      columns.createdAt,
+      columns.created_at,
     ),
   }),
 )
@@ -144,20 +144,20 @@ export const payload_preferences = pgTable(
     id: serial('id').primaryKey(),
     key: varchar('key'),
     value: jsonb('value'),
-    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+    updated_at: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
   },
   (columns) => ({
     payload_preferences_key_idx: index('payload_preferences_key_idx').on(columns.key),
     payload_preferences_updated_at_idx: index('payload_preferences_updated_at_idx').on(
-      columns.updatedAt,
+      columns.updated_at,
     ),
     payload_preferences_created_at_idx: index('payload_preferences_created_at_idx').on(
-      columns.createdAt,
+      columns.created_at,
     ),
   }),
 )
@@ -197,19 +197,19 @@ export const payload_migrations = pgTable(
     id: serial('id').primaryKey(),
     name: varchar('name'),
     batch: numeric('batch'),
-    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+    updated_at: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
   },
   (columns) => ({
     payload_migrations_updated_at_idx: index('payload_migrations_updated_at_idx').on(
-      columns.updatedAt,
+      columns.updated_at,
     ),
     payload_migrations_created_at_idx: index('payload_migrations_created_at_idx').on(
-      columns.createdAt,
+      columns.created_at,
     ),
   }),
 )

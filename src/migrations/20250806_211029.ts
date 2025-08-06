@@ -139,8 +139,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"subscription_usage_based_price_id" text NOT NULL,
   	"from" integer NOT NULL,
   	"to" integer,
-  	"perUnitPrice" double precision,
-  	"flatFeePrice" double precision
+  	"per_unit_price" double precision,
+  	"flat_fee_price" double precision
   );
   
   CREATE TABLE "tenant" (

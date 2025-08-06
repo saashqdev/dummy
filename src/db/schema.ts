@@ -314,8 +314,8 @@ export const subscription_usage_based_tier = pgTable(
     subscription_usage_based_price_id: text().notNull(),
     from: integer().notNull(),
     to: integer(),
-    perUnitPrice: doublePrecision(),
-    flatFeePrice: doublePrecision(),
+    per_unit_price: doublePrecision(),
+    flat_fee_price: doublePrecision(),
   },
   (table) => [
     foreignKey({
