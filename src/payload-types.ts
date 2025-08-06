@@ -117,6 +117,15 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  first_name?: string | null;
+  last_name?: string | null;
+  phone?: string | null;
+  avatar_url?: string | null;
+  locale?: string | null;
+  default_tenant_id?: string | null;
+  verify_token?: string | null;
+  active?: boolean | null;
+  admin?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -192,6 +201,15 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  first_name?: T;
+  last_name?: T;
+  phone?: T;
+  avatar_url?: T;
+  locale?: T;
+  default_tenant_id?: T;
+  verify_token?: T;
+  active?: T;
+  admin?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

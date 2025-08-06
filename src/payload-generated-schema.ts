@@ -16,6 +16,7 @@ import {
   varchar,
   timestamp,
   serial,
+  boolean,
   numeric,
   jsonb,
 } from '@payloadcms/db-postgres/drizzle/pg-core'
@@ -49,6 +50,15 @@ export const users = pgTable(
   'users',
   {
     id: serial('id').primaryKey(),
+    first_name: varchar('first_name'),
+    last_name: varchar('last_name'),
+    phone: varchar('phone'),
+    avatar_url: varchar('avatar_url'),
+    locale: varchar('locale'),
+    default_tenant_id: varchar('default_tenant_id'),
+    verify_token: varchar('verify_token'),
+    active: boolean('active').default(false),
+    admin: boolean('admin').default(false),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),

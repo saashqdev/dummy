@@ -35,7 +35,7 @@ export const Users: CollectionConfig = {
     {
       name: 'default_tenant_id',
       type: 'text',
-      label: 'Default Tenant ID',
+      label: 'Default tenant ID',
     },
     {
       name: 'verify_token',
