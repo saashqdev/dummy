@@ -29,7 +29,7 @@ export class TenantUserDbDrizzle implements ITenantUserDb {
     user_id,
   }: {
     tenant_id: string
-    user_id: string
+    userId: string
   }): Promise<TenantUserModel | null> {
     const items = await payload.db.tables.tenant_user.findMany({
       where: and(eq(tenant_user.tenant_id, tenant_id), eq(tenant_user.user_id, user_id)),
@@ -74,12 +74,12 @@ export class TenantUserDbDrizzle implements ITenantUserDb {
       )
     return result[0].count
   }
-  async create(data: { tenant_id: string; user_id: string }): Promise<string> {
+  async create(data: { tenant_id: string; userId: string }): Promise<string> {
     const id = createId()
     await payload.db.tables.insert(tenant_user).values({
       id,
       tenant_id: data.tenant_id,
-      user_id: data.user_id,
+      userId: data.user_id,
       created_at: new Date(),
     })
     return id

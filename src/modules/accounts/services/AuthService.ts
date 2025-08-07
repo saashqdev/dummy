@@ -16,7 +16,7 @@ import { sendEmail } from '@/modules/emails/services/EmailService'
 import EmailTemplates from '@/modules/emails/utils/EmailTemplates'
 import { AppConfigurationDto } from '@/modules/core/dtos/AppConfigurationDto'
 import { addTenantUser, createTenant } from './TenantService'
-import { isRedirectError } from 'next/dist/client/components/redirect'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { headers } from 'next/headers'
 import crypto from 'crypto'
 
@@ -161,7 +161,7 @@ export async function actionVerify(prev: any, form: FormData) {
 
   const registration = await db.userRegistrationAttempt.getByToken(verificationId)
   console.log({ registration, verificationId })
-  if (!registration || registration.createdTenantId) {
+  if (!registration || registration.created_tenant_id) {
     return { error: t('api.errors.userAlreadyRegistered') }
   }
 
@@ -208,7 +208,7 @@ export async function validateRegistration({
 }) {
   const { t } = await getServerTranslations()
   const appConfiguration = await getAppConfiguration()
-  const { email, password, company, firstName, lastName, avatar, slug } = registrationData
+  const { email, password, company, first_name, last_name, avatar, slug } = registrationData
   if (!email || !AuthUtils.validateEmail(email)) {
     throw Error(t('account.register.errors.invalidEmail'))
   }
@@ -218,16 +218,16 @@ export async function validateRegistration({
     throw Error(t('account.register.errors.organizationRequired'))
   } else if (
     appConfiguration.auth.requireName &&
-    (typeof firstName !== 'string' || typeof lastName !== 'string')
+    (typeof first_name !== 'string' || typeof last_name !== 'string')
   ) {
     throw Error(t('account.register.errors.nameRequired'))
   }
 
   if (company && company.length > 100) {
     throw Error('Maximum length for company name is 100 characters')
-  } else if (firstName && firstName.length > 50) {
+  } else if (first_name && first_name.length > 50) {
     throw Error('Maximum length for first name is 50 characters')
-  } else if (lastName && lastName.length > 50) {
+  } else if (last_name && last_name.length > 50) {
     throw Error('Maximum length for last name is 50 characters')
   }
 
@@ -252,8 +252,8 @@ export async function validateRegistration({
     email,
     password,
     company,
-    firstName,
-    lastName,
+    first_name,
+    last_name,
     stripe_customer_id,
     avatar,
     slug,
@@ -268,8 +268,8 @@ export async function validateRegistration({
 async function createRegistrationForm({
   email,
   company,
-  firstName,
-  lastName,
+  first_name,
+  last_name,
   ipAddress,
   recreateToken,
   slug,
@@ -277,22 +277,22 @@ async function createRegistrationForm({
   email: string
   ipAddress: string
   company?: string
-  firstName?: string
-  lastName?: string
+  first_name?: string
+  last_name?: string
   recreateToken?: boolean
   slug?: string
 }) {
   const appConfiguration = await getAppConfiguration()
   const registration = await db.userRegistrationAttempt.getByEmail(email)
   if (registration) {
-    if (registration.createdTenantId) {
+    if (registration.created_tenant_id) {
       throw Error('api.errors.userAlreadyRegistered')
     } else {
       if (recreateToken) {
         const newToken = crypto.randomBytes(20).toString('hex')
         await db.userRegistrationAttempt.update(registration.id, {
-          firstName,
-          lastName,
+          first_name,
+          last_name,
           company,
           token: newToken,
         })
@@ -300,7 +300,7 @@ async function createRegistrationForm({
           to: email,
           ...EmailTemplates.VERIFICATION_EMAIL.parse({
             appConfiguration,
-            name: firstName,
+            name: first_name,
             action_url: (await getBaseURL()) + `/verify/` + newToken,
           }),
         })
@@ -310,18 +310,18 @@ async function createRegistrationForm({
     var token = crypto.randomBytes(20).toString('hex')
     await db.userRegistrationAttempt.create({
       email,
-      firstName: firstName ?? '',
-      lastName: lastName ?? '',
+      first_name: first_name ?? '',
+      last_name: last_name ?? '',
       company: company ?? '',
       token,
       ipAddress,
       slug: slug ?? null,
-      createdTenantId: null,
+      created_tenant_id: null,
     })
     await sendEmail({
       to: email,
       ...EmailTemplates.VERIFICATION_EMAIL.parse({
-        name: firstName,
+        name: first_name,
         action_url: (await getBaseURL()) + `/verify/` + token,
         appConfiguration,
       }),
@@ -333,8 +333,8 @@ interface CreateUserAndTenantDto {
   email: string
   password?: string
   company?: string
-  firstName?: string
-  lastName?: string
+  first_name?: string
+  last_name?: string
   stripe_customer_id?: string
   avatar?: string
   locale?: string
@@ -345,8 +345,8 @@ async function createUserAndTenant({
   email,
   password,
   company,
-  firstName,
-  lastName,
+  first_name,
+  last_name,
   stripe_customer_id,
   avatar,
   locale,
@@ -364,14 +364,19 @@ async function createUserAndTenant({
 
   const user = await createUser({
     email: email,
-    firstName,
-    lastName,
+    first_name,
+    last_name,
     password,
     avatar,
     locale,
-    defaultTenantId: null,
+    default_tenant_id: null,
   })
-  const tenant = await createTenant({ name: tenantName, stripe_customer_id, slug, userId: user.id })
+  const tenant = await createTenant({
+    name: tenantName,
+    stripe_customer_id,
+    slug,
+    userId: user.id,
+  })
   if (!tenant) {
     throw Error('Could not create tenant')
   }
@@ -386,7 +391,7 @@ async function createUserAndTenant({
   await sendEmail({
     to: email,
     ...EmailTemplates.WELCOME_EMAIL.parse({
-      name: firstName,
+      name: first_name,
       appConfiguration,
       action_url: (await getBaseURL()) + `/login`,
     }),

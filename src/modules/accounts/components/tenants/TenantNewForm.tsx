@@ -1,31 +1,31 @@
-"use client";
+'use client'
 
-import { useTranslation } from "react-i18next";
-import { useActionState, useEffect, useRef, useState } from "react";
-import LoadingButton from "@/components/ui/buttons/LoadingButton";
-import { Input } from "@/components/ui/input";
-import { actionNewAccount } from "@/app/(app)/new-account/page";
-import toast from "react-hot-toast";
+import { useTranslation } from 'react-i18next'
+import { useActionState, useEffect, useRef, useState } from 'react'
+import LoadingButton from '@/components/ui/buttons/LoadingButton'
+import { Input } from '@/components/ui/input'
+import { actionNewAccount } from '@/app/(frontend)/(app)/new-account/page'
+import toast from 'react-hot-toast'
 
 export default function TenantNewForm() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const [actionData, action, pending] = useActionState(actionNewAccount, null);
+  const [actionData, action, pending] = useActionState(actionNewAccount, null)
 
-  const inputName = useRef<HTMLInputElement>(null);
+  const inputName = useRef<HTMLInputElement>(null)
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState('')
 
   useEffect(() => {
     if (actionData?.error) {
-      toast.error(actionData.error);
+      toast.error(actionData.error)
     }
-  }, [actionData]);
+  }, [actionData])
 
   useEffect(() => {
-    inputName.current?.focus();
-    inputName.current?.select();
-  }, []);
+    inputName.current?.focus()
+    inputName.current?.select()
+  }, [])
 
   return (
     <div>
@@ -37,14 +37,14 @@ export default function TenantNewForm() {
               <div className="mt-1 -space-y-px rounded-md shadow-sm">
                 <div>
                   <label className="mb-1 text-xs font-medium">
-                    {t("models.tenant.object")} <span className="text-red-500">*</span>
+                    {t('models.tenant.object')} <span className="text-red-500">*</span>
                   </label>
                   <Input
                     ref={inputName}
                     type="text"
                     name="name"
                     id="name"
-                    placeholder={t("shared.name")}
+                    placeholder={t('shared.name')}
                     required
                     value={name}
                     onChange={(e) => setName(e.currentTarget.value)}
@@ -58,7 +58,7 @@ export default function TenantNewForm() {
             <div className="right-0 text-sm leading-5">
               <span className="ml-2 inline-flex rounded-sm shadow-sm">
                 <LoadingButton isLoading={pending} type="submit">
-                  {t("shared.create")}
+                  {t('shared.create')}
                 </LoadingButton>
               </span>
             </div>
@@ -66,5 +66,5 @@ export default function TenantNewForm() {
         </form>
       </div>
     </div>
-  );
+  )
 }

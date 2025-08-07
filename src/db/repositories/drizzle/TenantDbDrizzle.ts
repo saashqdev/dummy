@@ -105,7 +105,7 @@ export class TenantDbDrizzle implements ITenantDb {
     }
   }
 
-  async getByUser(user_id: string): Promise<TenantDto[]> {
+  async getByUser(userId: string): Promise<TenantDto[]> {
     return payload.db.tables
       .select({
         id: tenant.id,

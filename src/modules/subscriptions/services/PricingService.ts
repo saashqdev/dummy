@@ -411,14 +411,14 @@ export async function addTenantProductsFromCheckoutSession({
   user,
   checkoutSession,
   createdUserId,
-  createdTenantId,
+  created_tenant_id,
   t,
 }: {
   tenantId: string
   user: { id: string; email: string }
   checkoutSession: CheckoutSessionResponse
   createdUserId?: string | null
-  createdTenantId?: string | null
+  created_tenant_id?: string | null
   t: TFunction
 }) {
   await clearSubscriptionsCache()
@@ -449,7 +449,7 @@ export async function addTenantProductsFromCheckoutSession({
     await db.checkoutSessionStatus.update(checkoutSession.id, {
       pending: false,
       createdUserId,
-      createdTenantId,
+      created_tenant_id,
     })
     await Promise.all(
       checkoutSession.products.map(async (product) => {

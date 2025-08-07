@@ -3,7 +3,7 @@ import { RoleModel } from './RoleModel'
 export type UserRoleModel = {
   id: string
   created_at: Date
-  user_id: string
+  userId: string
   role_id: string
   tenant_id: string | null
 }

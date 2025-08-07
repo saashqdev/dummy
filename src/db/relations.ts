@@ -22,12 +22,12 @@ import {
 } from './schema'
 
 export const relations_tenant_user_invitation = relations(tenant_user_invitation, ({ one }) => ({
-  user_from_user_id: one(user, {
+  user_from_userId: one(user, {
     fields: [tenant_user_invitation.from_user_id],
     references: [user.id],
     relationName: 'tenant_user_invitation_from_user_id_user_id',
   }),
-  user_created_user_id: one(user, {
+  user_created_userId: one(user, {
     fields: [tenant_user_invitation.created_user_id],
     references: [user.id],
     relationName: 'tenant_user_invitation_created_user_id_user_id',
@@ -39,10 +39,10 @@ export const relations_tenant_user_invitation = relations(tenant_user_invitation
 }))
 
 export const relations_user = relations(user, ({ many }) => ({
-  tenant_user_invitations_from_user_id: many(tenant_user_invitation, {
+  tenant_user_invitations_from_userId: many(tenant_user_invitation, {
     relationName: 'tenant_user_invitation_from_user_id_user_id',
   }),
-  tenant_user_invitations_created_user_id: many(tenant_user_invitation, {
+  tenant_user_invitations_created_userId: many(tenant_user_invitation, {
     relationName: 'tenant_user_invitation_created_user_id_user_id',
   }),
   user_roles: many(user_role),

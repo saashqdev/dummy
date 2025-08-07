@@ -75,7 +75,7 @@ export class CreditDbDrizzle implements ICreditDb {
 
   async create(data: {
     tenant_id: string
-    user_id: string | null
+    userId: string | null
     type: string
     object_id: string | null
     amount: number
@@ -85,7 +85,7 @@ export class CreditDbDrizzle implements ICreditDb {
       id,
       created_at: new Date(),
       tenant_id: data.tenant_id,
-      user_id: data.user_id,
+      userId: data.user_id,
       type: data.type,
       object_id: data.object_id,
       amount: data.amount,

@@ -8,7 +8,7 @@ export interface ITenantDb {
     filters?: { name?: string; slug?: string; active?: boolean }
     pagination: PaginationRequestDto
   }): Promise<{ items: TenantWithDetailsDto[]; pagination: PaginationDto }>
-  getByUser(user_id: string): Promise<TenantDto[]>
+  getByUser(userId: string): Promise<TenantDto[]>
   get(id: string): Promise<TenantWithDetailsDto | null>
   getSimple(id: string): Promise<TenantDto | null>
   getByIdOrSlug(id: string): Promise<TenantDto | null>

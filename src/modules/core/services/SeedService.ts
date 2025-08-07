@@ -27,8 +27,8 @@ async function seed() {
   }
   console.log('🌱 Seeding admin user', 1)
   const admin = await createUser({
-    firstName: 'Admin',
-    lastName: 'User',
+    first_name: 'Admin',
+    last_name: 'User',
     email: ADMIN_EMAIL,
     password: 'password',
     admin: true,
@@ -36,15 +36,15 @@ async function seed() {
 
   console.log('🌱 Creating users with tenants', 2)
   const user1 = await createUser({
-    firstName: 'John',
-    lastName: 'Doe',
+    first_name: 'John',
+    last_name: 'Doe',
     email: 'john.doe@company.com',
     password: 'password',
     admin: false,
   })
   const user2 = await createUser({
-    firstName: 'Luna',
-    lastName: 'Davis',
+    first_name: 'Luna',
+    last_name: 'Davis',
     email: 'luna.davis@company.com',
     password: 'password',
     admin: false,
@@ -66,14 +66,14 @@ async function seed() {
 }
 
 async function createUser({
-  firstName,
-  lastName,
+  first_name,
+  last_name,
   email,
   password,
   admin,
 }: {
-  firstName: string
-  lastName: string
+  first_name: string
+  last_name: string
   email: string
   password: string
   admin: boolean
@@ -81,20 +81,20 @@ async function createUser({
   const passwordHash = await bcrypt.hash(password, 10)
   let user = await db.user.getByEmail(email)
   if (!user) {
-    const userId = await db.user.create({
+    const user_id = await db.user.create({
       email,
       passwordHash,
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       avatar: null,
       phone: null,
-      defaultTenantId: null,
-      verifyToken: null,
+      default_tenant_id: null,
+      verify_token: null,
       locale: null,
       active: true,
       admin,
     })
-    user = await db.user.get(userId)
+    user = await db.user.get(user_id)
     if (!user) {
       throw Error('Did not create user with email: ' + email)
     }
@@ -176,7 +176,7 @@ async function seedRolesAndPermissions(adminEmail?: string): Promise<void> {
         appRoles.map(async (appRoleId) => {
           // console.log({ user: tenantUser.user.email, role: appRole.name });
           return await createUserRole({
-            userId: tenantUser.userId,
+            userId: tenantUser.user_id,
             roleId: appRoleId,
             tenantId: tenant.id,
           })

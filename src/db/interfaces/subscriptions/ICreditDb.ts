@@ -16,7 +16,7 @@ export interface ICreditDb {
   }): Promise<{ items: CreditWithDetailsDto[]; pagination: PaginationDto }>
   create(data: {
     tenant_id: string
-    user_id: string | null
+    userId: string | null
     type: string
     object_id: string | null
     amount: number

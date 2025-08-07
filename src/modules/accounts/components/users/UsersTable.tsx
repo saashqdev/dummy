@@ -35,7 +35,7 @@ export default function UsersTable({
     const roles: RoleModel[] = []
     user.roles
       .filter((f) =>
-        tenantId ? f.tenantId === tenantId && f.role.type === 'app' : f.role.type === 'admin',
+        tenantId ? f.tenant_id === tenantId && f.role.type === 'app' : f.role.type === 'admin',
       )
       .forEach((role) => {
         if (roles.find((f) => f.name === role.role.name) === undefined) {
@@ -90,7 +90,18 @@ export default function UsersTable({
             name: 'user',
             title: t('models.user.object'),
             value: (item) => (
-              <UserBadge item={item} admin={item.admin} withAvatar={true} withSignUpMethod={true} />
+              <UserBadge
+                item={{
+                  id: item.id,
+                  email: item.email,
+                  first_name: item.first_name ?? '',
+                  last_name: item.last_name ?? '',
+                  avatar: item.avatar,
+                }}
+                admin={item.admin}
+                withAvatar={true}
+                withSignUpMethod={true}
+              />
             ),
             sortBy: 'email',
           },
@@ -118,15 +129,15 @@ export default function UsersTable({
                       >
                         <span>{f.tenant.name}</span>
                       </Link>{' '}
-                      {getUserRoles(i, f.tenantId).length > 0 ? (
+                      {getUserRoles(i, f.tenant_id).length > 0 ? (
                         <span
                           className="truncate text-xs italic text-gray-500"
-                          title={getUserRoles(i, f.tenantId)
+                          title={getUserRoles(i, f.tenant_id)
                             .map((x) => x.name)
                             .join(', ')}
                         >
                           (
-                          {getUserRoles(i, f.tenantId)
+                          {getUserRoles(i, f.tenant_id)
                             .map((x) => x.name)
                             .join(', ')}
                           )
@@ -147,10 +158,10 @@ export default function UsersTable({
             title: t('shared.createdAt'),
             value: (item) => (
               <time
-                dateTime={DateUtils.dateYMDHMS(item.createdAt)}
-                title={DateUtils.dateYMDHMS(item.createdAt)}
+                dateTime={DateUtils.dateYMDHMS(item.created_at)}
+                title={DateUtils.dateYMDHMS(item.created_at)}
               >
-                {DateUtils.dateAgo(item.createdAt)}
+                {DateUtils.dateAgo(item.created_at)}
               </time>
             ),
             sortBy: 'createdAt',

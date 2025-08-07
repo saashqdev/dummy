@@ -13,7 +13,7 @@ export class UserDbDrizzle implements IUserDb {
         inArray(
           user.id,
           payload.db.tables.tenant_user
-            .select({ user_id: tenant_user.user_id })
+            .select({ userId: tenant_user.user_id })
             .where(eq(tenant_user.tenant_id, tenant_id)),
         ),
       ),
@@ -63,7 +63,7 @@ export class UserDbDrizzle implements IUserDb {
     }
     if (filters?.tenant_id) {
       const tenantUserSubquery = payload.db.tables.tenant_user
-        .select({ user_id: tenant_user.user_id })
+        .select({ userId: tenant_user.user_id })
         .where(eq(tenant_user.tenant_id, filters.tenant_id))
       whereConditions.push(inArray(user.id, tenantUserSubquery))
     }
@@ -129,7 +129,7 @@ export class UserDbDrizzle implements IUserDb {
       },
     })
   }
-  async get(user_id: string): Promise<UserDto | null> {
+  async get(userId: string): Promise<UserDto | null> {
     const items = await payload.db.tables
       .select({
         id: user.id,

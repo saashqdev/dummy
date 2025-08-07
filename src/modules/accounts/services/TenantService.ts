@@ -49,7 +49,7 @@ export async function createTenant({
     throw Error('Tenant not found')
   }
 
-  await updateUser(user?.id, { defaultTenantId: tenant.id })
+  await updateUser(user?.id, { default_tenant_id: tenant.id })
 
   if (process.env.STRIPE_SK && !stripe_customer_id) {
     const stripeCustomer = await stripeService.createStripeCustomer(user.email, name)
@@ -199,7 +199,7 @@ export async function addTenantUser({
   roles?: RoleModel[]
 }) {
   const tenantUserId = await db.tenantUser.create({
-    tenantId,
+    tenant_id: tenantId,
     userId,
   })
   const tenantUser = await db.tenantUser.getById(tenantUserId)
@@ -215,7 +215,7 @@ export async function addTenantUser({
       return await createUserRole({
         userId: tenantUser.userId,
         roleId: role.id,
-        tenantId: tenantUser.tenantId,
+        tenantId: tenantUser.tenant_id,
       })
     }),
   )

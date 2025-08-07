@@ -37,5 +37,22 @@
       "source.fixAll.eslint": "explicit"
     }
   },
-  "cSpell.words": ["dtos", "fkey", "paralleldrive", "payloadcms", "rels", "timestamptz"]
+  "cSpell.words": [
+    "autosubscribe",
+    "cachified",
+    "dtos",
+    "Fastly",
+    "fkey",
+    "metatags",
+    "paralleldrive",
+    "payloadcms",
+    "producthunt",
+    "rels",
+    "rewardful",
+    "sindresorhus",
+    "timestamptz",
+    "uploaders",
+    "ymdhms",
+    "ymdhmsms"
+  ]
 }

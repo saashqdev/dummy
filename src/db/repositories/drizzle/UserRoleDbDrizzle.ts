@@ -7,7 +7,7 @@ import { createId } from '@paralleldrive/cuid2'
 
 export class UserRoleDbDrizzle implements IUserRoleDb {
   async get(params: {
-    user_id: string
+    userId: string
     role_id: string
     tenant_id: string | null
   }): Promise<UserRoleModel | null> {
@@ -31,7 +31,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async getInTenant(
-    user_id: string,
+    userId: string,
     tenant_id: string,
     role_name: string,
   ): Promise<UserRoleModel | null> {
@@ -50,7 +50,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     return result.length > 0 ? result[0].UserRole : null
   }
 
-  async getInAdmin(user_id: string, role_name: string): Promise<UserRoleModel | null> {
+  async getInAdmin(userId: string, role_name: string): Promise<UserRoleModel | null> {
     const result = await payload.db.tables
       .select()
       .from(user_role)
@@ -63,7 +63,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async getPermissionsByUser(
-    user_id: string,
+    userId: string,
     tenant_id: string | null,
   ): Promise<UserRoleWithDetailsDto[]> {
     const conditions = [eq(user_role.user_id, user_id)]
@@ -90,7 +90,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async countPermissionByUser(
-    user_id: string,
+    userId: string,
     tenant_id: string | null,
     permission_name: string,
   ): Promise<number> {
@@ -114,7 +114,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async create(data: {
-    user_id: string
+    userId: string
     role_id: string
     tenant_id: string | null
   }): Promise<string> {
@@ -122,7 +122,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     await payload.db.tables.insert(user_role).values({
       id,
       created_at: new Date(),
-      user_id: data.user_id,
+      userId: data.user_id,
       role_id: data.role_id,
       tenant_id: data.tenant_id,
     })
@@ -130,7 +130,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async createMany(
-    user_id: string,
+    userId: string,
     roles: { id: string; tenant_id: string | null }[],
   ): Promise<void> {
     if (roles.length === 0) {
@@ -147,13 +147,13 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     )
   }
 
-  async del(user_id: string, role_id: string): Promise<void> {
+  async del(userId: string, role_id: string): Promise<void> {
     await payload.db.tables
       .delete(user_role)
       .where(and(eq(user_role.user_id, user_id), eq(user_role.role_id, role_id)))
   }
 
-  async deleteAllByUser(user_id: string, type: string): Promise<void> {
+  async deleteAllByUser(userId: string, type: string): Promise<void> {
     const subquery = payload.db.tables.select({ id: role.id }).from(role).where(eq(role.type, type))
 
     await payload.db.tables

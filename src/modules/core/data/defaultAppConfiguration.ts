@@ -1,53 +1,53 @@
-import { defaultThemeColor, defaultThemeScheme } from "@/lib/themes";
-import { AppConfigurationDto } from "../dtos/AppConfigurationDto";
+import { defaultThemeColor, defaultThemeScheme } from '@/lib/themes'
+import { AppConfigurationDto } from '../dtos/AppConfigurationDto'
 
 export const defaultAppConfiguration: AppConfigurationDto = {
   app: {
-    name: "Next.js RockStack Demo",
-    orm: "drizzle",
+    name: 'Next.js RockStack Demo',
+    orm: 'drizzle',
     cache: undefined,
   },
   email: {
-    provider: "postmark",
-    fromEmail: "alex@rockstack.dev",
-    fromName: "Alex @ Rockstack",
-    supportEmail: "rockstack.dev@gmail.com",
+    provider: 'postmark',
+    from_email: 'suppot@gointake.ca',
+    from_name: 'Dave @ inTake',
+    support_email: 'saashqdev@gmail.com',
   },
   theme: {
     color: defaultThemeColor,
     scheme: defaultThemeScheme,
   },
   auth: {
-    requireEmailVerification: false,
-    requireOrganization: true,
-    requireName: true,
+    require_email_verification: false,
+    require_organization: true,
+    require_name: true,
   },
   analytics: {
-    googleAnalyticsTrackingId: "",
-    simpleAnalytics: true,
-    plausibleAnalytics: false,
+    google_analytics_tracking_id: '',
+    simple_analytics: true,
+    plausible_analytics: false,
   },
   subscription: {
     required: false,
-    allowSubscribeBeforeSignUp: true,
-    allowSignUpBeforeSubscribe: true,
+    allow_subscribe_before_sign_up: true,
+    allow_sign_up_before_subscribe: true,
   },
   branding: {
     logo: undefined,
-    logoDarkMode: undefined,
+    logo_dark_mode: undefined,
     icon: undefined,
-    iconDarkMode: undefined,
+    icon_dark_mode: undefined,
     favicon: undefined,
   },
   affiliates: undefined,
   launches: {
     producthunt: {
-      url: "https://www.producthunt.com/posts/rockstack?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-rockstack",
-      title: "RockStack",
-      postId: "491901",
-      end: new Date("2024-10-10"),
-      theme: "light",
+      url: 'https://www.producthunt.com/posts/intake',
+      title: 'inTake',
+      postId: '491901',
+      end: new Date('2024-10-10'),
+      theme: 'light',
     },
   },
   scripts: { head: null, body: null },
-};
+}

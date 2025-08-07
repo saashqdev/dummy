@@ -4,7 +4,7 @@ export type TenantUserModel = {
   id: string
   created_at: Date
   tenant_id: string
-  user_id: string
+  userId: string
 }
 
 export type TenantUserWithUserDto = TenantUserModel & {

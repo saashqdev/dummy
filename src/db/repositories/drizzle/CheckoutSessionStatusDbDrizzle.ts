@@ -26,7 +26,7 @@ export class CheckoutSessionStatusDbDrizzle implements ICheckoutSessionStatusDb 
       pending: true,
       email: data.email,
       from_url: data.from_url,
-      from_user_id: data.from_user_id ?? null,
+      from_userId: data.from_user_id ?? null,
       from_tenant_id: data.from_tenant_id ?? null,
       created_at: new Date(),
       updated_at: new Date(),
@@ -42,7 +42,7 @@ export class CheckoutSessionStatusDbDrizzle implements ICheckoutSessionStatusDb 
       .update(checkout_session_status)
       .set({
         pending: data.pending,
-        created_user_id: data.created_user_id ?? null,
+        created_userId: data.created_user_id ?? null,
         created_tenant_id: data.created_tenant_id ?? null,
         updated_at: new Date(),
       })

@@ -50,8 +50,8 @@ export const tenant_user_invitation = pgTable(
     first_name: text().notNull(),
     last_name: text().notNull(),
     pending: boolean().notNull(),
-    created_user_id: text(),
-    from_user_id: text(),
+    created_userId: text(),
+    from_userId: text(),
   },
   (table) => [
     uniqueIndex('tenant_user_invitation_created_user_id_key').using(
@@ -203,7 +203,7 @@ export const user_role = pgTable(
     created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    user_id: text().notNull(),
+    userId: text().notNull(),
     role_id: text().notNull(),
     tenant_id: text(),
   } as Record<string, any>,
@@ -431,7 +431,7 @@ export const credit = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     tenant_id: text().notNull(),
-    user_id: text(),
+    userId: text(),
     amount: integer().notNull(),
     type: text().notNull(),
     object_id: text(),
@@ -479,9 +479,9 @@ export const checkout_session_status = pgTable(
     pending: boolean().default(true).notNull(),
     email: text().notNull(),
     from_url: text().notNull(),
-    from_user_id: text(),
+    from_userId: text(),
     from_tenant_id: text(),
-    created_user_id: text(),
+    created_userId: text(),
     created_tenant_id: text(),
   } as Record<string, any>,
   (table) => [
@@ -535,7 +535,7 @@ export const tenant_user = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     tenant_id: text().notNull(),
-    user_id: text().notNull(),
+    userId: text().notNull(),
   } as Record<string, any>,
   (table) => [
     uniqueIndex('tenant_user_tenant_id_user_id_key').using(

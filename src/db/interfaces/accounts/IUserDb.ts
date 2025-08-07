@@ -14,7 +14,7 @@ export interface IUserDb {
     pagination: { page: number; pageSize: number; sortedBy?: SortedByDto[] }
   }): Promise<{ items: UserWithDetailsDto[]; pagination: PaginationDto }>
   getAll(): Promise<UserWithDetailsDto[]>
-  get(user_id: string): Promise<UserDto | null>
+  get(userId: string): Promise<UserDto | null>
   getByEmail(email: string): Promise<UserDto | null>
   getByEmailWithDetails(email: string): Promise<UserWithDetailsDto | null>
   getPasswordHash(id: string): Promise<string | null>

@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DateUtils from '@/lib/utils/DateUtils'
 import TableSimple, {
@@ -156,7 +155,7 @@ export default function TenantsTable({ items, pagination, tenantInvoices, isStri
                 ) : (
                   <div>
                     ${NumberUtils.decimalFormat(getTotalPaid(i))} (
-                    {getTenantInvoices(i).filter((f) => f.paid).length})
+                    {getTenantInvoices(i).filter((f) => f.status === 'paid').length})
                   </div>
                 )}
               </a>
@@ -175,8 +174,8 @@ export default function TenantsTable({ items, pagination, tenantInvoices, isStri
             // value: (i) => i.createdAt,
             value: (item) => (
               <div className="flex flex-col">
-                <div>{DateUtils.dateYMD(item.createdAt)}</div>
-                <div className="text-xs">{DateUtils.dateAgo(item.createdAt)}</div>
+                <div>{DateUtils.dateYMD(item.created_at)}</div>
+                <div className="text-xs">{DateUtils.dateAgo(item.created_at)}</div>
               </div>
             ),
           },

@@ -1,21 +1,26 @@
-import { db } from "@/db";
-import { CreditType, CreditTypes } from "../dtos/CreditType";
+import { db } from '@/db'
+import { CreditType, CreditTypes } from '../dtos/CreditType'
 
-async function create(data: { tenantId: string; userId: string | null; type: CreditType; objectId: string | null }): Promise<string | null> {
-  const creditType = CreditTypes.find((t) => t.value === data.type);
+async function create(data: {
+  tenantId: string
+  userId: string | null
+  type: CreditType
+  objectId: string | null
+}): Promise<string | null> {
+  const creditType = CreditTypes.find((t) => t.value === data.type)
   if (!creditType) {
     // eslint-disable-next-line no-console
-    console.error(`Credit type not found: ${data.type}`);
-    return null;
+    console.error(`Credit type not found: ${data.type}`)
+    return null
   }
   return await db.credit.create({
     tenantId: data.tenantId,
-    userId: data.userId,
+    userId: data.user_id,
     type: data.type,
     objectId: data.objectId,
     amount: creditType.amount,
-  });
+  })
 }
 export default {
   create,
-};
+}
