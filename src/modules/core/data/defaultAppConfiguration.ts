@@ -3,13 +3,13 @@ import { AppConfigurationDto } from '../dtos/AppConfigurationDto'
 
 export const defaultAppConfiguration: AppConfigurationDto = {
   app: {
-    name: 'Next.js RockStack Demo',
+    name: 'Payload inTake Demo',
     orm: 'drizzle',
     cache: undefined,
   },
   email: {
     provider: 'postmark',
-    from_email: 'suppot@gointake.ca',
+    from_email: 'support@gointake.ca',
     from_name: 'Dave @ inTake',
     support_email: 'saashqdev@gmail.com',
   },
