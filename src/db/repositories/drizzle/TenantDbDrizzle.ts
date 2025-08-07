@@ -1,14 +1,14 @@
+import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
-import { and, asc, count, desc, eq, gte, inArray, or, sql, SQL } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { Tenant, TenantUser, User } from '@/db/config/drizzle/schema'
+import { and, asc, count, desc, eq, gte, or, sql, SQL } from 'drizzle-orm'
+import { tenant, tenant_user } from '@/db/schema'
 import { ITenantDb } from '@/db/interfaces/accounts/ITenantDb'
 import { TenantWithDetailsDto, TenantDto } from '@/db/models'
 import { PaginationRequestDto, PaginationDto } from '@/lib/dtos/PaginationDto'
 
 export class TenantDbDrizzle implements ITenantDb {
   async getAll(): Promise<TenantWithDetailsDto[]> {
-    return await drizzleDb.query.Tenant.findMany({
+    return await payload.db.tables.tenant.findMany({
       with: {
         users: {
           with: {
@@ -28,18 +28,18 @@ export class TenantDbDrizzle implements ITenantDb {
           },
         },
       },
-      orderBy: [desc(Tenant.created_at)],
+      orderBy: [desc(tenant.created_at)],
     })
   }
 
   async getAllIdsAndNames(): Promise<{ id: string; name: string; slug: string }[]> {
-    return drizzleDb
+    return payload.db.tables
       .select({
-        id: Tenant.id,
-        name: Tenant.name,
-        slug: Tenant.slug,
+        id: tenant.id,
+        name: tenant.name,
+        slug: tenant.slug,
       })
-      .from(Tenant)
+      .from(tenant)
   }
 
   async getAllWithPagination({
@@ -52,16 +52,16 @@ export class TenantDbDrizzle implements ITenantDb {
     let whereConditions: SQL[] = []
 
     if (filters?.name) {
-      whereConditions.push(sql`LOWER(${Tenant.name}) LIKE LOWER(${`%${filters.name}%`})`)
+      whereConditions.push(sql`LOWER(${tenant.name}) LIKE LOWER(${`%${filters.name}%`})`)
     }
     if (filters?.slug) {
-      whereConditions.push(sql`LOWER(${Tenant.slug}) LIKE LOWER(${`%${filters.slug}%`})`)
+      whereConditions.push(sql`LOWER(${tenant.slug}) LIKE LOWER(${`%${filters.slug}%`})`)
     }
     if (filters?.active !== undefined) {
-      whereConditions.push(eq(Tenant.active, filters.active))
+      whereConditions.push(eq(tenant.active, filters.active))
     }
 
-    const items = await drizzleDb.query.Tenant.findMany({
+    const items = await payload.db.tables.tenant.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         users: {
@@ -82,15 +82,15 @@ export class TenantDbDrizzle implements ITenantDb {
           },
         },
       },
-      limit: pagination.page_size,
-      offset: pagination.page_size * (pagination.page - 1),
-      orderBy: [desc(Tenant.created_at)],
+      limit: pagination.pageSize,
+      offset: pagination.pageSize * (pagination.page - 1),
+      orderBy: [desc(tenant.created_at)],
     })
 
     const totalItems = (
-      await drizzleDb
+      await payload.db.tables
         .select({ count: count() })
-        .from(Tenant)
+        .from(tenant)
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
     )[0].count
 
@@ -98,31 +98,31 @@ export class TenantDbDrizzle implements ITenantDb {
       items,
       pagination: {
         page: pagination.page,
-        page_size: pagination.page_size,
+        pageSize: pagination.pageSize,
         totalItems,
-        totalPages: Math.ceil(totalItems / pagination.page_size),
+        totalPages: Math.ceil(totalItems / pagination.pageSize),
       },
     }
   }
 
   async getByUser(user_id: string): Promise<TenantDto[]> {
-    return drizzleDb
+    return payload.db.tables
       .select({
-        id: Tenant.id,
-        name: Tenant.name,
-        slug: Tenant.slug,
-        icon: Tenant.icon,
-        active: Tenant.active,
+        id: tenant.id,
+        name: tenant.name,
+        slug: tenant.slug,
+        icon: tenant.icon,
+        active: tenant.active,
       })
-      .from(Tenant)
-      .innerJoin(TenantUser, eq(Tenant.id, TenantUser.tenant_id))
-      .where(eq(TenantUser.user_id, user_id))
-      .orderBy(asc(Tenant.name))
+      .from(tenant)
+      .innerJoin(tenant_user, eq(tenant.id, tenant_user.tenant_id))
+      .where(eq(tenant_user.user_id, user_id))
+      .orderBy(asc(tenant.name))
   }
 
   async get(id: string): Promise<TenantWithDetailsDto | null> {
-    const items = await drizzleDb.query.Tenant.findMany({
-      where: eq(Tenant.id, id),
+    const items = await payload.db.tables.tenant.findMany({
+      where: eq(tenant.id, id),
       with: {
         users: {
           with: {
@@ -147,60 +147,60 @@ export class TenantDbDrizzle implements ITenantDb {
   }
 
   async getSimple(id: string): Promise<TenantDto | null> {
-    const tenants = await drizzleDb
+    const tenants = await payload.db.tables
       .select({
-        id: Tenant.id,
-        name: Tenant.name,
-        slug: Tenant.slug,
-        icon: Tenant.icon,
-        active: Tenant.active,
+        id: tenant.id,
+        name: tenant.name,
+        slug: tenant.slug,
+        icon: tenant.icon,
+        active: tenant.active,
       })
-      .from(Tenant)
-      .where(eq(Tenant.id, id))
+      .from(tenant)
+      .where(eq(tenant.id, id))
     return tenants.length > 0 ? tenants[0] : null
   }
 
   async getByIdOrSlug(id: string): Promise<TenantDto | null> {
-    const tenants = await drizzleDb
+    const tenants = await payload.db.tables
       .select({
-        id: Tenant.id,
-        name: Tenant.name,
-        slug: Tenant.slug,
-        icon: Tenant.icon,
-        active: Tenant.active,
+        id: tenant.id,
+        name: tenant.name,
+        slug: tenant.slug,
+        icon: tenant.icon,
+        active: tenant.active,
       })
-      .from(Tenant)
-      .where(or(eq(Tenant.id, id), eq(Tenant.slug, id)))
+      .from(tenant)
+      .where(or(eq(tenant.id, id), eq(tenant.slug, id)))
     return tenants.length > 0 ? tenants[0] : null
   }
 
-  async getIdByIdOrSlug(tenant: string | undefined): Promise<string | null> {
-    if (!tenant) return null
-    const tenants = await drizzleDb
-      .select({ id: Tenant.id })
-      .from(Tenant)
-      .where(or(eq(Tenant.id, tenant), eq(Tenant.slug, tenant)))
+  async getIdByIdOrSlug(tenantIdOrSlug: string | undefined): Promise<string | null> {
+    if (!tenantIdOrSlug) return null
+    const tenants = await payload.db.tables
+      .select({ id: tenant.id })
+      .from(tenant)
+      .where(or(eq(tenant.id, tenantIdOrSlug), eq(tenant.slug, tenantIdOrSlug)))
     return tenants.length > 0 ? tenants[0].id : null
   }
 
   async countCreatedSince(since: Date | undefined): Promise<number> {
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select({ count: count() })
-      .from(Tenant)
-      .where(since ? gte(Tenant.created_at, since) : undefined)
+      .from(tenant)
+      .where(since ? gte(tenant.created_at, since) : undefined)
     return result[0].count
   }
 
   async countBySlug(slug: string): Promise<number> {
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select({ count: count() })
-      .from(Tenant)
-      .where(eq(Tenant.slug, slug))
+      .from(tenant)
+      .where(eq(tenant.slug, slug))
     return result[0].count
   }
 
   async count(): Promise<number> {
-    const result = await drizzleDb.select({ count: count() }).from(Tenant)
+    const result = await payload.db.tables.select({ count: count() }).from(tenant)
     return result[0].count
   }
 
@@ -216,7 +216,7 @@ export class TenantDbDrizzle implements ITenantDb {
     active: boolean
   }): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(Tenant).values({
+    await payload.db.tables.insert(tenant).values({
       id,
       slug,
       name,
@@ -229,22 +229,22 @@ export class TenantDbDrizzle implements ITenantDb {
   }
 
   async update(id: string, data: { name?: string; icon?: string; slug?: string }): Promise<void> {
-    await drizzleDb
-      .update(Tenant)
+    await payload.db.tables
+      .update(tenant)
       .set({
         name: data.name,
         icon: data.icon,
         slug: data.slug,
         updated_at: new Date(),
       })
-      .where(eq(Tenant.id, id))
+      .where(eq(tenant.id, id))
   }
 
   async del(id: string): Promise<void> {
-    await drizzleDb.delete(Tenant).where(eq(Tenant.id, id))
+    await payload.db.tables.delete(tenant).where(eq(tenant.id, id))
   }
 
   async deleteAll(): Promise<void> {
-    await drizzleDb.delete(Tenant)
+    await payload.db.tables.delete(tenant)
   }
 }

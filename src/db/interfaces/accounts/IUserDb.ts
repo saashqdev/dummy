@@ -11,7 +11,7 @@ export interface IUserDb {
       tenant_id?: string | null
       admin?: boolean
     }
-    pagination: { page: number; page_size: number; sortedBy?: SortedByDto[] }
+    pagination: { page: number; pageSize: number; sortedBy?: SortedByDto[] }
   }): Promise<{ items: UserWithDetailsDto[]; pagination: PaginationDto }>
   getAll(): Promise<UserWithDetailsDto[]>
   get(user_id: string): Promise<UserDto | null>

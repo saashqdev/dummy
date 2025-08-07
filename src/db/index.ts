@@ -81,7 +81,7 @@ export class Database {
         throw new Error(
           'Invalid defaultAppConfiguration.app.orm: ' +
             providerValue +
-            '. Valid values are: drizzle, mock',
+            '. Valid values are: drizzle',
         )
     }
   }

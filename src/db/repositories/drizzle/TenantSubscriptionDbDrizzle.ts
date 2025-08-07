@@ -1,13 +1,13 @@
+import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { eq } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { TenantSubscription, TenantSubscriptionUsageRecord } from '@/db/config/drizzle/schema'
+import { tenant_subscription, tenant_subscription_usage_record } from '@/db/schema'
 import { ITenantSubscriptionDb } from '@/db/interfaces/subscriptions/ITenantSubscriptionDb'
 import { TenantSubscriptionWithDetailsDto } from '@/db/models'
 
 export class TenantSubscriptionDbDrizzle implements ITenantSubscriptionDb {
   async getAll(): Promise<TenantSubscriptionWithDetailsDto[]> {
-    return await drizzleDb.query.TenantSubscription.findMany({
+    return await payload.db.tables.tenant_subscription.findMany({
       with: {
         products: {
           with: {
@@ -27,15 +27,15 @@ export class TenantSubscriptionDbDrizzle implements ITenantSubscriptionDb {
               },
             },
           },
-          orderBy: (products, { desc }) => [desc(products.created_at)],
+          orderBy: (products: { created_at: any }, { desc }: any) => [desc(products.created_at)],
         },
       },
     })
   }
 
   async get(tenant_id: string): Promise<TenantSubscriptionWithDetailsDto | null> {
-    const subscriptions = await drizzleDb.query.TenantSubscription.findMany({
-      where: eq(TenantSubscription.tenant_id, tenant_id),
+    const subscriptions = await payload.db.tables.tenant_subscription.findMany({
+      where: eq(tenant_subscription.tenant_id, tenant_id),
       with: {
         products: {
           with: {
@@ -51,7 +51,7 @@ export class TenantSubscriptionDbDrizzle implements ITenantSubscriptionDb {
               },
             },
           },
-          orderBy: (products, { desc }) => [desc(products.created_at)],
+          orderBy: (products: { created_at: any }, { desc }: any) => [desc(products.created_at)],
         },
       },
     })
@@ -61,25 +61,25 @@ export class TenantSubscriptionDbDrizzle implements ITenantSubscriptionDb {
 
   async create(data: { tenant_id: string; stripe_customer_id: string }): Promise<string> {
     const id = createId()
-    const [result] = await drizzleDb
-      .insert(TenantSubscription)
+    const [result] = await payload.db.tables
+      .insert(tenant_subscription)
       .values({
         id,
         tenant_id: data.tenant_id,
         stripe_customer_id: data.stripe_customer_id,
       })
-      .returning({ tenant_id: TenantSubscription.tenant_id })
+      .returning({ tenant_id: tenant_subscription.tenant_id })
 
     return result.tenant_id
   }
 
   async update(tenant_id: string, data: { stripe_customer_id: string }): Promise<void> {
-    await drizzleDb
-      .update(TenantSubscription)
+    await payload.db.tables
+      .update(tenant_subscription)
       .set({
         stripe_customer_id: data.stripe_customer_id,
       })
-      .where(eq(TenantSubscription.tenant_id, tenant_id))
+      .where(eq(tenant_subscription.tenant_id, tenant_id))
   }
 
   async createUsageRecord(data: {
@@ -89,8 +89,8 @@ export class TenantSubscriptionDbDrizzle implements ITenantSubscriptionDb {
     stripe_subscription_item_id: string
   }): Promise<string> {
     const id = createId()
-    const [result] = await drizzleDb
-      .insert(TenantSubscriptionUsageRecord)
+    const [result] = await payload.db.tables
+      .insert(tenant_subscription_usage_record)
       .values({
         id,
         tenant_subscription_product_price_id: data.tenant_subscription_product_price_id,
@@ -98,7 +98,7 @@ export class TenantSubscriptionDbDrizzle implements ITenantSubscriptionDb {
         quantity: data.quantity,
         stripe_subscription_item_id: data.stripe_subscription_item_id,
       })
-      .returning({ id: TenantSubscriptionUsageRecord.id })
+      .returning({ id: tenant_subscription_usage_record.id })
 
     return result.id
   }

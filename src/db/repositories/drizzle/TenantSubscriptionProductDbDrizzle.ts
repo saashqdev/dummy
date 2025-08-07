@@ -1,29 +1,26 @@
+import payload from 'payload'
 import { eq } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import {
-  TenantSubscriptionProduct,
-  TenantSubscriptionProductPrice,
-} from '@/db/config/drizzle/schema'
+import { tenant_subscription_product, tenant_subscription_product_price } from '@/db/schema'
 import { ITenantSubscriptionProductDb } from '@/db/interfaces/subscriptions/ITenantSubscriptionProductDb'
 import { TenantSubscriptionProductModel } from '@/db/models'
 import { createId } from '@paralleldrive/cuid2'
 
 export class TenantSubscriptionProductDbDrizzle implements ITenantSubscriptionProductDb {
   async get(id: string): Promise<TenantSubscriptionProductModel | null> {
-    const results = await drizzleDb
+    const results = await payload.db.tables
       .select()
-      .from(TenantSubscriptionProduct)
-      .where(eq(TenantSubscriptionProduct.id, id))
+      .from(tenant_subscription_product)
+      .where(eq(tenant_subscription_product.id, id))
     return results[0] || null
   }
 
   async getByStripeSubscriptionId(
     stripe_subscription_id: string,
   ): Promise<TenantSubscriptionProductModel | null> {
-    const results = await drizzleDb
+    const results = await payload.db.tables
       .select()
-      .from(TenantSubscriptionProduct)
-      .where(eq(TenantSubscriptionProduct.stripe_subscription_id, stripe_subscription_id))
+      .from(tenant_subscription_product)
+      .where(eq(tenant_subscription_product.stripe_subscription_id, stripe_subscription_id))
     return results[0] || null
   }
 
@@ -39,8 +36,13 @@ export class TenantSubscriptionProductDbDrizzle implements ITenantSubscriptionPr
     }[]
   }): Promise<string> {
     const id = createId()
-    await drizzleDb.transaction(async (tx) => {
-      await tx.insert(TenantSubscriptionProduct).values({
+    interface TenantSubscriptionProductPriceInput {
+      subscription_price_id?: string
+      subscription_usage_based_price_id?: string
+    }
+
+    await payload.db.tables.transaction(async (tx: typeof payload.db.tables) => {
+      await tx.insert(tenant_subscription_product).values({
         id,
         tenant_subscription_id: data.tenant_subscription_id,
         subscription_product_id: data.subscription_product_id,
@@ -52,8 +54,8 @@ export class TenantSubscriptionProductDbDrizzle implements ITenantSubscriptionPr
         created_at: new Date(),
       })
 
-      for (const price of data.prices) {
-        await tx.insert(TenantSubscriptionProductPrice).values({
+      for (const price of data.prices as TenantSubscriptionProductPriceInput[]) {
+        await tx.insert(tenant_subscription_product_price).values({
           id: createId(),
           tenant_subscription_product_id: id,
           subscription_price_id: price.subscription_price_id,
@@ -75,8 +77,8 @@ export class TenantSubscriptionProductDbDrizzle implements ITenantSubscriptionPr
       current_period_end?: Date | null
     },
   ): Promise<void> {
-    await drizzleDb
-      .update(TenantSubscriptionProduct)
+    await payload.db.tables
+      .update(tenant_subscription_product)
       .set({
         cancelled_at: data.cancelled_at,
         ends_at: data.ends_at,
@@ -84,6 +86,6 @@ export class TenantSubscriptionProductDbDrizzle implements ITenantSubscriptionPr
         current_period_end: data.current_period_end,
         // updated_at: new Date(),
       })
-      .where(eq(TenantSubscriptionProduct.id, id))
+      .where(eq(tenant_subscription_product.id, id))
   }
 }

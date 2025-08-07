@@ -1,14 +1,14 @@
+import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
-import { and, eq, sql, SQL } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { TenantUserInvitation, Tenant } from '@/db/config/drizzle/schema'
+import { and, eq } from 'drizzle-orm'
+import { tenant_user_invitation } from '@/db/schema'
 import { ITenantUserInvitationDb } from '@/db/interfaces/accounts/ITenantUserInvitationDb'
 import { TenantUserInvitationWithTenantDto, TenantUserInvitationModel } from '@/db/models'
 
 export class TenantUserInvitationDbDrizzle implements ITenantUserInvitationDb {
   async get(id: string): Promise<TenantUserInvitationWithTenantDto | null> {
-    const items = await drizzleDb.query.TenantUserInvitation.findMany({
-      where: eq(TenantUserInvitation.id, id),
+    const items = await payload.db.tables.tenant_user_invitation.findMany({
+      where: eq(tenant_user_invitation.id, id),
       with: {
         tenant: true,
       },
@@ -17,10 +17,10 @@ export class TenantUserInvitationDbDrizzle implements ITenantUserInvitationDb {
   }
 
   async getPending(tenant_id: string): Promise<TenantUserInvitationModel[]> {
-    return drizzleDb.query.TenantUserInvitation.findMany({
+    return payload.db.tables.tenant_user_invitation.findMany({
       where: and(
-        eq(TenantUserInvitation.tenant_id, tenant_id),
-        eq(TenantUserInvitation.pending, true),
+        eq(tenant_user_invitation.tenant_id, tenant_id),
+        eq(tenant_user_invitation.pending, true),
       ),
     })
   }
@@ -29,7 +29,7 @@ export class TenantUserInvitationDbDrizzle implements ITenantUserInvitationDb {
     data: Omit<TenantUserInvitationModel, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(TenantUserInvitation).values({
+    await payload.db.tables.tenant_user_invitation.insert().values({
       id,
       tenant_id: data.tenant_id,
       email: data.email,
@@ -43,16 +43,19 @@ export class TenantUserInvitationDbDrizzle implements ITenantUserInvitationDb {
   }
 
   async update(id: string, data: { pending?: boolean }): Promise<void> {
-    await drizzleDb
-      .update(TenantUserInvitation)
+    await payload.db.tables
+      .update(tenant_user_invitation)
       .set({
         pending: data.pending,
       })
-      .where(eq(TenantUserInvitation.id, id))
+      .where(eq(tenant_user_invitation.id, id))
       .execute()
   }
 
   async del(id: string): Promise<void> {
-    await drizzleDb.delete(TenantUserInvitation).where(eq(TenantUserInvitation.id, id)).execute()
+    await payload.db.tables.tenant_user_invitation
+      .delete()
+      .where(eq(tenant_user_invitation.id, id))
+      .execute()
   }
 }

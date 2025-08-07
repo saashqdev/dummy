@@ -1,6 +1,6 @@
+import payload from 'payload'
 import { and, eq, isNull, inArray, count } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { UserRole, Role, RolePermission, Permission } from '@/db/config/drizzle/schema'
+import { user_role, role, role_permission, permission } from '@/db/schema'
 import { IUserRoleDb } from '../../interfaces/permissions/IUserRoleDb'
 import { UserRoleModel, UserRoleWithDetailsDto } from '../../models'
 import { createId } from '@paralleldrive/cuid2'
@@ -11,17 +11,20 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     role_id: string
     tenant_id: string | null
   }): Promise<UserRoleModel | null> {
-    const conditions = [eq(UserRole.user_id, params.user_id), eq(UserRole.role_id, params.role_id)]
+    const conditions = [
+      eq(user_role.user_id, params.user_id),
+      eq(user_role.role_id, params.role_id),
+    ]
 
     if (params.tenant_id === null) {
-      conditions.push(isNull(UserRole.tenant_id))
+      conditions.push(isNull(user_role.tenant_id))
     } else {
-      conditions.push(eq(UserRole.tenant_id, params.tenant_id))
+      conditions.push(eq(user_role.tenant_id, params.tenant_id))
     }
 
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select()
-      .from(UserRole)
+      .from(user_role)
       .where(and(...conditions))
       .limit(1)
     return result.length > 0 ? result[0] : null
@@ -32,15 +35,15 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     tenant_id: string,
     role_name: string,
   ): Promise<UserRoleModel | null> {
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select()
-      .from(UserRole)
-      .innerJoin(Role, eq(UserRole.role_id, Role.id))
+      .from(user_role)
+      .innerJoin(role, eq(user_role.role_id, role.id))
       .where(
         and(
-          eq(UserRole.user_id, user_id),
-          eq(UserRole.tenant_id, tenant_id),
-          eq(Role.name, role_name),
+          eq(user_role.user_id, user_id),
+          eq(user_role.tenant_id, tenant_id),
+          eq(role.name, role_name),
         ),
       )
       .limit(1)
@@ -48,12 +51,12 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async getInAdmin(user_id: string, role_name: string): Promise<UserRoleModel | null> {
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select()
-      .from(UserRole)
-      .innerJoin(Role, eq(UserRole.role_id, Role.id))
+      .from(user_role)
+      .innerJoin(role, eq(user_role.role_id, role.id))
       .where(
-        and(eq(UserRole.user_id, user_id), isNull(UserRole.tenant_id), eq(Role.name, role_name)),
+        and(eq(user_role.user_id, user_id), isNull(user_role.tenant_id), eq(role.name, role_name)),
       )
       .limit(1)
     return result.length > 0 ? result[0].UserRole : null
@@ -63,14 +66,14 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     user_id: string,
     tenant_id: string | null,
   ): Promise<UserRoleWithDetailsDto[]> {
-    const conditions = [eq(UserRole.user_id, user_id)]
+    const conditions = [eq(user_role.user_id, user_id)]
     if (tenant_id === null) {
-      conditions.push(isNull(UserRole.tenant_id))
+      conditions.push(isNull(user_role.tenant_id))
     } else {
-      conditions.push(eq(UserRole.tenant_id, tenant_id))
+      conditions.push(eq(user_role.tenant_id, tenant_id))
     }
 
-    return await drizzleDb.query.UserRole.findMany({
+    return await payload.db.tables.user_role.findMany({
       where: and(...conditions),
       with: {
         role: {
@@ -91,21 +94,21 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     tenant_id: string | null,
     permission_name: string,
   ): Promise<number> {
-    const subquery = drizzleDb
-      .select({ role_id: UserRole.role_id })
-      .from(UserRole)
+    const subquery = payload.db.tables
+      .select({ role_id: user_role.role_id })
+      .from(user_role)
       .where(
         and(
-          eq(UserRole.user_id, user_id),
-          tenant_id === null ? isNull(UserRole.tenant_id) : eq(UserRole.tenant_id, tenant_id),
+          eq(user_role.user_id, user_id),
+          tenant_id === null ? isNull(user_role.tenant_id) : eq(user_role.tenant_id, tenant_id),
         ),
       )
 
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select({ count: count() })
-      .from(Permission)
-      .innerJoin(RolePermission, eq(Permission.id, RolePermission.permission_id))
-      .where(and(eq(Permission.name, permission_name), inArray(RolePermission.role_id, subquery)))
+      .from(permission)
+      .innerJoin(role_permission, eq(permission.id, role_permission.permission_id))
+      .where(and(eq(permission.name, permission_name), inArray(role_permission.role_id, subquery)))
 
     return result[0].count
   }
@@ -116,7 +119,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     tenant_id: string | null
   }): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(UserRole).values({
+    await payload.db.tables.insert(user_role).values({
       id,
       created_at: new Date(),
       user_id: data.user_id,
@@ -133,7 +136,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     if (roles.length === 0) {
       return
     }
-    await drizzleDb.insert(UserRole).values(
+    await payload.db.tables.insert(user_role).values(
       roles.map((role) => ({
         id: createId(),
         created_at: new Date(),
@@ -145,16 +148,16 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   }
 
   async del(user_id: string, role_id: string): Promise<void> {
-    await drizzleDb
-      .delete(UserRole)
-      .where(and(eq(UserRole.user_id, user_id), eq(UserRole.role_id, role_id)))
+    await payload.db.tables
+      .delete(user_role)
+      .where(and(eq(user_role.user_id, user_id), eq(user_role.role_id, role_id)))
   }
 
   async deleteAllByUser(user_id: string, type: string): Promise<void> {
-    const subquery = drizzleDb.select({ id: Role.id }).from(Role).where(eq(Role.type, type))
+    const subquery = payload.db.tables.select({ id: role.id }).from(role).where(eq(role.type, type))
 
-    await drizzleDb
-      .delete(UserRole)
-      .where(and(eq(UserRole.user_id, user_id), inArray(UserRole.role_id, subquery)))
+    await payload.db.tables
+      .delete(user_role)
+      .where(and(eq(user_role.user_id, user_id), inArray(user_role.role_id, subquery)))
   }
 }

@@ -1,12 +1,12 @@
-import { and, eq, inArray, desc, asc } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
+import payload from 'payload'
+import { and, eq, inArray, asc } from 'drizzle-orm'
 import {
-  SubscriptionProduct,
-  SubscriptionPrice,
-  SubscriptionUsageBasedPrice,
-  SubscriptionUsageBasedTier,
-  SubscriptionFeature,
-} from '@/db/config/drizzle/schema'
+  subscription_product,
+  subscription_price,
+  subscription_usage_based_price,
+  subscription_usage_based_tier,
+  subscription_feature,
+} from '@/db/schema'
 import { ISubscriptionProductDb } from '@/db/interfaces/subscriptions/ISubscriptionProductDb'
 import { SubscriptionProductDto } from '@/modules/subscriptions/dtos/SubscriptionProductDto'
 import { PricingModel } from '@/modules/subscriptions/enums/PricingModel'
@@ -20,79 +20,79 @@ import { createId } from '@paralleldrive/cuid2'
 
 export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
   async getAllSubscriptionProductsWithTenants(): Promise<SubscriptionProductDto[]> {
-    return await drizzleDb.query.SubscriptionProduct.findMany({
+    return await payload.db.tables.subscription_product.findMany({
       with: {
         tenantProducts: true,
         usageBasedPrices: {
           with: {
-            tiers: { orderBy: asc(SubscriptionUsageBasedTier.from) },
+            tiers: { orderBy: asc(subscription_usage_based_tier.from) },
           },
         },
         prices: true,
         features: {
-          orderBy: asc(SubscriptionFeature.order),
+          orderBy: asc(subscription_feature.order),
         },
       },
-      orderBy: asc(SubscriptionProduct.order),
+      orderBy: asc(subscription_product.order),
     })
   }
 
   async getAllSubscriptionProducts(is_public?: boolean): Promise<SubscriptionProductDto[]> {
-    let whereClause: any = eq(SubscriptionProduct.active, true)
+    let whereClause: any = eq(subscription_product.active, true)
     if (is_public) {
-      whereClause = and(whereClause, eq(SubscriptionProduct.public, true))
+      whereClause = and(whereClause, eq(subscription_product.public, true))
     }
 
-    return await drizzleDb.query.SubscriptionProduct.findMany({
+    return await payload.db.tables.subscription_product.findMany({
       where: whereClause,
       with: {
         tenantProducts: true,
         usageBasedPrices: {
           with: {
-            tiers: { orderBy: asc(SubscriptionUsageBasedTier.from) },
+            tiers: { orderBy: asc(subscription_usage_based_tier.from) },
           },
         },
         prices: true,
         features: {
-          orderBy: asc(SubscriptionFeature.order),
+          orderBy: asc(subscription_feature.order),
         },
       },
-      orderBy: asc(SubscriptionProduct.order),
+      orderBy: asc(subscription_product.order),
     })
   }
 
   async getSubscriptionProductsInIds(ids: string[]): Promise<SubscriptionProductDto[]> {
-    return await drizzleDb.query.SubscriptionProduct.findMany({
-      where: inArray(SubscriptionProduct.id, ids),
+    return await payload.db.tables.subscription_product.findMany({
+      where: inArray(subscription_product.id, ids),
       with: {
         tenantProducts: true,
         usageBasedPrices: {
           with: {
-            tiers: { orderBy: asc(SubscriptionUsageBasedTier.from) },
+            tiers: { orderBy: asc(subscription_usage_based_tier.from) },
           },
         },
         prices: true,
         features: {
-          orderBy: asc(SubscriptionFeature.order),
+          orderBy: asc(subscription_feature.order),
         },
       },
-      orderBy: asc(SubscriptionProduct.order),
+      orderBy: asc(subscription_product.order),
     })
   }
 
   async getSubscriptionProduct(id: string): Promise<SubscriptionProductDto | null> {
-    const products = await drizzleDb.query.SubscriptionProduct.findMany({
-      where: eq(SubscriptionProduct.id, id),
+    const products = await payload.db.tables.subscription_product.findMany({
+      where: eq(subscription_product.id, id),
       with: {
         tenantProducts: true,
         usageBasedPrices: {
           with: {
-            tiers: { orderBy: asc(SubscriptionUsageBasedTier.from) },
+            tiers: { orderBy: asc(subscription_usage_based_tier.from) },
           },
         },
         prices: true,
         features: {
-          orderBy: asc(SubscriptionFeature.order),
+          orderBy: asc(subscription_feature.order),
         },
       },
     })
@@ -100,8 +100,8 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
   }
 
   async getSubscriptionPriceByStripeId(stripe_id: string): Promise<SubscriptionPriceModel | null> {
-    const prices = await drizzleDb.query.SubscriptionPrice.findMany({
-      where: eq(SubscriptionPrice.stripe_id, stripe_id),
+    const prices = await payload.db.tables.subscription_price.findMany({
+      where: eq(subscription_price.stripe_id, stripe_id),
       with: {
         subscription_product: true,
       },
@@ -112,8 +112,8 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
   async getSubscriptionUsageBasedPriceByStripeId(
     stripe_id: string,
   ): Promise<SubscriptionUsageBasedPriceModel | null> {
-    const prices = await drizzleDb.query.SubscriptionUsageBasedPrice.findMany({
-      where: eq(SubscriptionUsageBasedPrice.stripe_id, stripe_id),
+    const prices = await payload.db.tables.subscription_usage_based_price.findMany({
+      where: eq(subscription_usage_based_price.stripe_id, stripe_id),
     })
     return prices[0] || null
   }
@@ -122,7 +122,7 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
     data: Omit<SubscriptionProductModel, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(SubscriptionProduct).values({
+    await payload.db.tables.insert(subscription_product).values({
       id,
       ...data,
     })
@@ -146,37 +146,37 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
       can_buy_again?: boolean
     },
   ): Promise<void> {
-    await drizzleDb
-      .update(SubscriptionProduct)
+    await payload.db.tables
+      .update(subscription_product)
       .set({
         ...data,
       })
-      .where(eq(SubscriptionProduct.id, id))
+      .where(eq(subscription_product.id, id))
   }
 
   async updateSubscriptionProductStripeId(id: string, data: { stripe_id: string }): Promise<void> {
-    await drizzleDb
-      .update(SubscriptionProduct)
+    await payload.db.tables
+      .update(subscription_product)
       .set({
         stripe_id: data.stripe_id,
       })
-      .where(eq(SubscriptionProduct.id, id))
+      .where(eq(subscription_product.id, id))
   }
 
   async updateSubscriptionPriceStripeId(id: string, data: { stripe_id: string }): Promise<void> {
-    await drizzleDb
-      .update(SubscriptionPrice)
+    await payload.db.tables
+      .update(subscription_price)
       .set({
         stripe_id: data.stripe_id,
       })
-      .where(eq(SubscriptionPrice.id, id))
+      .where(eq(subscription_price.id, id))
   }
 
   async createSubscriptionPrice(
     data: Omit<SubscriptionPriceModel, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(SubscriptionPrice).values({
+    await payload.db.tables.insert(subscription_price).values({
       id,
       ...data,
     })
@@ -186,8 +186,8 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
   async getSubscriptionUsageBasedPrice(
     id: string,
   ): Promise<SubscriptionUsageBasedPriceModel | null> {
-    const prices = await drizzleDb.query.SubscriptionUsageBasedPrice.findMany({
-      where: eq(SubscriptionUsageBasedPrice.id, id),
+    const prices = await payload.db.tables.subscription_usage_based_price.findMany({
+      where: eq(subscription_usage_based_price.id, id),
     })
     return prices[0] || null
   }
@@ -196,7 +196,7 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
     data: Omit<SubscriptionUsageBasedPriceModel, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(SubscriptionUsageBasedPrice).values({
+    await payload.db.tables.insert(subscription_usage_based_price).values({
       id,
       ...data,
     })
@@ -207,7 +207,7 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
     data: Omit<SubscriptionUsageBasedTierModel, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(SubscriptionUsageBasedTier).values({
+    await payload.db.tables.insert(subscription_usage_based_tier).values({
       id,
       ...data,
     })
@@ -215,20 +215,22 @@ export class SubscriptionProductDbDrizzle implements ISubscriptionProductDb {
   }
 
   async deleteSubscriptionProduct(id: string): Promise<void> {
-    await drizzleDb.delete(SubscriptionProduct).where(eq(SubscriptionProduct.id, id))
+    await payload.db.tables.delete(subscription_product).where(eq(subscription_product.id, id))
   }
 
   async deleteSubscriptionPrice(id: string): Promise<void> {
-    await drizzleDb.delete(SubscriptionPrice).where(eq(SubscriptionPrice.id, id))
+    await payload.db.tables.delete(subscription_price).where(eq(subscription_price.id, id))
   }
 
   async deleteSubscriptionUsageBasedTier(id: string): Promise<void> {
-    await drizzleDb.delete(SubscriptionUsageBasedTier).where(eq(SubscriptionUsageBasedTier.id, id))
+    await payload.db.tables
+      .delete(subscription_usage_based_tier)
+      .where(eq(subscription_usage_based_tier.id, id))
   }
 
   async deleteSubscriptionUsageBasedPrice(id: string): Promise<void> {
-    await drizzleDb
-      .delete(SubscriptionUsageBasedPrice)
-      .where(eq(SubscriptionUsageBasedPrice.id, id))
+    await payload.db.tables
+      .delete(subscription_usage_based_price)
+      .where(eq(subscription_usage_based_price.id, id))
   }
 }

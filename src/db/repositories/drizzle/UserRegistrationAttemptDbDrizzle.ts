@@ -1,26 +1,26 @@
 // UserRegistrationAttemptDbDrizzle.ts
+import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { eq } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { UserRegistrationAttempt } from '@/db/config/drizzle/schema'
+import { user_registration_attempt } from '@/db/schema'
 import { IUserRegistrationAttemptDb } from '@/db/interfaces/accounts/IUserRegistrationAttemptDb'
 import { UserRegistrationAttemptModel } from '@/db/models'
 
 export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemptDb {
   async getByEmail(email: string): Promise<UserRegistrationAttemptModel | null> {
-    const result = await drizzleDb
+    const result = await payload.db.tables.user_registration_attempt
       .select()
-      .from(UserRegistrationAttempt)
-      .where(eq(UserRegistrationAttempt.email, email))
+      .from(user_registration_attempt)
+      .where(eq(user_registration_attempt.email, email))
       .limit(1)
     return result[0] || null
   }
 
   async getByToken(token: string): Promise<UserRegistrationAttemptModel | null> {
-    const result = await drizzleDb
+    const result = await payload.db.tables
       .select()
-      .from(UserRegistrationAttempt)
-      .where(eq(UserRegistrationAttempt.token, token))
+      .from(user_registration_attempt)
+      .where(eq(user_registration_attempt.token, token))
       .limit(1)
     return result[0] || null
   }
@@ -29,8 +29,8 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
     data: Omit<UserRegistrationAttemptModel, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<string> {
     const id = createId()
-    const [result] = await drizzleDb
-      .insert(UserRegistrationAttempt)
+    const [result] = await payload.db.tables
+      .insert(user_registration_attempt)
       .values({
         id,
         created_at: new Date(),
@@ -42,7 +42,7 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
         ipAddress: data.ipAddress,
         slug: data.slug,
       })
-      .returning({ id: UserRegistrationAttempt.id })
+      .returning({ id: user_registration_attempt.id })
     return result.id
   }
 
@@ -56,8 +56,8 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
       token?: string
     },
   ): Promise<void> {
-    await drizzleDb
-      .update(UserRegistrationAttempt)
+    await payload.db.tables
+      .update(user_registration_attempt)
       .set({
         first_name: data.first_name,
         last_name: data.last_name,
@@ -65,6 +65,6 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
         created_tenant_id: data.created_tenant_id,
         token: data.token,
       })
-      .where(eq(UserRegistrationAttempt.id, id))
+      .where(eq(user_registration_attempt.id, id))
   }
 }

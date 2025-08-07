@@ -1,6 +1,6 @@
 export type PaginationDto = {
   page: number
-  page_size: number
+  pageSize: number
   totalItems: number
   totalPages: number
   sortedBy?: SortedByDto[]
@@ -9,7 +9,7 @@ export type PaginationDto = {
 
 export type PaginationRequestDto = {
   page: number
-  page_size: number
+  pageSize: number
   sortedBy?: SortedByDto[]
 }
 

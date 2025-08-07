@@ -1,6 +1,6 @@
+import payload from 'payload'
 import { eq } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { SubscriptionFeature } from '@/db/config/drizzle/schema'
+import { subscription_feature } from '@/db/schema'
 import { ISubscriptionFeatureDb } from '@/db/interfaces/subscriptions/ISubscriptionFeatureDb'
 import { SubscriptionFeatureModel } from '@/db/models'
 import { SubscriptionFeatureLimitType } from '@/modules/subscriptions/enums/SubscriptionFeatureLimitType'
@@ -8,12 +8,12 @@ import { createId } from '@paralleldrive/cuid2'
 
 export class SubscriptionFeatureDbDrizzle implements ISubscriptionFeatureDb {
   async getAll(): Promise<SubscriptionFeatureModel[]> {
-    return await drizzleDb.query.SubscriptionFeature.findMany()
+    return await payload.db.tables.subscription_feature.findMany()
   }
 
   async get(id: string): Promise<SubscriptionFeatureModel | null> {
-    const items = await drizzleDb.query.SubscriptionFeature.findMany({
-      where: eq(SubscriptionFeature.id, id),
+    const items = await payload.db.tables.subscription_feature.findMany({
+      where: eq(subscription_feature.id, id),
     })
     return items.length > 0 ? items[0] : null
   }
@@ -32,7 +32,7 @@ export class SubscriptionFeatureDbDrizzle implements ISubscriptionFeatureDb {
     },
   ): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(SubscriptionFeature).values({
+    await payload.db.tables.insert(subscription_feature).values({
       id,
       subscription_product_id,
       order: data.order,
@@ -48,8 +48,8 @@ export class SubscriptionFeatureDbDrizzle implements ISubscriptionFeatureDb {
   }
 
   async deleteBySubscriptionProductId(subscription_product_id: string): Promise<void> {
-    await drizzleDb
-      .delete(SubscriptionFeature)
-      .where(eq(SubscriptionFeature.subscription_product_id, subscription_product_id))
+    await payload.db.tables
+      .delete(subscription_feature)
+      .where(eq(subscription_feature.subscription_product_id, subscription_product_id))
   }
 }

@@ -1,7 +1,7 @@
+import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { and, eq, inArray, max, asc, SQL } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { Permission, RolePermission } from '@/db/config/drizzle/schema'
+import { permission, role_permission } from '@/db/schema'
 import { IPermissionDb } from '@/db/interfaces/permissions/IPermissionDb'
 import { PermissionWithRolesDto, PermissionDto } from '@/db/models'
 
@@ -13,18 +13,18 @@ export class PermissionDbDrizzle implements IPermissionDb {
     let whereConditions: SQL[] = []
 
     if (filters?.type) {
-      whereConditions.push(eq(Permission.type, filters.type))
+      whereConditions.push(eq(permission.type, filters.type))
     }
 
     if (filters?.role_id) {
-      const rolePermissionSubquery = drizzleDb
-        .select({ permission_id: RolePermission.permission_id })
-        .from(RolePermission)
-        .where(eq(RolePermission.role_id, filters.role_id))
-      whereConditions.push(inArray(Permission.id, rolePermissionSubquery))
+      const rolePermissionSubquery = payload.db.tables
+        .select({ permission_id: role_permission.permission_id })
+        .from(role_permission)
+        .where(eq(role_permission.role_id, filters.role_id))
+      whereConditions.push(inArray(permission.id, rolePermissionSubquery))
     }
 
-    return await drizzleDb.query.Permission.findMany({
+    return await payload.db.tables.permission.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         in_roles: {
@@ -33,24 +33,24 @@ export class PermissionDbDrizzle implements IPermissionDb {
           },
         },
       },
-      orderBy: [asc(Permission.type), asc(Permission.name)],
+      orderBy: [asc(permission.type), asc(permission.name)],
     })
   }
 
   async getAllIdsAndNames(): Promise<PermissionDto[]> {
-    return await drizzleDb
+    return await payload.db.tables.permission
       .select({
-        id: Permission.id,
-        name: Permission.name,
-        description: Permission.description,
+        id: permission.id,
+        name: permission.name,
+        description: permission.description,
       })
-      .from(Permission)
-      .orderBy(asc(Permission.name))
+      .from(permission)
+      .orderBy(asc(permission.name))
   }
 
   async get(id: string): Promise<PermissionWithRolesDto | null> {
-    const results = await drizzleDb.query.Permission.findMany({
-      where: eq(Permission.id, id),
+    const results = await payload.db.tables.permission.findMany({
+      where: eq(permission.id, id),
       with: {
         in_roles: {
           with: {
@@ -63,24 +63,24 @@ export class PermissionDbDrizzle implements IPermissionDb {
   }
 
   async getByName(name: string): Promise<PermissionDto | null> {
-    const results = await drizzleDb
+    const results = await payload.db.tables.permission
       .select({
-        id: Permission.id,
-        name: Permission.name,
-        description: Permission.description,
+        id: permission.id,
+        name: permission.name,
+        description: permission.description,
       })
-      .from(Permission)
-      .where(eq(Permission.name, name))
+      .from(permission)
+      .where(eq(permission.name, name))
       .limit(1)
 
     return results.length > 0 ? results[0] : null
   }
 
   async getMaxOrder(type: 'admin' | 'app'): Promise<number> {
-    const result = await drizzleDb
-      .select({ maxOrder: max(Permission.order) })
-      .from(Permission)
-      .where(eq(Permission.type, type))
+    const result = await payload.db.tables.permission
+      .select({ maxOrder: max(permission.order) })
+      .from(permission)
+      .where(eq(permission.type, type))
     return result[0].maxOrder ?? 0
   }
 
@@ -92,7 +92,7 @@ export class PermissionDbDrizzle implements IPermissionDb {
     is_default: boolean
   }): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(Permission).values({
+    await payload.db.tables.permission.insert().values({
       id,
       created_at: new Date(),
       updated_at: new Date(),
@@ -114,18 +114,18 @@ export class PermissionDbDrizzle implements IPermissionDb {
       order?: number
     },
   ): Promise<void> {
-    await drizzleDb
-      .update(Permission)
+    await payload.db.tables
+      .update(permission)
       .set({
         name: data.name,
         description: data.description,
         type: data.type,
         order: data.order,
       })
-      .where(eq(Permission.id, id))
+      .where(eq(permission.id, id))
   }
 
   async del(id: string): Promise<void> {
-    await drizzleDb.delete(Permission).where(eq(Permission.id, id))
+    await payload.db.tables.delete(permission).where(eq(permission.id, id))
   }
 }

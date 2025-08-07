@@ -1,7 +1,7 @@
+import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { and, count, desc, eq, gte, like, lt, or, SQL, sum } from 'drizzle-orm'
-import { drizzleDb } from '@/db/config/drizzle/database'
-import { Credit } from '@/db/config/drizzle/schema'
+import { credit } from '@/db/schema'
 import { ICreditDb } from '@/db/interfaces/subscriptions/ICreditDb'
 import { CreditWithDetailsDto } from '@/db/models'
 import { PaginationDto } from '@/lib/dtos/PaginationDto'
@@ -17,30 +17,30 @@ export class CreditDbDrizzle implements ICreditDb {
       user_id?: string | null
       type?: string | null
     }
-    pagination: { page_size: number; page: number }
+    pagination: { pageSize: number; page: number }
   }): Promise<{ items: CreditWithDetailsDto[]; pagination: PaginationDto }> {
     let whereConditions: SQL[] = []
 
     if (filters.tenant_id) {
-      whereConditions.push(eq(Credit.tenant_id, filters.tenant_id))
+      whereConditions.push(eq(credit.tenant_id, filters.tenant_id))
     }
 
     if (filters.user_id) {
-      whereConditions.push(eq(Credit.user_id, filters.user_id))
+      whereConditions.push(eq(credit.user_id, filters.user_id))
     }
 
     if (filters.type) {
-      whereConditions.push(eq(Credit.type, filters.type))
+      whereConditions.push(eq(credit.type, filters.type))
     }
 
     if (filters.q) {
-      const q = or(like(Credit.type, `%${filters.q}%`), like(Credit.object_id, `%${filters.q}%`))
+      const q = or(like(credit.type, `%${filters.q}%`), like(credit.object_id, `%${filters.q}%`))
       if (q) {
         whereConditions.push(q)
       }
     }
 
-    const items: CreditWithDetailsDto[] = await drizzleDb.query.Credit.findMany({
+    const items: CreditWithDetailsDto[] = await payload.db.tables.credit.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         tenant: {
@@ -50,15 +50,15 @@ export class CreditDbDrizzle implements ICreditDb {
           columns: { email: true },
         },
       },
-      limit: pagination.page_size,
-      offset: pagination.page_size * (pagination.page - 1),
-      orderBy: [desc(Credit.created_at)],
+      limit: pagination.pageSize,
+      offset: pagination.pageSize * (pagination.page - 1),
+      orderBy: [desc(credit.created_at)],
     })
 
     const totalItems = (
-      await drizzleDb
+      await payload.db.tables
         .select({ count: count() })
-        .from(Credit)
+        .from(credit)
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
     )[0].count
 
@@ -66,9 +66,9 @@ export class CreditDbDrizzle implements ICreditDb {
       items,
       pagination: {
         page: pagination.page,
-        page_size: pagination.page_size,
+        pageSize: pagination.pageSize,
         totalItems,
-        totalPages: Math.ceil(totalItems / pagination.page_size),
+        totalPages: Math.ceil(totalItems / pagination.pageSize),
       },
     }
   }
@@ -81,7 +81,7 @@ export class CreditDbDrizzle implements ICreditDb {
     amount: number
   }): Promise<string> {
     const id = createId()
-    await drizzleDb.insert(Credit).values({
+    await payload.db.tables.insert(credit).values({
       id,
       created_at: new Date(),
       tenant_id: data.tenant_id,
@@ -96,16 +96,16 @@ export class CreditDbDrizzle implements ICreditDb {
     tenant_id: string
     created_at?: { gte: Date; lt: Date }
   }): Promise<number> {
-    let conditions = [eq(Credit.tenant_id, filters.tenant_id)]
+    let conditions = [eq(credit.tenant_id, filters.tenant_id)]
 
     if (filters.created_at) {
-      conditions.push(gte(Credit.created_at, filters.created_at.gte))
-      conditions.push(lt(Credit.created_at, filters.created_at.lt))
+      conditions.push(gte(credit.created_at, filters.created_at.gte))
+      conditions.push(lt(credit.created_at, filters.created_at.lt))
     }
 
-    const result = await drizzleDb
-      .select({ sum: sum(Credit.amount).as('sum') })
-      .from(Credit)
+    const result = await payload.db.tables
+      .select({ sum: sum(credit.amount).as('sum') })
+      .from(credit)
       .where(and(...conditions))
 
     // Explicitly cast the result to a number
