@@ -1,71 +1,71 @@
-import { defaultAppConfiguration } from "@/modules/core/data/defaultAppConfiguration";
-import { sendEmailPostmark } from "./PostmarkEmailService";
-import { sendEmailResend } from "./ResendEmailService";
+import { defaultAppConfiguration } from '@/modules/core/data/defaultAppConfiguration'
+import { sendEmailPostmark } from './PostmarkEmailService'
+import { sendEmailResend } from './ResendEmailService'
 
 export async function sendEmail({
   to,
   subject,
   body,
 }: {
-  to: string;
-  subject: string;
-  body: string;
+  to: string
+  subject: string
+  body: string
   // data?: { to: string; };
 }) {
-  const clientConfig = getEmailConfig({ throwError: true });
+  const clientConfig = getEmailConfig({ throwError: true })
   if (!clientConfig) {
     // eslint-disable-next-line no-console
-    throw new Error("📧 Email provider not configured");
+    throw new Error('📧 Email provider not configured')
     // console.error("📧 Email provider not configured");
-    return;
+    return
   }
   // eslint-disable-next-line no-console
-  console.log("📧 Sending email", { providerSettings: clientConfig.provider, to, subject });
+  console.log('📧 Sending email', { providerSettings: clientConfig.provider, to, subject })
   switch (clientConfig.provider) {
-    case "postmark":
-      return await sendEmailPostmark({ to, subject, body }, clientConfig);
-    case "resend":
-      return await sendEmailResend({ to, subject, body }, clientConfig);
+    case 'postmark':
+      return await sendEmailPostmark({ to, subject, body }, clientConfig)
+    case 'resend':
+      return await sendEmailResend({ to, subject, body }, clientConfig)
     default:
-      throw new Error("Invalid provider: " + clientConfig.provider);
+      throw new Error('Invalid provider: ' + clientConfig.provider)
   }
 }
 
 export function getEmailProvider() {
-  const clientConfig = getEmailConfig();
-  return clientConfig?.provider;
+  const clientConfig = getEmailConfig()
+  return clientConfig?.provider
 }
 
 export function getEmailConfig({ throwError = false } = {}) {
-  if (defaultAppConfiguration.email.provider === "postmark") {
+  if (defaultAppConfiguration.email.provider === 'postmark') {
     if (!process.env.POSTMARK_SERVER_TOKEN) {
       // eslint-disable-next-line no-console
-      console.error("📧 POSTMARK_SERVER_TOKEN required");
+      console.error('📧 POSTMARK_SERVER_TOKEN required')
       if (throwError) {
-        throw new Error("POSTMARK_SERVER_TOKEN required");
+        throw new Error('POSTMARK_SERVER_TOKEN required')
       }
-      return null;
+      return null
     }
     return {
-      provider: "postmark",
+      provider: 'postmark',
       apiKey: process.env.POSTMARK_SERVER_TOKEN,
-      from: defaultAppConfiguration.email.fromEmail,
-    };
-  } else if (defaultAppConfiguration.email.provider === "resend") {
+      from: defaultAppConfiguration.email.from_email,
+    }
+  } else if (defaultAppConfiguration.email.provider === 'resend') {
     if (!process.env.RESEND_API_KEY) {
       // eslint-disable-next-line no-console
-      console.error("📧 RESEND_API_KEY required");
+      console.error('📧 RESEND_API_KEY required')
       if (throwError) {
-        throw new Error("RESEND_API_KEY required");
+        throw new Error('RESEND_API_KEY required')
       }
-      return null;
+      return null
     }
     return {
-      provider: "resend",
+      provider: 'resend',
       apiKey: process.env.RESEND_API_KEY,
-      from: defaultAppConfiguration.email.fromEmail,
-    };
+      from: defaultAppConfiguration.email.from_email,
+    }
   }
-  console.error("📧 POSTMARK_SERVER_TOKEN or RESEND_API_KEY required");
-  return null;
+  console.error('📧 POSTMARK_SERVER_TOKEN or RESEND_API_KEY required')
+  return null
 }

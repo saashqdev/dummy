@@ -1,46 +1,52 @@
-"use client";
+'use client'
 
-import { Fragment, useState } from "react";
-import { Transition } from "@headlessui/react";
-import Logo from "@/components/brand/Logo";
-import DarkModeToggle from "@/components/ui/toggles/DarkModeToggle";
-import { useTranslation } from "react-i18next";
-import clsx from "clsx";
-import { HeaderBlockDto } from "@/modules/pageBlocks/blocks/marketing/header/HeaderBlockDto";
-import HeaderFlyoutItem from "@/components/ui/headers/HeaderFlyoutItem";
-import Icon from "@/components/brand/Icon";
-import LocaleSelector from "@/components/ui/selectors/LocaleSelector";
-import ButtonEvent from "@/components/ui/buttons/ButtonEvent";
-import ThemeSelector from "@/components/ui/selectors/ThemeSelector";
-import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
-import ButtonTertiary from "@/components/ui/buttons/ButtonTertiary";
-import { usePathname } from "next/navigation";
-import useRootData from "@/lib/state/useRootData";
+import { Fragment, useState } from 'react'
+import { Transition } from '@headlessui/react'
+import Logo from '@/components/brand/Logo'
+import DarkModeToggle from '@/components/ui/toggles/DarkModeToggle'
+import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
+import { HeaderBlockDto } from '@/modules/pageBlocks/blocks/marketing/header/HeaderBlockDto'
+import HeaderFlyoutItem from '@/components/ui/headers/HeaderFlyoutItem'
+import Icon from '@/components/brand/Icon'
+import LocaleSelector from '@/components/ui/selectors/LocaleSelector'
+import ButtonEvent from '@/components/ui/buttons/ButtonEvent'
+import ThemeSelector from '@/components/ui/selectors/ThemeSelector'
+import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary'
+import ButtonTertiary from '@/components/ui/buttons/ButtonTertiary'
+import { usePathname } from 'next/navigation'
+import useRootData from '@/lib/state/useRootData'
 
-export default function HeaderVariantSimple({ item, width = "7xl" }: { item: HeaderBlockDto; width?: "screen-2xl" | "7xl" }) {
-  const { authenticated, appConfiguration } = useRootData();
+export default function HeaderVariantSimple({
+  item,
+  width = '7xl',
+}: {
+  item: HeaderBlockDto
+  width?: 'screen-2xl' | '7xl'
+}) {
+  const { authenticated, appConfiguration } = useRootData()
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const pathname = usePathname();
+  const pathname = usePathname()
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   function isCurrent(path: string): boolean {
-    return pathname === path;
+    return pathname === path
   }
 
   const loginOrEnterRoute = () => {
     if (!authenticated) {
-      return "/login";
+      return '/login'
     }
-    return "/app";
-  };
+    return '/app'
+  }
 
   function registerRoute() {
-    if (appConfiguration?.subscription.allowSignUpBeforeSubscribe) {
-      return "/register";
+    if (appConfiguration?.subscription.allow_sign_up_before_subscribe) {
+      return '/register'
     } else {
-      return "/pricing";
+      return '/pricing'
     }
   }
 
@@ -48,8 +54,16 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
     <div>
       <div className="pb-6">
         <div className="relative pt-6">
-          <div className={clsx("mx-auto px-4 sm:px-6", width === "screen-2xl" ? "max-w-screen-2xl" : "max-w-7xl")}>
-            <nav className="relative flex items-center justify-between sm:h-10 md:justify-center" aria-label="Global">
+          <div
+            className={clsx(
+              'mx-auto px-4 sm:px-6',
+              width === 'screen-2xl' ? 'max-w-screen-2xl' : 'max-w-7xl',
+            )}
+          >
+            <nav
+              className="relative flex items-center justify-between sm:h-10 md:justify-center"
+              aria-label="Global"
+            >
               <div className="flex flex-1 items-center md:absolute md:inset-y-0 md:left-0">
                 <div className="flex w-full items-center justify-between md:w-auto">
                   {item.withLogo ? (
@@ -67,22 +81,33 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                           {!authenticated && (
                             <ButtonTertiary
                               to={registerRoute()}
-                              event={{ action: "click", category: "header", label: t("account.shared.signUp"), value: registerRoute() }}
+                              event={{
+                                action: 'click',
+                                category: 'header',
+                                label: t('account.shared.signUp'),
+                                value: registerRoute(),
+                              }}
                             >
-                              <div>{t("account.shared.signUp")}</div>
+                              <div>{t('account.shared.signUp')}</div>
                             </ButtonTertiary>
                           )}
                           {!authenticated && (
                             <ButtonPrimary
                               to={loginOrEnterRoute()}
                               event={{
-                                action: "click",
-                                category: "header",
-                                label: !authenticated ? t("account.shared.signIn") : t("shared.enter"),
+                                action: 'click',
+                                category: 'header',
+                                label: !authenticated
+                                  ? t('account.shared.signIn')
+                                  : t('shared.enter'),
                                 value: loginOrEnterRoute(),
                               }}
                             >
-                              {!authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
+                              {!authenticated ? (
+                                <div>{t('account.shared.signIn')}</div>
+                              ) : (
+                                <div>{t('shared.enter')}</div>
+                              )}
                             </ButtonPrimary>
                           )}
                         </div>
@@ -96,9 +121,21 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                         id="main-menu"
                         aria-haspopup="true"
                       >
-                        <span className="sr-only">{t("shared.close")}</span>
-                        <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <span className="sr-only">{t('shared.close')}</span>
+                        <svg
+                          className="h-6 w-6"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                          />
                         </svg>
                       </button>
                     )}
@@ -111,17 +148,25 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                     <Fragment key={idx}>
                       {!link.items || link.items.length === 0 ? (
                         <ButtonEvent
-                          to={link.path ?? ""}
+                          to={link.path ?? ''}
                           target={link.target}
                           className={clsx(
                             link.className,
-                            "truncate rounded-sm px-3 py-1 text-base font-medium leading-6 transition duration-150 ease-in-out focus:outline-none",
-                            !isCurrent(link.path ?? "") && "text-muted-foreground",
-                            isCurrent(link.path ?? "") && ""
+                            'truncate rounded-sm px-3 py-1 text-base font-medium leading-6 transition duration-150 ease-in-out focus:outline-none',
+                            !isCurrent(link.path ?? '') && 'text-muted-foreground',
+                            isCurrent(link.path ?? '') && '',
                           )}
-                          event={{ action: "click", category: "header", label: t(link.title), value: link.path ?? "" }}
+                          event={{
+                            action: 'click',
+                            category: 'header',
+                            label: t(link.title),
+                            value: link.path ?? '',
+                          }}
                         >
-                          {t(link.title)} {link.hint && <span className="text-xs text-muted-foreground">{t(link.hint)}</span>}
+                          {t(link.title)}{' '}
+                          {link.hint && (
+                            <span className="text-xs text-muted-foreground">{t(link.hint)}</span>
+                          )}
                         </ButtonEvent>
                       ) : (
                         <HeaderFlyoutItem
@@ -131,7 +176,7 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                         />
                       )}
                     </Fragment>
-                  );
+                  )
                 })}
                 {item.withLanguageSelector && <LocaleSelector className="hidden lg:flex" />}
                 {item.withDarkModeToggle && <DarkModeToggle className="hidden lg:flex" />}
@@ -145,21 +190,30 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                         <ButtonTertiary
                           to={registerRoute()}
                           // className="inline-flex items-center rounded-sm border border-transparent px-4 py-2 text-base font-medium text-slate-500 dark:text-white"
-                          event={{ action: "click", category: "header", label: t("account.shared.signUp"), value: registerRoute() }}
+                          event={{
+                            action: 'click',
+                            category: 'header',
+                            label: t('account.shared.signUp'),
+                            value: registerRoute(),
+                          }}
                         >
-                          {t("account.shared.signUp")}
+                          {t('account.shared.signUp')}
                         </ButtonTertiary>
                       )}
                       <ButtonPrimary
                         to={loginOrEnterRoute()}
                         event={{
-                          action: "click",
-                          category: "header",
-                          label: !authenticated ? t("account.shared.signIn") : t("shared.enter"),
+                          action: 'click',
+                          category: 'header',
+                          label: !authenticated ? t('account.shared.signIn') : t('shared.enter'),
                           value: loginOrEnterRoute(),
                         }}
                       >
-                        {!authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
+                        {!authenticated ? (
+                          <div>{t('account.shared.signIn')}</div>
+                        ) : (
+                          <div>{t('shared.enter')}</div>
+                        )}
                       </ButtonPrimary>
                     </>
                   )}
@@ -189,10 +243,22 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                       type="button"
                       className="inline-flex items-center justify-center rounded-md p-2 hover:bg-secondary hover:text-secondary-foreground focus:outline-none"
                     >
-                      <span className="sr-only">{t("shared.close")}</span>
+                      <span className="sr-only">{t('shared.close')}</span>
                       {/* Heroicon name: x */}
-                      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="h-6 w-6"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -208,12 +274,12 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                               target={link.target}
                               role="menuitem"
                               className={clsx(
-                                "block rounded-md px-3 py-2 text-base font-medium hover:bg-secondary hover:text-secondary-foreground",
-                                isCurrent(link.path ?? "") ? "bg-secondary" : ""
+                                'block rounded-md px-3 py-2 text-base font-medium hover:bg-secondary hover:text-secondary-foreground',
+                                isCurrent(link.path ?? '') ? 'bg-secondary' : '',
                               )}
                               event={{
-                                action: "click",
-                                category: "header",
+                                action: 'click',
+                                category: 'header',
                                 label: t(link.title),
                                 value: link.path,
                               }}
@@ -226,27 +292,27 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                                 return (
                                   <ButtonEvent
                                     key={subItem.title}
-                                    to={subItem.path ?? ""}
+                                    to={subItem.path ?? ''}
                                     role="menuitem"
                                     className={clsx(
-                                      "block rounded-md px-3 py-2 text-base font-medium hover:bg-secondary hover:text-secondary-foreground",
-                                      isCurrent(subItem.path ?? "") ? "bg-secondary" : ""
+                                      'block rounded-md px-3 py-2 text-base font-medium hover:bg-secondary hover:text-secondary-foreground',
+                                      isCurrent(subItem.path ?? '') ? 'bg-secondary' : '',
                                     )}
                                     event={{
-                                      action: "click",
-                                      category: "header",
+                                      action: 'click',
+                                      category: 'header',
                                       label: t(subItem.title),
-                                      value: subItem.path ?? "",
+                                      value: subItem.path ?? '',
                                     }}
                                   >
                                     {t(subItem.title)}
                                   </ButtonEvent>
-                                );
+                                )
                               })}
                             </>
                           )}
                         </Fragment>
-                      );
+                      )
                     })}
                   </div>
                   <div role="none" className="flex items-center px-2 pb-2">
@@ -254,20 +320,34 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
                       <>
                         <ButtonEvent
                           to={registerRoute()}
-                          className={clsx("block w-full rounded-md px-3 py-2 text-center text-base font-medium hover:bg-secondary")}
+                          className={clsx(
+                            'block w-full rounded-md px-3 py-2 text-center text-base font-medium hover:bg-secondary',
+                          )}
                           role="menuitem"
-                          event={{ action: "click", category: "header", label: t("account.shared.signUp"), value: registerRoute() }}
+                          event={{
+                            action: 'click',
+                            category: 'header',
+                            label: t('account.shared.signUp'),
+                            value: registerRoute(),
+                          }}
                         >
-                          <div>{t("account.shared.signUp")}</div>
+                          <div>{t('account.shared.signUp')}</div>
                         </ButtonEvent>
 
                         <ButtonEvent
                           to="/login"
-                          className={clsx("block w-full rounded-md px-3 py-2 text-center text-base font-medium hover:bg-secondary")}
+                          className={clsx(
+                            'block w-full rounded-md px-3 py-2 text-center text-base font-medium hover:bg-secondary',
+                          )}
                           role="menuitem"
-                          event={{ action: "click", category: "header", label: t("account.shared.signIn"), value: "/login" }}
+                          event={{
+                            action: 'click',
+                            category: 'header',
+                            label: t('account.shared.signIn'),
+                            value: '/login',
+                          }}
                         >
-                          <div>{t("account.shared.signIn")}</div>
+                          <div>{t('account.shared.signIn')}</div>
                         </ButtonEvent>
                       </>
                     )}
@@ -279,5 +359,5 @@ export default function HeaderVariantSimple({ item, width = "7xl" }: { item: Hea
         </div>
       </div>
     </div>
-  );
+  )
 }

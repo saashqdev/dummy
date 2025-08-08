@@ -7,13 +7,13 @@ export async function verifyUserHasPermission(
   tenantId: string | null = null,
 ) {
   const userInfo = await getUserInfo()
-  if (!userInfo.user_id) {
+  if (!userInfo.userId) {
     throw Error('Unauthorized')
   }
   const permission = await db.permission.getByName(permissionName)
   if (permission) {
     const userPermission =
-      (await db.userRole.countPermissionByUser(userInfo.user_id, tenantId, permissionName)) > 0
+      (await db.userRole.countPermissionByUser(userInfo.userId, tenantId, permissionName)) > 0
     if (!userPermission) {
       throw Error('Unauthorized')
     }

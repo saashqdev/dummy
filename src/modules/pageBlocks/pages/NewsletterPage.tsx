@@ -50,7 +50,7 @@ export namespace NewsletterPage {
     const emailConfig = getEmailConfig()
     if (emailConfig) {
       await sendEmail({
-        to: defaultAppConfiguration.email.supportEmail,
+        to: defaultAppConfiguration.email.support_email,
         subject: 'New newsletter subscription',
         body: `
                 <p>First Name: ${submission.first_name}</p>

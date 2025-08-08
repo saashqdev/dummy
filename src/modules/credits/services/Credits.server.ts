@@ -14,10 +14,10 @@ async function create(data: {
     return null
   }
   return await db.credit.create({
-    tenantId: data.tenantId,
-    userId: data.user_id,
+    tenant_id: data.tenantId,
+    userId: data.userId,
     type: data.type,
-    objectId: data.objectId,
+    object_id: data.objectId,
     amount: creditType.amount,
   })
 }

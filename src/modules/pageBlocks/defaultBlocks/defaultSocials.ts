@@ -1,10 +1,10 @@
-import { SocialsBlockDto } from "../blocks/marketing/socials/SocialsBlockDto";
+import { SocialsBlockDto } from '../blocks/marketing/socials/SocialsBlockDto'
 
 export const defaultSocials: SocialsBlockDto = {
   // instagram: "",
-  twitter: "https://twitter.com/AlexandroMtzG",
-  github: "https://github.com/rockstack-dev",
-  discord: "https://discord.com/invite/KMkjU2BFn9",
-  twitterCreator: "https://twitter.com/AlexandroMtzG",
-  youtube: "https://www.youtube.com/@rockstack-dev",
-};
+  twitter: 'https://twitter.com/intake_dev',
+  github: 'https://github.com/intake-dev',
+  discord: 'https://discord.com/EFHuanDbHQ',
+  twitterCreator: 'https://twitter.com/intake-dev',
+  youtube: 'https://www.youtube.com/@intake-dev',
+}

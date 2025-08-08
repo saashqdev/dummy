@@ -8,7 +8,7 @@ class StripeService {
   stripe: Stripe
   constructor(secretKey: string) {
     this.stripe = new Stripe(secretKey, {
-      apiVersion: '2022-08-01',
+      apiVersion: '2025-07-30.basil',
     })
   }
 
@@ -87,8 +87,8 @@ class StripeService {
       })
   }
 
-  async cancelStripeSubscription(subscriptionId: string) {
-    return await this.stripe.subscriptions.del(subscriptionId).catch((e: any) => {
+  async cancelStripeSubscription(subscription_id: string) {
+    return await this.stripe.subscriptions.cancel(subscription_id).catch((e: any) => {
       // eslint-disable-next-line no-console
       console.log('Could not cancel stripe subscription', e.message)
     })
@@ -159,7 +159,7 @@ class StripeService {
       return null
     }
     try {
-      return await this.stripe.invoices.retrieveUpcoming({
+      return await this.stripe.invoices.createPreview({
         customer: id,
       })
     } catch (e: any) {
@@ -349,7 +349,7 @@ class StripeService {
       tiers_mode,
       billing_scheme,
       nickname: data.unit_title,
-      recurring: { interval, interval_count, usage_type, aggregate_usage },
+      recurring: { interval, interval_count, usage_type },
       product: productId,
       tiers,
       active: true,
@@ -381,17 +381,15 @@ class StripeService {
       })
   }
 
-  async createUsageRecord(
-    id: string,
-    quantity: number,
-    action: 'increment' | 'set',
-    timestamp: number | 'now' = 'now',
-  ) {
-    return await this.stripe.subscriptionItems
-      .createUsageRecord(id, {
-        quantity,
-        action,
-        timestamp,
+  async createUsageRecord(id: string, quantity: string, timestamp: number | 'now' = 'now') {
+    return await this.stripe.billing.meterEvents
+      .create({
+        event_name: 'Usage record',
+        payload: {
+          customer_id: id,
+          value: quantity,
+        },
+        timestamp: timestamp === 'now' ? Math.floor(Date.now() / 1000) : Number(timestamp),
       })
       .catch(() => {
         // ignore

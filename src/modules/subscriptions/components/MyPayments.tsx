@@ -1,50 +1,50 @@
-"use client";
+'use client'
 
-import { useTranslation } from "react-i18next";
-import Stripe from "stripe";
-import { Colors } from "@/lib/colors";
-import SimpleBadge from "@/components/ui/badges/SimpleBadge";
-import DownloadIcon from "@/components/ui/icons/DownloadIcon";
-import TableSimple from "@/components/ui/tables/TableSimple";
-import DateUtils from "@/lib/utils/DateUtils";
-import NumberUtils from "@/lib/utils/NumberUtils";
+import { useTranslation } from 'react-i18next'
+import Stripe from 'stripe'
+import { Colors } from '@/lib/colors'
+import SimpleBadge from '@/components/ui/badges/SimpleBadge'
+import DownloadIcon from '@/components/ui/icons/DownloadIcon'
+import TableSimple from '@/components/ui/tables/TableSimple'
+import DateUtils from '@/lib/utils/DateUtils'
+import NumberUtils from '@/lib/utils/NumberUtils'
 
 interface Props {
-  items: Stripe.PaymentIntent[];
+  items: (Stripe.PaymentIntent & { charge?: Stripe.Charge })[]
 }
 
 export default function MyPayments({ items }: Props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium">{t("app.subscription.payments.title")}</div>
+      <div className="text-sm font-medium">{t('app.subscription.payments.title')}</div>
       {items.length === 0 ? (
-        <div className="text-sm italic text-gray-500">{t("shared.noRecords")}</div>
+        <div className="text-sm italic text-gray-500">{t('shared.noRecords')}</div>
       ) : (
         <TableSimple
           items={items}
           headers={[
             {
-              name: "paidAt",
-              title: t("app.subscription.invoices.paidAt"),
+              name: 'paidAt',
+              title: t('app.subscription.invoices.paidAt'),
               value: (i) => (
                 <div>
-                  {i.charges?.data
-                    .filter((f) => f.status === "succeeded")
-                    .map((m, index) => (
-                      <div key={index}>
-                        <div className="flex flex-col">
-                          <div>{DateUtils.dateYMD(new Date(m.created * 1000))}</div>
-                          <div className="text-xs">{DateUtils.dateAgo(new Date(m.created * 1000))}</div>
+                  {i.charge && i.charge.status === 'succeeded' ? (
+                    <div>
+                      <div className="flex flex-col">
+                        <div>{DateUtils.dateYMD(new Date(i.charge.created * 1000))}</div>
+                        <div className="text-xs">
+                          {DateUtils.dateAgo(new Date(i.charge.created * 1000))}
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ) : null}
                 </div>
               ),
             },
             {
-              name: "amount",
-              title: t("app.subscription.invoices.amount"),
+              name: 'amount',
+              title: t('app.subscription.invoices.amount'),
               value: (i) => (
                 <div className="flex flex-col">
                   <div>${NumberUtils.decimalFormat(i.amount / 100)}</div>
@@ -53,18 +53,21 @@ export default function MyPayments({ items }: Props) {
               ),
             },
             {
-              name: "status",
-              title: t("shared.status"),
+              name: 'status',
+              title: t('shared.status'),
               value: (i) => (
                 <div>
-                  <SimpleBadge title={t("app.subscription.payments.status." + i.status)} color={i.status === "succeeded" ? Colors.GREEN : Colors.GRAY} />
+                  <SimpleBadge
+                    title={t('app.subscription.payments.status.' + i.status)}
+                    color={i.status === 'succeeded' ? Colors.GREEN : Colors.GRAY}
+                  />
                 </div>
               ),
             },
             {
-              className: "w-full",
-              name: "date",
-              title: t("shared.createdAt"),
+              className: 'w-full',
+              name: 'date',
+              title: t('shared.createdAt'),
               // value: (i) => DateUtils.dateYMD(new Date(i.created * 1000)),
               value: (item) => (
                 <div className="flex flex-col">
@@ -81,14 +84,12 @@ export default function MyPayments({ items }: Props) {
                   <DownloadIcon className="h-4 w-4" />
                 </div>
               ),
-              onClickRoute: (_, item) => item.charges?.data.find((f) => f.receipt_url)?.receipt_url ?? "",
-              disabled: (item) => !item.charges?.data.find((f) => f.receipt_url)?.receipt_url,
-              onClickRouteTarget: "_blank",
-              firstColumn: true,
+              onClickRoute: (_, item) => (item as any).charge?.receipt_url ?? '',
+              disabled: (item) => !(item as any).charge?.receipt_url,
             },
           ]}
         />
       )}
     </div>
-  );
+  )
 }

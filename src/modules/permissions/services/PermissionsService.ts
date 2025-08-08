@@ -30,7 +30,7 @@ export async function createPermissions(
         name: data.name,
         description: data.description,
         type: data.type,
-        isDefault: true,
+        is_default: true,
       })
       const permission = await db.permission.get(permissionId)
       if (!permission) {
@@ -45,7 +45,7 @@ export async function createPermissions(
             throw new Error('Role required: ' + inRole)
           }
           const existing = allRolePermissions.find(
-            (p) => p.roleId === role.id && p.permission.name === permission.name,
+            (p) => p.role_id === role.id && p.permission.name === permission.name,
           )
           if (existing) {
             return existing
@@ -98,8 +98,8 @@ export async function createRolePermission(data: {
     return existing.id
   }
   return await db.rolePermission.create({
-    roleId: data.roleId,
-    permissionId: data.permissionId,
+    role_id: data.roleId,
+    permission_id: data.permissionId,
   })
 }
 
@@ -110,8 +110,8 @@ export async function setRolePermissions(roleId: string, permissionNames: string
     const permission = await db.permission.getByName(name)
     if (permission) {
       await db.rolePermission.create({
-        roleId,
-        permissionId: permission.id,
+        role_id: roleId,
+        permission_id: permission.id,
       })
     }
   })
@@ -124,8 +124,8 @@ export async function setPermissionRoles(permissionId: string, roleNames: string
     const role = await db.role.getByName(name)
     if (role) {
       await db.rolePermission.create({
-        roleId: role.id,
-        permissionId,
+        role_id: role.id,
+        permission_id: permissionId,
       })
     }
   })

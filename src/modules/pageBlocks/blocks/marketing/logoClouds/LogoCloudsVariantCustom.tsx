@@ -1,14 +1,14 @@
-import LogoReact from "@/assets/logos/react.png";
-import LogoTailwind from "@/assets/logos/tailwindcss.png";
-import LogoPrisma from "@/assets/logos/prisma.png";
-import LogoPrismaDark from "@/assets/logos/prisma-dark.png";
-import LogoStripe from "@/assets/logos/stripe.png";
-import LogoPostmark from "@/assets/logos/postmark.png";
-import LogoTypescript from "@/assets/logos/typescript.png";
-import ButtonEvent from "@/components/ui/buttons/ButtonEvent";
-import Image from "next/image";
-import NextJsLight from "@/components/brand/NextJsLight";
-import NextJsDark from "@/components/brand/NextJsDark";
+import LogoReact from '@/assets/logos/react.png'
+import LogoTailwind from '@/assets/logos/tailwindcss.png'
+import LogoPrisma from '@/assets/logos/prisma.png'
+import LogoPrismaDark from '@/assets/logos/prisma-dark.png'
+import LogoStripe from '@/assets/logos/stripe.png'
+import LogoPostmark from '@/assets/logos/postmark.png'
+import LogoTypescript from '@/assets/logos/typescript.png'
+import ButtonEvent from '@/components/ui/buttons/ButtonEvent'
+import Image from 'next/image'
+import NextJsLight from '@/components/brand/NextJsLight'
+import NextJsDark from '@/components/brand/NextJsDark'
 
 export default function LogoCloudsVariantCustom() {
   return (
@@ -18,10 +18,10 @@ export default function LogoCloudsVariantCustom() {
           <div className="order-none col-span-1 flex justify-center">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "react",
-                value: "https://react.dev",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'react',
+                value: 'https://react.dev',
               }}
               to="https://react.dev"
               target="_blank"
@@ -34,10 +34,10 @@ export default function LogoCloudsVariantCustom() {
           <div className="order-none col-span-1 flex justify-center">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "typescript",
-                value: "https://www.typescriptlang.org",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'typescript',
+                value: 'https://www.typescriptlang.org',
               }}
               to="https://www.typescriptlang.org"
               target="_blank"
@@ -50,26 +50,34 @@ export default function LogoCloudsVariantCustom() {
           <div className="order-none col-span-1 flex justify-center">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "prisma",
-                value: "https://www.prisma.io/?via=alexandro",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'prisma',
+                value: 'https://www.prisma.io/?via=alexandro',
               }}
               to="https://www.prisma.io/?via=alexandro"
               target="_blank"
               rel="noreferrer"
             >
-              <Image className="h-10 object-cover dark:hidden md:h-14" src={LogoPrisma} alt="Next" />
-              <Image className="hidden h-10 object-cover dark:block md:h-14" src={LogoPrismaDark} alt="Next" />
+              <Image
+                className="h-10 object-cover dark:hidden md:h-14"
+                src={LogoPrisma}
+                alt="Next"
+              />
+              <Image
+                className="hidden h-10 object-cover dark:block md:h-14"
+                src={LogoPrismaDark}
+                alt="Next"
+              />
             </ButtonEvent>
           </div>
           <div className="order-first col-span-1 flex justify-center lg:order-none">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "next.js",
-                value: "https://nextjs.org",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'next.js',
+                value: 'https://nextjs.org',
               }}
               to="https://nextjs.org"
               target="_blank"
@@ -82,10 +90,10 @@ export default function LogoCloudsVariantCustom() {
           <div className="order-none col-span-1 flex justify-center">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "tailwindcss",
-                value: "https://tailwindcss.com",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'tailwindcss',
+                value: 'https://tailwindcss.com',
               }}
               to="https://tailwindcss.com"
               target="_blank"
@@ -98,10 +106,10 @@ export default function LogoCloudsVariantCustom() {
           <div className="order-none col-span-1 flex justify-center">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "stripe",
-                value: "https://stripe.com",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'stripe',
+                value: 'https://stripe.com',
               }}
               to="https://stripe.com"
               target="_blank"
@@ -114,10 +122,10 @@ export default function LogoCloudsVariantCustom() {
           <div className="order-none col-span-1 flex justify-center">
             <ButtonEvent
               event={{
-                action: "click",
-                category: "logo-clouds",
-                label: "postmark",
-                value: "https://postmarkapp.com",
+                action: 'click',
+                category: 'logo-clouds',
+                label: 'postmark',
+                value: 'https://postmarkapp.com',
               }}
               to="https://postmarkapp.com/"
               target="_blank"
@@ -129,5 +137,5 @@ export default function LogoCloudsVariantCustom() {
         </div>
       </div>
     </div>
-  );
+  )
 }

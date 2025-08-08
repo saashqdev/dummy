@@ -174,7 +174,7 @@ export default function PermissionForm({
                     id={role.name}
                     name={role.name}
                     checked={hasRole(role)}
-                    onCheckedChange={(e) => setPermission(role, e)}
+                    onCheckedChange={(e: any) => setPermission(role, e)}
                   />
                   <div className="grid gap-1.5 leading-none">
                     <label

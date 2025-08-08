@@ -448,7 +448,7 @@ export async function addTenantProductsFromCheckoutSession({
   } else {
     await db.checkoutSessionStatus.update(checkoutSession.id, {
       pending: false,
-      createdUserId,
+      created_user_id: createdUserId,
       created_tenant_id,
     })
     await Promise.all(

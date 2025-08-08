@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import bcrypt from 'bcryptjs'
+import bcrypt, { hash } from 'bcryptjs'
 import {
   defaultAdmin_roles,
   defaultAppRoles,
@@ -20,11 +20,6 @@ import { defaultAppConfiguration } from '../data/defaultAppConfiguration'
 const ADMIN_EMAIL = 'admin@email.com'
 
 async function seed() {
-  if (defaultAppConfiguration.app.orm === 'mock') {
-    throw Error(
-      '🌱 Seeding is not supported with defaultAppConfiguration.app.orm=mock. Use the mock database to develop features without a database.',
-    )
-  }
   console.log('🌱 Seeding admin user', 1)
   const admin = await createUser({
     first_name: 'Admin',
@@ -83,7 +78,7 @@ async function createUser({
   if (!user) {
     const user_id = await db.user.create({
       email,
-      passwordHash,
+      hash: passwordHash,
       first_name,
       last_name,
       avatar: null,
@@ -125,18 +120,18 @@ async function createTenant(
   })
 
   await db.tenantSubscription.create({
-    tenantId,
+    tenant_id: tenantId,
     stripe_customer_id: '',
   })
 
   for (const user of users) {
-    const tenantUser = await db.tenantUser.get({ tenantId, userId: user.id })
+    const tenantUser = await db.tenantUser.get({ tenant_id: tenantId, userId: user.id })
     if (tenantUser) {
       console.log(`ℹ️ User already in tenant`, user.id, tenantId)
       continue
     }
     await db.tenantUser.create({
-      tenantId,
+      tenant_id: tenantId,
       userId: user.id,
     })
   }
@@ -176,7 +171,7 @@ async function seedRolesAndPermissions(adminEmail?: string): Promise<void> {
         appRoles.map(async (appRoleId) => {
           // console.log({ user: tenantUser.user.email, role: appRole.name });
           return await createUserRole({
-            userId: tenantUser.user_id,
+            userId: tenantUser.userId,
             roleId: appRoleId,
             tenantId: tenant.id,
           })

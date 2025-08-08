@@ -37,7 +37,7 @@ export default function CreditsList({ data }: Props) {
             title: t('shared.createdAt'),
             value: (item) => (
               <div className="text-xs text-gray-600">
-                {item.createdAt && <span>{DateUtils.dateYMDHMS(item.createdAt)}</span>}
+                {item.created_at && <span>{DateUtils.dateYMDHMS(item.created_at)}</span>}
               </div>
             ),
           },
@@ -52,9 +52,9 @@ export default function CreditsList({ data }: Props) {
             className: 'w-full',
             value: (item) => (
               <div className="max-w-xs truncate">
-                {item.objectId ? (
-                  <Link href={item.objectId} className="truncate underline">
-                    {item.objectId}
+                {item.object_id ? (
+                  <Link href={item.object_id} className="truncate underline">
+                    {item.object_id}
                   </Link>
                 ) : (
                   <span className="truncate">{t('shared.undefined')}</span>
@@ -69,7 +69,7 @@ export default function CreditsList({ data }: Props) {
               <FilterableValueLink
                 name="user_id"
                 value={item.user?.email}
-                param={item.user_id ?? 'null'}
+                param={item.userId ?? 'null'}
               />
             ),
           },

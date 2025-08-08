@@ -1,30 +1,34 @@
-import { MetaTagsDto } from "@/lib/dtos/MetaTagsDto";
+import { MetaTagsDto } from '@/lib/dtos/MetaTagsDto'
 
 type SiteTags = {
-  title?: string;
-  description?: string;
-  keywords?: string;
-  image?: string;
-  thumbnail?: string;
-  twitterCreator?: string;
-  twitterSite?: string;
-};
+  title?: string
+  description?: string
+  keywords?: string
+  image?: string
+  thumbnail?: string
+  twitterCreator?: string
+  twitterSite?: string
+}
 export const defaultSiteTags: SiteTags = {
-  title: "Next.js RockStack Demo",
-  description: "Build, launch, fail, repeat with Next.js, Remix, SvelteKit, Tailwind CSS, shadcn/ui, Prisma, Drizzle, Stripe, Postmark. and Resend.",
-  keywords: "remix,nextjs,svelte,saas,tailwindcss,prisma,react,typescript,boilerplate,saas-kit,saas-boilerplate,saas-starter-kit,stripe,postmark,drizzle",
-  image: "https://qwcsbptoezmuwgyijrxp.supabase.co/storage/v1/object/public/novel/1727286645348-rockstack-og.png",
-  thumbnail: "https://qwcsbptoezmuwgyijrxp.supabase.co/storage/v1/object/public/novel/1727460068835-rockstack-thumbnail.jpg.jpeg",
-  twitterCreator: "@AlexandroMtzG",
-  twitterSite: "",
-};
+  title: 'PayloadCMS inTake Demo',
+  description:
+    'Build, launch, repeat with Next.js, PayloadCMS, Tailwind CSS, shadcn/ui, Drizzle, Stripe, Postmark. and Resend.',
+  keywords:
+    'payloadcms,nextjs,saas,tailwindcss,react,typescript,boilerplate,saas-kit,saas-boilerplate,saas-starter-kit,stripe,postmark,drizzle',
+  image:
+    'https://qwcsbptoezmuwgyijrxp.supabase.co/storage/v1/object/public/novel/1727286645348-intake-og.png',
+  thumbnail:
+    'https://qwcsbptoezmuwgyijrxp.supabase.co/storage/v1/object/public/novel/1727460068835-intake-thumbnail.jpg.jpeg',
+  twitterCreator: '@inTakedev',
+  twitterSite: '',
+}
 
 export function getMetaTags(tags?: SiteTags): MetaTagsDto {
   return parseMetaTags({
     ...defaultSiteTags,
     ...tags,
     // ...getLinkTags(),
-  });
+  })
 }
 
 function parseMetaTags(tags: SiteTags): MetaTagsDto {
@@ -34,11 +38,11 @@ function parseMetaTags(tags: SiteTags): MetaTagsDto {
     keywords: tags.keywords,
     openGraph: {
       title: tags.title,
-      type: "website",
+      type: 'website',
       images: tags.image ? [{ url: tags.image }] : [],
       description: tags.description,
     },
-  };
+  }
   // return [
   //   { title: tags.title },
   //   { name: "description", content: tags.description },

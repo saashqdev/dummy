@@ -191,11 +191,11 @@ async function getUsed(
   } else if (feature.name === DefaultAppFeatures.Credits) {
     if (feature.type === SubscriptionFeatureLimitType.MONTHLY) {
       return await db.credit.sumAmount({
-        tenantId,
-        createdAt: { gte: firstDay, lt: lastDay },
+        tenant_id: tenantId,
+        created_at: { gte: firstDay, lt: lastDay },
       })
     } else if (feature.type === SubscriptionFeatureLimitType.MAX) {
-      return await db.credit.sumAmount({ tenantId })
+      return await db.credit.sumAmount({ tenant_id: tenantId })
     }
   }
   return 0
@@ -232,10 +232,13 @@ export async function getActiveTenantSubscriptions(tenantId: string) {
               item.stripe_subscription_id,
             )
             if (stripeSubscription) {
-              let startOfDay = new Date(stripeSubscription.current_period_start * 1000)
-              let endOfDay = new Date(stripeSubscription.current_period_end * 1000)
+              let startOfDay = new Date(stripeSubscription.start_date * 1000)
+              let endOfDay =
+                stripeSubscription.ended_at != null
+                  ? new Date(stripeSubscription.ended_at * 1000)
+                  : null
               item.current_period_start = DateUtils.getDateStartOfDay(startOfDay)
-              item.current_period_end = DateUtils.getDateEndOfDay(endOfDay)
+              item.current_period_end = endOfDay ? DateUtils.getDateEndOfDay(endOfDay) : null
             }
             await db.tenantSubscriptionProduct
               .update(item.id, {
@@ -267,8 +270,11 @@ async function getActiveTenantsSubscriptions() {
               item.stripe_subscription_id,
             )
             if (stripeSubscription) {
-              item.current_period_start = new Date(stripeSubscription.current_period_start * 1000)
-              item.current_period_end = new Date(stripeSubscription.current_period_end * 1000)
+              item.current_period_start = new Date(stripeSubscription.start_date * 1000)
+              item.current_period_end =
+                stripeSubscription?.ended_at != null
+                  ? new Date(stripeSubscription.ended_at * 1000)
+                  : null
             }
           }
         }),
@@ -302,16 +308,12 @@ export async function reportUsage(tenantId: string, unit: string) {
             )
             if (subscriptionItem) {
               // console.log("[REPORT USAGE] Will report usage for subscription item id", subscriptionItem);
-              const usageRecord = await stripeService.createUsageRecord(
-                subscriptionItem.id,
-                1,
-                'increment',
-              )
+              const usageRecord = await stripeService.createUsageRecord(subscriptionItem.id, '1')
               if (usageRecord) {
                 await db.tenantSubscription.createUsageRecord({
                   tenant_subscription_product_price_id: price.id,
                   timestamp: usageRecord.timestamp,
-                  quantity: usageRecord.quantity,
+                  quantity: Number(usageRecord.payload.quantity ?? 1),
                   stripe_subscription_item_id: subscriptionItem.id,
                 })
               }
@@ -341,12 +343,12 @@ export async function persistCheckoutSessionStatus({
       const sessionId = await db.checkoutSessionStatus.create({
         id: stripeCheckoutSession.id,
         email: stripeCheckoutSession.customer_details?.email ?? '',
-        fromUrl,
-        fromUserId,
-        fromTenantId,
+        from_url: fromUrl,
+        from_user_id: fromUserId,
+        from_tenant_id: fromTenantId,
       })
       const session = await db.checkoutSessionStatus.get(sessionId)
-      if (session && !session.fromUserId && !session.fromTenantId) {
+      if (session && !session.from_userId && !session.from_tenant_id) {
         const sessionResponse = await getAcquiredItemsFromCheckoutSession(session.id)
         if (sessionResponse && sessionResponse.products.length > 0) {
           // await sendEmail({

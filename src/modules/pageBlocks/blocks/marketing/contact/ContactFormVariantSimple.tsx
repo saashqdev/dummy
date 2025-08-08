@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { ContactFormBlockDto } from './ContactFormBlockDto'
 import { Button } from '@/components/ui/button'
 import clsx from 'clsx'
-import { actionContact } from '@/app/(marketing)/contact/actions'
+import { actionContact } from '@/app/(frontend)/(marketing)/contact/actions'
 
 export default function ContactFormVariantSimple({ item }: { item: ContactFormBlockDto }) {
   const { t } = useTranslation()

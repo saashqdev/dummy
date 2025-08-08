@@ -25,7 +25,7 @@ export async function createTenantSubscription(
 ): Promise<string> {
   const id = await db.tenantSubscription
     .create({
-      tenantId,
+      tenant_id: tenantId,
       stripe_customer_id,
     })
     .then((item) => {
@@ -75,7 +75,7 @@ export async function createTenantSubscriptionProduct(data: {
     .then(async (id) => {
       const tenantSubscription = await db.tenantSubscription.get(data.tenant_subscription_id)
       if (tenantSubscription) {
-        clearCacheKey(`tenantSubscription:${tenantSubscription.tenantId}`)
+        clearCacheKey(`tenantSubscription:${tenantSubscription.tenant_id}`)
       }
       return id
     })
@@ -98,8 +98,8 @@ export async function cancelTenantSubscriptionProduct(
         const tenantSubscription = await db.tenantSubscription.get(
           tenantSubscriptionProduct?.tenant_subscription_id,
         )
-        if (tenantSubscription?.tenantId) {
-          clearCacheKey(`tenantSubscription:${tenantSubscription.tenantId}`)
+        if (tenantSubscription?.tenant_id) {
+          clearCacheKey(`tenantSubscription:${tenantSubscription.tenant_id}`)
         }
       }
     })

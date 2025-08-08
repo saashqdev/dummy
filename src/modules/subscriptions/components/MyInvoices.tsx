@@ -1,32 +1,32 @@
-"use client";
+'use client'
 
-import { useTranslation } from "react-i18next";
-import Stripe from "stripe";
-import { Colors } from "@/lib/colors";
-import SimpleBadge from "@/components/ui/badges/SimpleBadge";
-import DownloadIcon from "@/components/ui/icons/DownloadIcon";
-import TableSimple from "@/components/ui/tables/TableSimple";
-import PricingUtils from "@/modules/subscriptions/utils/PricingUtils";
-import DateUtils from "@/lib/utils/DateUtils";
+import { useTranslation } from 'react-i18next'
+import Stripe from 'stripe'
+import { Colors } from '@/lib/colors'
+import SimpleBadge from '@/components/ui/badges/SimpleBadge'
+import DownloadIcon from '@/components/ui/icons/DownloadIcon'
+import TableSimple from '@/components/ui/tables/TableSimple'
+import PricingUtils from '@/modules/subscriptions/utils/PricingUtils'
+import DateUtils from '@/lib/utils/DateUtils'
 
 interface Props {
-  items: Stripe.Invoice[];
+  items: Stripe.Invoice[]
 }
 
 export default function MyInvoices({ items }: Props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium">{t("app.subscription.invoices.title")}</div>
+      <div className="text-sm font-medium">{t('app.subscription.invoices.title')}</div>
       {items.length === 0 ? (
-        <div className="text-sm italic text-gray-500">{t("shared.noRecords")}</div>
+        <div className="text-sm italic text-gray-500">{t('shared.noRecords')}</div>
       ) : (
         <TableSimple
           items={items}
           headers={[
             {
-              name: "date",
-              title: t("shared.createdAt"),
+              name: 'date',
+              title: t('shared.createdAt'),
               // value: (i) => DateUtils.dateYMD(new Date(i.created * 1000)),
               value: (item) => (
                 <div className="flex flex-col">
@@ -36,8 +36,8 @@ export default function MyInvoices({ items }: Props) {
               ),
             },
             {
-              name: "amount",
-              title: t("app.subscription.invoices.amount"),
+              name: 'amount',
+              title: t('app.subscription.invoices.amount'),
               value: (i) => (
                 <div className="flex flex-col">
                   <div>
@@ -51,27 +51,30 @@ export default function MyInvoices({ items }: Props) {
               ),
             },
             {
-              name: "status",
-              title: t("shared.status"),
+              name: 'status',
+              title: t('shared.status'),
               value: (i) => (
                 <div>
-                  <SimpleBadge title={t("app.subscription.invoices.status." + i.status)} color={i.status === "paid" ? Colors.GREEN : Colors.YELLOW} />
+                  <SimpleBadge
+                    title={t('app.subscription.invoices.status.' + i.status)}
+                    color={i.status === 'paid' ? Colors.GREEN : Colors.YELLOW}
+                  />
                 </div>
               ),
             },
             {
-              className: "w-full",
-              name: "items",
-              title: t("app.subscription.invoices.items"),
+              className: 'w-full',
+              name: 'items',
+              title: t('app.subscription.invoices.items'),
               value: (i) => (
                 <div className="flex flex-col">
                   {i.lines.data.map((lineItem, idx) => {
                     return (
                       <div key={idx}>
-                        {lineItem.price?.nickname && <span>{t(lineItem.price?.nickname)} - </span>}
+                        {lineItem?.pricing && <span> - </span>}
                         {lineItem.description}
                       </div>
-                    );
+                    )
                   })}
                 </div>
               ),
@@ -84,14 +87,14 @@ export default function MyInvoices({ items }: Props) {
                   <DownloadIcon className="h-4 w-4" />
                 </div>
               ),
-              onClickRoute: (_, item) => item.invoice_pdf ?? "",
+              onClickRoute: (_, item) => item.invoice_pdf ?? '',
               disabled: (item) => !item.invoice_pdf,
-              onClickRouteTarget: "_blank",
+              onClickRouteTarget: '_blank',
               firstColumn: true,
             },
           ]}
         />
       )}
     </div>
-  );
+  )
 }
