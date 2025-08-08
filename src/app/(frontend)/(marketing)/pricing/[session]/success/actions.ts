@@ -31,7 +31,7 @@ export const actionPricingSuccess = async (prev: any, form: FormData) => {
       registrationData,
       addToTrialOrFreePlan: false,
       checkEmailVerification: false,
-      stripeCustomerId: checkoutSession.customer.id,
+      stripe_customer_id: checkoutSession.customer.id,
     })
     if (!result.registered) {
       return { error: t('shared.unknownError') }

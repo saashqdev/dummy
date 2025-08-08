@@ -1,7 +1,6 @@
 import SidebarLayout from '@/components/layouts/SidebarLayout'
 import AppDataLayout from '@/context/AppDataLayout'
 import { db } from '@/db'
-import { getServerTranslations } from '@/i18n/server'
 import { IServerComponentsProps } from '@/lib/dtos/ServerComponentsProps'
 import { getUserInfo } from '@/lib/services/session.server'
 import { getCurrentUrl, requireTenantSlug } from '@/lib/services/url.server'
@@ -28,14 +27,14 @@ const loader = async () => {
   const tenantSlug = await requireTenantSlug()
   const tenantId = await getTenantIdFromUrl(tenantSlug)
   const userInfo = await getUserInfo()
-  if (!userInfo.user_id) {
+  if (!userInfo.userId) {
     throw redirect('/login')
   }
   if (!tenantSlug) {
     throw redirect('/app')
   }
   const { user, currentTenant } = await promiseHash({
-    user: getUser(userInfo.user_id!),
+    user: getUser(userInfo.userId!),
     currentTenant: getTenantSimple(tenantId),
   })
 
@@ -51,22 +50,22 @@ const loader = async () => {
   }
 
   if (!user?.admin) {
-    const tenantUser = await db.tenantUser.get({ tenantId, userId: userInfo.user_id })
+    const tenantUser = await db.tenantUser.get({ tenant_id: tenantId, userId: userInfo.userId })
     if (!tenantUser) {
       throw redirect('/app')
     }
   }
   if (user?.default_tenant_id !== tenantId) {
-    await updateUser(userInfo.user_id, { default_tenant_id: tenantId })
+    await updateUser(userInfo.userId, { default_tenant_id: tenantId })
   }
 
   let { myTenants, mySubscription, allPermissions, superUserRole, superAdminRole } =
     await promiseHash({
       myTenants: db.tenant.getByUser(user.id),
       mySubscription: getActiveTenantSubscriptions(tenantId),
-      allPermissions: getPermissionsByUser(userInfo.user_id, tenantId),
-      superUserRole: db.userRole.getInTenant(userInfo.user_id, tenantId, AppRoleEnum.SuperUser),
-      superAdminRole: db.userRole.getInAdmin(userInfo.user_id, AdminRoleEnum.SuperAdmin),
+      allPermissions: getPermissionsByUser(userInfo.userId, tenantId),
+      superUserRole: db.userRole.getInTenant(userInfo.userId, tenantId, AppRoleEnum.SuperUser),
+      superAdminRole: db.userRole.getInAdmin(userInfo.userId, AdminRoleEnum.SuperAdmin),
     })
 
   if (!UrlUtils.stripTrailingSlash(url.pathname).startsWith(`/app/${tenantSlug}/settings`)) {

@@ -356,7 +356,7 @@
     "hero": {
       "heading": "Kit Full-stack de desarrollo SaaS en Next.js, Tailwind CSS, shadcn/ui, Drizzle y Stripe",
       "subheading": "La manera más rápida de desarrollar un SaaS en Next.js, Remix, o SvelteKit.",
-      "topText": "Next.js RockStack Demo",
+      "topText": "Next.js inTake Demo",
       "cta1": "Ver precios",
       "cta2": "Contáctanos"
     },
@@ -398,10 +398,10 @@
     "faq": {
       "title": "Preguntas más frecuentes",
       "headline": "Agrega tus propias preguntas y respuestas para ayudar a tus usuarios a entender tu SaaS.",
-      "subheadline": "Preguntas frecuentes acerca de SaasRock.",
+      "subheadline": "Preguntas frecuentes acerca de World.",
       "questions": {
         "q1": "¿Cómo obtengo el código después de la compra?",
-        "a1": "Serás invitado al repositorio saasrock en GitHub. Si compraste SaasRock Enterprise también serás invitado al repositorio saasrock-enterprise.",
+        "a1": "Serás invitado al repositorio world en GitHub. Si compraste World Enterprise también serás invitado al repositorio world-enterprise.",
         "q2": "¿Puedo obtener un reembolso?",
         "a2": "Debido a la naturaleza del desarrollo de software como un servicio personalizado, no ofrecemos reembolsos."
       }

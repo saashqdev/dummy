@@ -1,13 +1,12 @@
 'use server'
 
-import { FilterablePropertyDto } from '@/lib/dtos/FilterablePropertyDto'
-import { getStringFilter } from '@/lib/helpers/PaginationHelper'
-import { PermissionWithRolesDto, RoleWithPermissionsDto, UserWithDetailsDto } from '@/db/models'
 import { db } from '@/db'
 import { verifyUserHasPermission } from '@/modules/permissions/services/UserPermissionsService'
 import { defaultSiteTags, getMetaTags } from '@/modules/pageBlocks/seo/SeoMetaTagsUtils'
 import { getServerTranslations } from '@/i18n/server'
 import { IServerComponentsProps } from '@/lib/dtos/ServerComponentsProps'
+import { UserWithDetailsDto } from '@/db/models/accounts/UserModel'
+import { RoleWithPermissionsDto } from '@/db/models/permissions/RoleModel'
 import Component from './component'
 import { revalidatePath } from 'next/cache'
 import { createUserRole, deleteUserRole } from '@/modules/permissions/services/UserRolesService'
@@ -53,13 +52,13 @@ export const actionAdminRolesAdminUsers = async (prev: any, form: FormData) => {
     const add = form.get('add') === 'true'
 
     if (add) {
-      await createUserRole({ user_id, roleId, tenantId: null })
+      await createUserRole({ userId: user_id, roleId, tenantId: null })
     } else {
       const role = await db.role.get(roleId)
-      if (role?.name === AdminRoleEnum.SuperAdmin && userInfo.user_id === user_id) {
+      if (role?.name === AdminRoleEnum.SuperAdmin && userInfo.userId === user_id) {
         return { error: "You can't remove Super Admin role from yourself" }
       }
-      await deleteUserRole({ user_id, roleId, tenantId: null })
+      await deleteUserRole({ userId: user_id, roleId, tenantId: null })
     }
     revalidatePath('/admin/accounts/roles-and-permissions/admin-users')
     return { success: t('shared.updated') }

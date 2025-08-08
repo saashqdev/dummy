@@ -28,7 +28,7 @@ export async function actionContact(prev: any, form: FormData) {
   if (emailConfig) {
     try {
       await sendEmail({
-        to: defaultAppConfiguration.email.supportEmail,
+        to: defaultAppConfiguration.email.support_email,
         subject: 'New contact form submission',
         body: `
                 <p>

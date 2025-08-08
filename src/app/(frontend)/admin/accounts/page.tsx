@@ -57,15 +57,17 @@ const loader = async (props: IServerComponentsProps) => {
   const tenantInvoices: Stripe.Invoice[] = []
   await Promise.all(
     items.map(async (item) => {
-      if (item.subscription?.stripeCustomerId) {
-        const invoices = await stripeService.getStripeInvoices(item.subscription?.stripeCustomerId)
+      if (item.subscription?.stripe_customer_id) {
+        const invoices = await stripeService.getStripeInvoices(
+          item.subscription?.stripe_customer_id,
+        )
         tenantInvoices.push(...invoices)
       }
     }),
   )
 
   const data: AdminAccountsLoaderData = {
-    items: items.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
+    items: items.sort((a, b) => (a.created_at > b.created_at ? -1 : 1)),
     filterableProperties,
     pagination,
     tenantInvoices,
@@ -88,12 +90,12 @@ export const actionAdminAccounts = async (prev: any, form: FormData) => {
     if (!slug || existingSlug) {
       return { error: t('shared.slugTaken') }
     }
-    const tenant = await createTenant({ name, slug, userId: userInfo.user_id! })
+    const tenant = await createTenant({ name, slug, userId: userInfo.userId! })
     const addMyself = Boolean(form.get('addMyself'))
     if (addMyself) {
       await addTenantUser({
         tenantId: tenant.id,
-        userId: userInfo.user_id!,
+        userId: userInfo.userId!,
       })
     }
     revalidatePath('/admin/accounts')

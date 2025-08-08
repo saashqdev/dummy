@@ -18,8 +18,8 @@ export async function generateMetadata() {
 
 const loader = async () => {
   const userInfo = await getUserInfo()
-  if (userInfo.user_id) {
-    const user = await getUser(userInfo.user_id)
+  if (userInfo.userId) {
+    const user = await getUser(userInfo.userId)
     if (user) {
       if (!user?.default_tenant_id) {
         return redirect('/app')

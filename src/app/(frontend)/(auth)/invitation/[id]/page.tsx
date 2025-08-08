@@ -75,7 +75,7 @@ export const actionInvitation = async (prev: any, form: FormData) => {
       pending: false,
     })
     await addTenantUser({
-      tenantId: invitation.tenantId,
+      tenantId: invitation.tenant_id,
       userId: user.id,
     })
 
@@ -102,7 +102,7 @@ export const actionInvitation = async (prev: any, form: FormData) => {
       pending: false,
     })
     await addTenantUser({
-      tenantId: invitation.tenantId,
+      tenantId: invitation.tenant_id,
       userId: existingUser.id,
     })
 

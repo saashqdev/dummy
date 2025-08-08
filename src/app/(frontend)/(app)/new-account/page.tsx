@@ -19,7 +19,7 @@ export async function generateMetadata() {
 
 export const actionNewAccount = async (prev: any, form: FormData) => {
   const userInfo = await getUserInfo()
-  const user = userInfo.user_id ? await getUser(userInfo.user_id) : null
+  const user = userInfo.userId ? await getUser(userInfo.userId) : null
   if (!user) {
     throw redirect(`/login`)
   }
@@ -42,7 +42,7 @@ export const actionNewAccount = async (prev: any, form: FormData) => {
 
 export default async function () {
   const userInfo = await getUserInfo()
-  const user = userInfo.user_id ? await getUser(userInfo.user_id) : null
+  const user = userInfo.userId ? await getUser(userInfo.userId) : null
   if (!user) {
     throw redirect(`/login`)
   }

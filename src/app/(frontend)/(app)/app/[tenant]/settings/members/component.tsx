@@ -13,7 +13,6 @@ import InputSearch from '@/components/ui/input/InputSearch'
 import IndexPageLayout from '@/components/ui/layouts/IndexPageLayout'
 import Modal from '@/components/ui/modals/Modal'
 import SettingSection from '@/components/ui/sections/SettingSection'
-import SlideOverWideEmpty from '@/components/ui/slideOvers/SlideOverWideEmpty'
 import TableSimple from '@/components/ui/tables/TableSimple'
 import UrlUtils from '@/lib/utils/UrlUtils'
 import MemberInvitationsListAndTable from '@/modules/accounts/components/members/MemberInvitationsListAndTable'
@@ -74,7 +73,7 @@ export default function ({
           f.user.email?.toString().toUpperCase().includes(searchInput.toUpperCase()),
       )
       .sort((x, y) => {
-        return x.createdAt > y.createdAt ? -1 : 1
+        return x.created_at > y.created_at ? -1 : 1
       })
   }
 

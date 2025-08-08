@@ -50,7 +50,7 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
     return { profileError: `Form not submitted correctly.` }
   }
 
-  const user = await getUser(userInfo.user_id!)
+  const user = await getUser(userInfo.userId!)
   if (!user) {
     return { profileError: t('shared.notFound') }
   }
@@ -80,14 +80,14 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
         return { profileError: `Form not submitted correctly.` }
       }
 
-      if (user?.admin && user.id !== userInfo?.user_id) {
+      if (user?.admin && user.id !== userInfo?.userId) {
         return { profileError: `Cannot update admin user.` }
       }
 
       const avatarStored = avatar
-        ? await storeSupabaseFile({ bucket: 'users-icons', content: avatar, id: userInfo.user_id! })
+        ? await storeSupabaseFile({ bucket: 'users-icons', content: avatar, id: userInfo.userId! })
         : avatar
-      await updateUser(userInfo.user_id!, { first_name, last_name, avatar: avatarStored })
+      await updateUser(userInfo.userId!, { first_name, last_name, avatar: avatarStored })
       revalidatePath('/admin/settings/profile')
       return { profileSuccess: 'Profile updated' }
     }
@@ -108,7 +108,7 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
         return { passwordError: `Passwords must have least 6 characters.` }
       }
 
-      if (user.admin && user.id !== userInfo?.user_id) {
+      if (user.admin && user.id !== userInfo?.userId) {
         return { passwordError: `Cannot change an admin password` }
       }
 
@@ -119,7 +119,7 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
       }
 
       const passwordHash = await bcrypt.hash(passwordNew, 10)
-      await updateUser(userInfo.user_id!, { passwordHash, verify_token: '' })
+      await updateUser(userInfo.userId!, { passwordHash, verify_token: '' })
 
       return {
         passwordSuccess: 'Password updated',

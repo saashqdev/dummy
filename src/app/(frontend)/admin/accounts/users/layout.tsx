@@ -99,7 +99,7 @@ export const actionAdminUsers = async (prev: any, form: FormData) => {
       const passwordNew = form.get('password-new')?.toString()
       if (!passwordNew || passwordNew.length < 8) {
         return { error: 'Set a password with 8 characters minimum' }
-      } else if (user?.admin && user.id !== userInfo.user_id) {
+      } else if (user?.admin && user.id !== userInfo.userId) {
         return { error: 'You cannot change password for admin user' }
       }
 

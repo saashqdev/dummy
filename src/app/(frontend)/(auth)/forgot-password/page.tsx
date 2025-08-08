@@ -1,7 +1,6 @@
 'use server'
 
 import { getServerTranslations } from '@/i18n/server'
-import { IServerComponentsProps } from '@/lib/dtos/ServerComponentsProps'
 import { defaultSiteTags, getMetaTags } from '@/modules/pageBlocks/seo/SeoMetaTagsUtils'
 import Component from './component'
 import { db } from '@/db'

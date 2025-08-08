@@ -53,9 +53,9 @@ export const actionAppSettingsMembersNew = async (prev: any, form: FormData) => 
   const tenantSlug = await requireTenantSlug()
   const tenantId = await getTenantIdFromUrl(tenantSlug)
   await verifyUserHasPermission('app.settings.members.create', tenantId)
-  const { user_id } = await getUserInfo()
+  const { userId } = await getUserInfo()
 
-  const fromUser = await getUser(user_id!)
+  const fromUser = await getUser(userId!)
   const tenant = await getTenant(tenantId)
   if (!tenant || !fromUser) {
     return { error: 'Could not find tenant or user' }
@@ -69,20 +69,20 @@ export const actionAppSettingsMembersNew = async (prev: any, form: FormData) => 
   try {
     const user = await db.user.getByEmail(email)
     if (user) {
-      const tenantUser = await db.tenantUser.get({ tenantId, userId: user.id })
+      const tenantUser = await db.tenantUser.get({ tenant_id: tenantId, userId: user.id })
       if (tenantUser) {
         return { error: 'User already in organization' }
       }
     }
 
     const invitationId = await db.tenantUserInvitation.create({
-      tenantId,
+      tenant_id: tenantId,
       email,
       first_name,
       last_name,
-      fromUserId: fromUser?.id ?? null,
+      from_user_id: fromUser?.id ?? null,
       pending: true,
-      createdUserId: null,
+      created_user_id: null,
     })
     const invitation = await db.tenantUserInvitation.get(invitationId)
     if (!invitation) {

@@ -16,10 +16,10 @@ import { getCurrentUrl } from '@/lib/services/url.server'
 
 const loader = async ({}: IServerComponentsProps): Promise<AdminDataDto> => {
   const userInfo = await getUserInfo()
-  const user = userInfo.user_id ? await getUser(userInfo.user_id) : null
+  const user = userInfo.userId ? await getUser(userInfo.userId) : null
   const url = new URL(await getCurrentUrl())
   const redirectTo = url.pathname + url.search
-  if (!userInfo || !user || !userInfo.user_id) {
+  if (!userInfo || !user || !userInfo.userId) {
     let searchParams = new URLSearchParams([['redirect', redirectTo]])
     throw redirect(`/login?${searchParams.toString()}`)
   }
@@ -30,8 +30,8 @@ const loader = async ({}: IServerComponentsProps): Promise<AdminDataDto> => {
   }
 
   const { allPermissions, superAdminRole } = await promiseHash({
-    allPermissions: getPermissionsByUser(userInfo.user_id, null),
-    superAdminRole: getUserRoleInAdmin(userInfo.user_id, AdminRoleEnum.SuperAdmin),
+    allPermissions: getPermissionsByUser(userInfo.userId, null),
+    superAdminRole: getUserRoleInAdmin(userInfo.userId, AdminRoleEnum.SuperAdmin),
   })
   const data: AdminDataDto = {
     user,

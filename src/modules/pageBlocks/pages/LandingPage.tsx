@@ -181,7 +181,7 @@ export namespace LandingPage {
             },
             {
               name: 'Jane Doe',
-              quote: "I can't believe how easy it is to use RockStack. It's amazing!",
+              quote: "I can't believe how easy it is to use inTake. It's amazing!",
               stars: 5,
             },
             {

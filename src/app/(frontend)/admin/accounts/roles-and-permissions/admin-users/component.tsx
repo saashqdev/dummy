@@ -1,12 +1,8 @@
 'use client'
 
 import useAdminData from '@/lib/state/useAdminData'
-import { useTranslation } from 'react-i18next'
-import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary'
-import InputFilters from '@/components/ui/input/InputFilters'
 import { getUserHasPermission } from '@/lib/helpers/PermissionsHelper'
 import { useActionState, useEffect, useState } from 'react'
-import PermissionsTable from '@/modules/permissions/components/PermissionsTable'
 import { actionAdminRolesAdminUsers, AdminRolesAdminUsersLoaderData } from './page'
 import { RoleWithPermissionsDto, UserWithRolesDto } from '@/db/models'
 import InputSearch from '@/components/ui/input/InputSearch'
@@ -37,14 +33,37 @@ export default function ({
     if (!items) {
       return []
     }
+    interface Tenant {
+      tenant: {
+        name: string
+      }
+    }
+
+    interface Role {
+      role: {
+        name: string
+        description: string
+      }
+    }
+
+    interface UserItem {
+      email?: string
+      first_name?: string
+      last_name?: string
+      tenants: Tenant[]
+      roles: Role[]
+    }
+
     return items.filter(
-      (f) =>
+      (f: UserItem) =>
         f.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.first_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.last_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.tenants.find((f) => f.tenant.name.toUpperCase().includes(searchInput.toUpperCase())) ||
+        f.tenants.find((f: Tenant) =>
+          f.tenant.name.toUpperCase().includes(searchInput.toUpperCase()),
+        ) ||
         f.roles.find(
-          (f) =>
+          (f: Role) =>
             f.role.name.toUpperCase().includes(searchInput.toUpperCase()) ||
             f.role.description.toUpperCase().includes(searchInput.toUpperCase()),
         ),

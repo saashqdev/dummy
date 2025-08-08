@@ -62,8 +62,8 @@ export default function ({ data }: { data: AdminAccountUsersLoaderData }) {
             // value: (i) => i.createdAt,
             value: (item) => (
               <div className="flex flex-col">
-                <div>{DateUtils.dateYMD(item.createdAt)}</div>
-                <div className="text-xs">{DateUtils.dateAgo(item.createdAt)}</div>
+                <div>{DateUtils.dateYMD(item.created_at)}</div>
+                <div className="text-xs">{DateUtils.dateAgo(item.created_at)}</div>
               </div>
             ),
           },

@@ -59,9 +59,9 @@ const loader = async (props: IServerComponentsProps) => {
   ]
   const currentPagination = getCurrentPagination(searchParams)
   const filters = {
-    tenantId,
+    tenant_id: tenantId,
     q: getStringFilter(searchParams, 'q'),
-    userId: getStringFilter(searchParams, 'user_id'),
+    user_id: getStringFilter(searchParams, 'user_id'),
     type: getStringFilter(searchParams, 'type'),
   }
   const { items, pagination } = await db.credit.getAllWithPagination({

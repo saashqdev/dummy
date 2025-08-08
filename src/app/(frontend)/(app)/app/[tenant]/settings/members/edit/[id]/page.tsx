@@ -1,18 +1,8 @@
 'use server'
 
-import { getTenant } from '@/modules/accounts/services/TenantService'
 import { db } from '@/db'
-import { getUser } from '@/modules/accounts/services/UserService'
-import { sendEmail } from '@/modules/emails/services/EmailService'
 import { getTenantIdFromUrl } from '@/modules/accounts/services/TenantService'
-import { PlanFeatureUsageDto } from '@/modules/subscriptions/dtos/PlanFeatureUsageDto'
-import { getPlanFeatureUsage } from '@/modules/subscriptions/services/SubscriptionService'
 import { verifyUserHasPermission } from '@/modules/permissions/services/UserPermissionsService'
-import { DefaultAppFeatures } from '@/modules/subscriptions/data/appFeatures'
-import { getBaseURL } from '@/lib/services/url.server'
-import { getUserInfo } from '@/lib/services/session.server'
-import EmailTemplates from '@/modules/emails/utils/EmailTemplates'
-import { getAppConfiguration } from '@/modules/core/services/AppConfigurationService'
 import { defaultSiteTags, getMetaTags } from '@/modules/pageBlocks/seo/SeoMetaTagsUtils'
 import { getServerTranslations } from '@/i18n/server'
 import { requireTenantSlug } from '@/lib/services/url.server'
@@ -20,7 +10,6 @@ import Component from './component'
 import { redirect } from 'next/navigation'
 import { TenantUserWithUserDto } from '@/db/models'
 import { IServerComponentsProps } from '@/lib/dtos/ServerComponentsProps'
-import UrlUtils from '@/lib/utils/UrlUtils'
 
 export async function generateMetadata() {
   const { t } = await getServerTranslations()

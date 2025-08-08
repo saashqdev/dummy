@@ -352,7 +352,7 @@
     "hero": {
       "heading": "Full-stack SaaS kit for founders in Next.js, Tailwind CSS, shadcn/ui, Drizzle, and Stripe",
       "subheading": "The quickest way to build a full-stack SaaS app with Next.js, Remix or SvelteKit.",
-      "topText": "Next.js RockStack Demo",
+      "topText": "Next.js inTake Demo",
       "cta1": "Pricing",
       "cta2": "Contact us"
     },
@@ -393,10 +393,10 @@
     "faq": {
       "title": "Frequently Asked Questions",
       "headline": "Add your own questions and answers to help your users understand your SaaS.",
-      "subheadline": "Common questions and answers about SaasRock.",
+      "subheadline": "Common questions and answers about World.",
       "questions": {
         "q1": "How do I get the code after purchasing?",
-        "a1": "You will be invited to the saasrock repository on GitHub. If you bought SaasRock Enterprise you will also be invited to the saasrock-enterprise repository.",
+        "a1": "You will be invited to the world repository on GitHub. If you bought World Enterprise you will also be invited to the world-enterprise repository.",
         "q2": "Can I get a refund?",
         "a2": "Due to the nature of software development being a custom service, we do not offer refunds."
       }

@@ -1,11 +1,6 @@
 'use server'
 
-import {
-  RoleWithPermissionsDto,
-  TenantModel,
-  TenantWithDetailsDto,
-  UserWithRolesDto,
-} from '@/db/models'
+import { RoleWithPermissionsDto, TenantModel, UserWithRolesDto } from '@/db/models'
 import { db } from '@/db'
 import { verifyUserHasPermission } from '@/modules/permissions/services/UserPermissionsService'
 import { defaultSiteTags, getMetaTags } from '@/modules/pageBlocks/seo/SeoMetaTagsUtils'
@@ -79,9 +74,9 @@ export const actionAdminAccountUsersAccount = async (prev: any, form: FormData) 
     const add = form.get('add') === 'true'
 
     if (add) {
-      await createUserRole({ user_id, roleId, tenantId: tenantId })
+      await createUserRole({ userId: user_id, roleId, tenantId: tenantId })
     } else {
-      await deleteUserRole({ user_id, roleId, tenantId: tenantId })
+      await deleteUserRole({ userId: user_id, roleId, tenantId: tenantId })
     }
     revalidatePath(`/admin/accounts/roles-and-permissions/account-users/${tenantId}`)
     return { success: t('shared.updated') }

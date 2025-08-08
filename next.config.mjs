@@ -12,6 +12,15 @@ const nextConfig = {
 
     return webpackConfig
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/buy-now',
+        destination: '/pricing',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

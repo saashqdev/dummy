@@ -53,7 +53,7 @@ const loader = async (props: IServerComponentsProps) => {
   const userInfo = await getUserInfo()
   await requireAuth({ tenantSlug: params?.tenant })
 
-  const user = await getUser(userInfo.user_id!)
+  const user = await getUser(userInfo.userId!)
   if (!user) {
     throw redirect(`/login`)
   }
@@ -62,10 +62,10 @@ const loader = async (props: IServerComponentsProps) => {
     throw redirect(`/app`)
   }
 
-  let items = await db.subscriptionProduct.getAllSubscriptionProducts(true)
+  let items = await db.subscription_product.getAllSubscriptionProducts(true)
   const planParam = searchParams?.plan?.toString()
   if (planParam) {
-    items = await db.subscriptionProduct.getSubscriptionProductsInIds([planParam])
+    items = await db.subscription_product.getSubscriptionProductsInIds([planParam])
   }
 
   const couponParam = searchParams?.coupon?.toString()
@@ -99,11 +99,17 @@ const loader = async (props: IServerComponentsProps) => {
     coupon,
     currentTenant,
     mySubscription: await getActiveTenantSubscriptions(tenantId),
-    currenciesAndPeriod: PricingUtils.getCurrenciesAndPeriods(
-      items.flatMap((f) => f.prices),
-      defaultCurrency,
-      defaultBillingPeriod,
-    ),
+    currenciesAndPeriod: (() => {
+      const result = PricingUtils.getCurrenciesAndPeriods(
+        items.flatMap((f) => f.prices),
+        defaultCurrency,
+        defaultBillingPeriod,
+      )
+      return {
+        currencies: result.currencies,
+        billingPeriods: result.billing_periods,
+      }
+    })(),
   }
   return data
 }
@@ -121,22 +127,22 @@ export const actionAppSubscribeTenant = async (prev: any, form: FormData) => {
   verifyUserHasPermission('app.settings.subscription.update', tenantId)
 
   const tenantSubscription = await getOrPersistTenantSubscription(tenantId)
-  const user = await getUser(userInfo.user_id!)
+  const user = await getUser(userInfo.userId!)
   const tenant = await getTenant(tenantId)
 
-  if (!tenantSubscription.stripeCustomerId && user && tenant) {
+  if (!tenantSubscription.stripe_customer_id && user && tenant) {
     const customer = await stripeService.createStripeCustomer(user.email, tenant.name)
     if (customer) {
-      tenantSubscription.stripeCustomerId = customer.id
+      tenantSubscription.stripe_customer_id = customer.id
       await updateTenantSubscription(tenant.id, {
-        stripeCustomerId: customer.id,
+        stripe_customer_id: customer.id,
       })
     }
   }
 
   const action = form.get('action')
 
-  if (!tenantSubscription || !tenantSubscription?.stripeCustomerId) {
+  if (!tenantSubscription || !tenantSubscription?.stripe_customer_id) {
     return { error: 'Invalid stripe customer' }
   }
 
@@ -144,8 +150,8 @@ export const actionAppSubscribeTenant = async (prev: any, form: FormData) => {
     const selectedPlan = await getPlanFromForm(form)
     const response = await stripeService
       .createStripeCheckoutSession({
-        subscriptionProduct: selectedPlan.product,
-        customer: tenantSubscription.stripeCustomerId,
+        subscription_product: selectedPlan.product,
+        customer: tenantSubscription.stripe_customer_id,
         line_items: selectedPlan.line_items,
         mode: selectedPlan.mode,
         success_url: `${await getBaseURL()}/subscribe/${tenantSlug}/{CHECKOUT_SESSION_ID}/success`,

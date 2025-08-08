@@ -14,14 +14,14 @@ export type AppIndexLoaderData = {
 
 const loader = async () => {
   const userInfo = await getUserInfo()
-  if (!userInfo.user_id) {
+  if (!userInfo.userId) {
     throw redirect(`/login`)
   }
-  const user = await getUser(userInfo.user_id)
-  if (!userInfo.user_id || !user) {
+  const user = await getUser(userInfo.userId)
+  if (!userInfo.userId || !user) {
     throw redirect(`/login`)
   }
-  const myTenants = await db.tenant.getByUser(userInfo.user_id!)
+  const myTenants = await db.tenant.getByUser(userInfo.userId!)
   if (myTenants.length === 1) {
     return redirect('/app/' + encodeURIComponent(myTenants[0].slug) + '/dashboard')
   }

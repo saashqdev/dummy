@@ -3,19 +3,11 @@
 import { getTenant } from '@/modules/accounts/services/TenantService'
 import { db } from '@/db'
 import { getUser } from '@/modules/accounts/services/UserService'
-import { sendEmail } from '@/modules/emails/services/EmailService'
 import { getTenantIdFromUrl } from '@/modules/accounts/services/TenantService'
 import { PlanFeatureUsageDto } from '@/modules/subscriptions/dtos/PlanFeatureUsageDto'
-import {
-  getPlanFeaturesUsage,
-  getPlanFeatureUsage,
-} from '@/modules/subscriptions/services/SubscriptionService'
+import { getPlanFeaturesUsage } from '@/modules/subscriptions/services/SubscriptionService'
 import { verifyUserHasPermission } from '@/modules/permissions/services/UserPermissionsService'
-import { DefaultAppFeatures } from '@/modules/subscriptions/data/appFeatures'
-import { getBaseURL } from '@/lib/services/url.server'
 import { getUserInfo } from '@/lib/services/session.server'
-import EmailTemplates from '@/modules/emails/utils/EmailTemplates'
-import { getAppConfiguration } from '@/modules/core/services/AppConfigurationService'
 import { defaultSiteTags, getMetaTags } from '@/modules/pageBlocks/seo/SeoMetaTagsUtils'
 import { getServerTranslations } from '@/i18n/server'
 import { requireTenantSlug } from '@/lib/services/url.server'
@@ -29,9 +21,6 @@ import {
 } from '@/modules/subscriptions/services/TenantSubscriptionService'
 import { promiseHash } from '@/lib/utils'
 import { revalidatePath } from 'next/cache'
-import SubscriptionSettings from '@/modules/subscriptions/components/SubscriptionSettings'
-import useAppData from '@/lib/state/useAppData'
-import IndexPageLayout from '@/components/ui/layouts/IndexPageLayout'
 
 export async function generateMetadata() {
   const { t } = await getServerTranslations()
@@ -59,7 +48,7 @@ const loader = async (): Promise<AppSettingsSubscriptionLoaderData> => {
   await verifyUserHasPermission('app.settings.subscription.view', tenantId)
 
   const userInfo = await getUserInfo()
-  const user = await getUser(userInfo.user_id!)
+  const user = await getUser(userInfo.userId!)
   if (!user) {
     return { error: 'Invalid user' }
   }
@@ -72,16 +61,18 @@ const loader = async (): Promise<AppSettingsSubscriptionLoaderData> => {
   const { customer, myInvoices, myPayments, myUpcomingInvoice, myPaymentMethods, myFeatures } =
     await promiseHash({
       customer: stripeService
-        .getStripeCustomer(tenantSubscription.stripeCustomerId)
+        .getStripeCustomer(tenantSubscription.stripe_customer_id)
         .catch(() => null),
-      myInvoices: stripeService.getStripeInvoices(tenantSubscription.stripeCustomerId) ?? [],
+      myInvoices: stripeService.getStripeInvoices(tenantSubscription.stripe_customer_id) ?? [],
       myPayments:
-        stripeService.getStripePaymentIntents(tenantSubscription.stripeCustomerId, 'succeeded') ??
+        stripeService.getStripePaymentIntents(tenantSubscription.stripe_customer_id, 'succeeded') ??
         [],
       myUpcomingInvoice: stripeService.getStripeUpcomingInvoice(
-        tenantSubscription.stripeCustomerId,
+        tenantSubscription.stripe_customer_id,
       ),
-      myPaymentMethods: stripeService.getStripePaymentMethods(tenantSubscription.stripeCustomerId),
+      myPaymentMethods: stripeService.getStripePaymentMethods(
+        tenantSubscription.stripe_customer_id,
+      ),
       myFeatures: getPlanFeaturesUsage(tenantId),
     })
   const data: AppSettingsSubscriptionLoaderData = {
@@ -103,9 +94,9 @@ export const actionAppSettingsSubscription = async (prev: any, form: FormData) =
 
   const action = form.get('action')?.toString()
 
-  if (!tenantSubscription || !tenantSubscription?.stripeCustomerId) {
+  if (!tenantSubscription || !tenantSubscription?.stripe_customer_id) {
     return {
-      error: 'Invalid stripe customer: ' + (tenantSubscription?.stripeCustomerId || 'empty'),
+      error: 'Invalid stripe customer: ' + (tenantSubscription?.stripe_customer_id || 'empty'),
     }
   } else if (action === 'cancel') {
     await verifyUserHasPermission('app.settings.subscription.delete', tenantId)
@@ -113,17 +104,17 @@ export const actionAppSettingsSubscription = async (prev: any, form: FormData) =
     const tenantSubscriptionProduct = await db.tenantSubscriptionProduct.get(
       tenantSubscriptionProductId,
     )
-    if (!tenantSubscriptionProduct?.stripeSubscriptionId) {
+    if (!tenantSubscriptionProduct?.stripe_subscription_id) {
       return { error: 'Not subscribed' }
     }
-    await stripeService.cancelStripeSubscription(tenantSubscriptionProduct?.stripeSubscriptionId)
+    await stripeService.cancelStripeSubscription(tenantSubscriptionProduct?.stripe_subscription_id)
     const stripeSubscription = await stripeService.getStripeSubscription(
-      tenantSubscriptionProduct.stripeSubscriptionId,
+      tenantSubscriptionProduct.stripe_subscription_id,
     )
     await cancelTenantSubscriptionProduct(tenantSubscriptionProduct.id, {
-      cancelledAt: new Date(),
-      endsAt: stripeSubscription?.current_period_end
-        ? new Date(stripeSubscription.current_period_end * 1000)
+      cancelled_at: new Date(),
+      ends_at: stripeSubscription?.ended_at
+        ? new Date(stripeSubscription.ended_at * 1000)
         : new Date(),
     })
     revalidatePath(`/app/${tenantSlug}/settings/subscription`)
@@ -132,7 +123,7 @@ export const actionAppSettingsSubscription = async (prev: any, form: FormData) =
     }
   } else if (action === 'add-payment-method') {
     const session = await stripeService.createStripeSetupSession(
-      tenantSubscription.stripeCustomerId,
+      tenantSubscription.stripe_customer_id,
     )
     return redirect(session?.url ?? '')
   } else if (action === 'delete-payment-method') {
@@ -140,7 +131,7 @@ export const actionAppSettingsSubscription = async (prev: any, form: FormData) =
     return {}
   } else if (action === 'open-customer-portal') {
     const session = await stripeService.createCustomerPortalSession(
-      tenantSubscription.stripeCustomerId,
+      tenantSubscription.stripe_customer_id,
     )
     return redirect(session?.url ?? '')
   }

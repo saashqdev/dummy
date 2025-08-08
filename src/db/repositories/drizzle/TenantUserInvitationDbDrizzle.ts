@@ -36,8 +36,8 @@ export class TenantUserInvitationDbDrizzle implements ITenantUserInvitationDb {
       first_name: data.first_name,
       last_name: data.last_name,
       pending: data.pending,
-      created_userId: data.created_user_id,
-      from_userId: data.from_user_id,
+      created_user_id: data.created_user_id,
+      from_user_id: data.from_user_id,
     })
     return id
   }

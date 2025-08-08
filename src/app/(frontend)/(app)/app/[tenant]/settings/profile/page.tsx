@@ -29,7 +29,7 @@ export async function generateMetadata() {
 export const actionAppSettingsProfile = async (prev: any, form: FormData) => {
   await requireAuth()
   const userInfo = await getUserInfo()
-  if (!userInfo?.user_id) {
+  if (!userInfo?.userId) {
     throw Error('Unauthorized')
   }
   const { t } = await getServerTranslations()
@@ -49,7 +49,7 @@ export const actionAppSettingsProfile = async (prev: any, form: FormData) => {
     return { error: `Form not submitted correctly.` }
   }
 
-  const user = await getUser(userInfo.user_id!)
+  const user = await getUser(userInfo.userId!)
   const tenant = await getTenant(tenantId)
   if (!user) {
     return { error: `User not found.` }
@@ -82,9 +82,9 @@ export const actionAppSettingsProfile = async (prev: any, form: FormData) => {
       }
 
       let avatarStored = avatar
-        ? await storeSupabaseFile({ bucket: 'users-icons', content: avatar, id: userInfo.user_id! })
+        ? await storeSupabaseFile({ bucket: 'users-icons', content: avatar, id: userInfo.userId! })
         : avatar
-      await updateUser(userInfo.user_id!, { first_name, last_name, avatar: avatarStored })
+      await updateUser(userInfo.userId!, { first_name, last_name, avatar: avatarStored })
       revalidatePath(`/app/${tenantSlug}/settings/profile`)
       return { success: t('shared.updated') }
     }
@@ -118,7 +118,7 @@ export const actionAppSettingsProfile = async (prev: any, form: FormData) => {
       }
 
       const passwordHash = await bcrypt.hash(passwordNew, 10)
-      await updateUser(userInfo.user_id, { passwordHash, verify_token: '' })
+      await updateUser(userInfo.userId, { passwordHash, verify_token: '' })
 
       revalidatePath(`/app/${tenantSlug}/settings/profile`)
       return { success: t('shared.updated') }

@@ -8,7 +8,7 @@ export interface CreateRoleDto {
   type: 'admin' | 'app'
   assignToNewUsers: boolean
 }
-export const defaultAdmin_roles: CreateRoleDto[] = [
+export const defaultAdminRoles: CreateRoleDto[] = [
   // /admin
   {
     name: AdminRoleEnum.SuperAdmin,

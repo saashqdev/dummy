@@ -85,7 +85,7 @@ export const actionAdminUsersEditRoles = async (prev: any, form: FormData) => {
       return { error: 'You cannot remove admin access from the last admin user' }
     }
     const hasSuperAdmin = setRoles.some((r) => r.role.name === AdminRoleEnum.SuperAdmin)
-    if (user.id === userInfo.user_id && !hasSuperAdmin) {
+    if (user.id === userInfo.userId && !hasSuperAdmin) {
       return { error: 'You cannot remove super admin access from yourself' }
     }
 

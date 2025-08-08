@@ -50,8 +50,8 @@ export const tenant_user_invitation = pgTable(
     first_name: text().notNull(),
     last_name: text().notNull(),
     pending: boolean().notNull(),
-    created_userId: text(),
-    from_userId: text(),
+    created_user_id: text(),
+    from_user_id: text(),
   },
   (table) => [
     uniqueIndex('tenant_user_invitation_created_user_id_key').using(
@@ -479,9 +479,9 @@ export const checkout_session_status = pgTable(
     pending: boolean().default(true).notNull(),
     email: text().notNull(),
     from_url: text().notNull(),
-    from_userId: text(),
+    from_user_id: text(),
     from_tenant_id: text(),
-    created_userId: text(),
+    created_user_id: text(),
     created_tenant_id: text(),
   } as Record<string, any>,
   (table) => [

@@ -5,8 +5,8 @@ export type CheckoutSessionStatusModel = {
   pending: boolean
   email: string
   from_url: string
-  from_userId: string | null
+  from_user_id: string | null
   from_tenant_id: string | null
-  created_userId: string | null
+  created_user_id: string | null
   created_tenant_id: string | null
 }

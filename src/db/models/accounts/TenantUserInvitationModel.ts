@@ -7,8 +7,8 @@ export type TenantUserInvitationModel = {
   first_name: string
   last_name: string
   pending: boolean
-  created_userId: string | null
-  from_userId: string | null
+  created_user_id: string | null
+  from_user_id: string | null
 }
 
 export type TenantUserInvitationWithTenantDto = TenantUserInvitationModel & {

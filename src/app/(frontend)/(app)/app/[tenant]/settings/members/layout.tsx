@@ -65,7 +65,7 @@ export const actionAppSettingsMembersLayout = async (prev: any, form: FormData) 
   const tenantId = await getTenantIdFromUrl(tenantSlug)
   const userInfo = await getUserInfo()
   const action = form.get('action')?.toString()
-  const fromUser = await getUser(userInfo.user_id!)
+  const fromUser = await getUser(userInfo.userId!)
   if (!fromUser) {
     return { error: 'Invalid user' }
   }
@@ -90,19 +90,19 @@ export const actionAppSettingsMembersLayout = async (prev: any, form: FormData) 
     if (role?.name === AppRoleEnum.SuperUser) {
       const allMembers = await db.tenantUser.getAll(tenantId)
       const superAdmins = allMembers.filter((m) =>
-        m.user.roles.some((r) => r.tenantId === tenantId && r.role.name === AppRoleEnum.SuperUser),
+        m.user.roles.some((r) => r.tenant_id === tenantId && r.role.name === AppRoleEnum.SuperUser),
       )
       if (superAdmins.length === 1 && !add) {
         return { error: 'There must be at least one super user' }
       }
-      if (user_id === userInfo.user_id) {
+      if (user_id === userInfo.userId) {
         return { error: 'You cannot remove yourself from the super user role' }
       }
     }
     if (add) {
-      await createUserRole({ user_id, roleId, tenantId })
+      await createUserRole({ userId: user_id, roleId, tenantId })
     } else {
-      await deleteUserRole({ user_id, roleId, tenantId })
+      await deleteUserRole({ userId: user_id, roleId, tenantId })
     }
     revalidatePath(`/app/${tenantSlug}/settings/members`)
     return { success: t('shared.updated') }

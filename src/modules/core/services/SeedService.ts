@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import bcrypt, { hash } from 'bcryptjs'
 import {
-  defaultAdmin_roles,
+  defaultAdminRoles,
   defaultAppRoles,
   defaultPermissions,
   CreateRoleDto,
@@ -140,7 +140,7 @@ async function createTenant(
 }
 
 async function seedRolesAndPermissions(adminEmail?: string): Promise<void> {
-  const admin_roles = await seedRoles(defaultAdmin_roles)
+  const admin_roles = await seedRoles(defaultAdminRoles)
   // eslint-disable-next-line no-console
   console.log('🌱 Seeding admin roles and permissions', admin_roles.length)
 

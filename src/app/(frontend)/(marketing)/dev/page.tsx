@@ -11,7 +11,7 @@ import SeedService from '@/modules/core/services/SeedService'
 
 const loader = async () => {
   const userInfo = await getUserInfo()
-  const user = await getUser(userInfo.user_id || '')
+  const user = await getUser(userInfo.userId || '')
   if (process.env.NODE_ENV !== 'development' && !user?.admin) {
     // return json({ error: "This route is only available in development" }, { status: 404 });
     throw new Error('This route is only available in development')

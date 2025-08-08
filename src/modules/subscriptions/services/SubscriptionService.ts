@@ -348,7 +348,7 @@ export async function persistCheckoutSessionStatus({
         from_tenant_id: fromTenantId,
       })
       const session = await db.checkoutSessionStatus.get(sessionId)
-      if (session && !session.from_userId && !session.from_tenant_id) {
+      if (session && !session.from_user_id && !session.from_tenant_id) {
         const sessionResponse = await getAcquiredItemsFromCheckoutSession(session.id)
         if (sessionResponse && sessionResponse.products.length > 0) {
           // await sendEmail({
