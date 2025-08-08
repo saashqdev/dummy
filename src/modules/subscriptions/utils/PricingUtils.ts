@@ -1,6 +1,6 @@
 import { SubscriptionPriceDto } from '@/modules/subscriptions/dtos/SubscriptionPriceDto'
 import { SubscriptionBillingPeriod } from '@/modules/subscriptions/enums/SubscriptionBillingPeriod'
-import billing_periods from '@/modules/subscriptions/data/billing_periods'
+import billing_periods from '@/modules/subscriptions/data/billingPeriods'
 import currencies from '@/modules/subscriptions/data/currencies'
 import { ISearchParams } from '@/lib/dtos/ServerComponentsProps'
 
