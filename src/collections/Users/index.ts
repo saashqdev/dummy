@@ -99,9 +99,45 @@ export const Users: CollectionConfig = {
       unique: true,
     },
     {
+      name: 'firstName',
+      type: 'text',
+      label: 'First Name',
+    },
+    {
+      name: 'lastName',
+      type: 'text',
+      label: 'Last Name',
+    },
+    {
+      name: 'phone',
+      type: 'text',
+      label: 'Phone',
+    },
+    {
       name: 'avatarUrl',
       type: 'text',
       label: 'Avatar URL',
+    },
+    {
+      name: 'defaultTenantId',
+      type: 'text',
+      label: 'Default Tenant ID',
+    },
+    {
+      name: 'locale',
+      type: 'text',
+      label: 'Locale',
+    },
+    {
+      name: 'verifyToken',
+      type: 'text',
+      label: 'Verify Token',
+    },
+    {
+      name: 'passwordHash',
+      type: 'text',
+      label: 'Password Hash',
+      required: true,
     },
     {
       name: 'onboarded',
@@ -123,6 +159,20 @@ export const Users: CollectionConfig = {
         ...(defaultTenantArrayField?.admin || {}),
         position: 'sidebar',
       },
+    },
+    {
+      name: 'admin',
+      type: 'checkbox',
+      label: 'Admin',
+      required: true,
+      defaultValue: false,
+    },
+    {
+      name: 'active',
+      type: 'checkbox',
+      label: 'Active',
+      required: true,
+      defaultValue: false,
     },
   ],
 }

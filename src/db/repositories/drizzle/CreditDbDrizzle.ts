@@ -85,7 +85,7 @@ export class CreditDbDrizzle implements ICreditDb {
       id,
       created_at: new Date(),
       tenant_id: data.tenant_id,
-      userId: data.user_id,
+      userId: data.userId,
       type: data.type,
       object_id: data.object_id,
       amount: data.amount,

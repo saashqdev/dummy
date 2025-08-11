@@ -122,7 +122,14 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
   avatarUrl?: string | null;
+  defaultTenantId?: string | null;
+  locale?: string | null;
+  verifyToken?: string | null;
+  passwordHash: string;
   onboarded?: boolean | null;
   role?: ('admin' | 'user' | 'demo')[] | null;
   tenants?:
@@ -132,6 +139,8 @@ export interface User {
         id?: string | null;
       }[]
     | null;
+  admin: boolean;
+  active: boolean;
   deletedAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -162,7 +171,9 @@ export interface Tenant {
   id: number;
   name: string;
   slug: string;
-  subdomain: string;
+  subscriptionId: string;
+  icon?: string | null;
+  active: boolean;
   deletedAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -182,67 +193,11 @@ export interface Role {
    * Enter description for the role.
    */
   description?: string | null;
-  projects: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  services: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  servers: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  templates: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  sshKeys: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
+  role_type: string;
+  assign_to_new_users: boolean;
+  is_default: boolean;
+  order: number;
   roles: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  backups: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  securityGroups: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  cloudProviderAccounts: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  dockerRegistries: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  gitProviders: {
     create: boolean;
     update: boolean;
     read: boolean;
@@ -328,7 +283,14 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   username?: T;
+  firstName?: T;
+  lastName?: T;
+  phone?: T;
   avatarUrl?: T;
+  defaultTenantId?: T;
+  locale?: T;
+  verifyToken?: T;
+  passwordHash?: T;
   onboarded?: T;
   role?: T;
   tenants?:
@@ -338,6 +300,8 @@ export interface UsersSelect<T extends boolean = true> {
         role?: T;
         id?: T;
       };
+  admin?: T;
+  active?: T;
   deletedAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -366,7 +330,9 @@ export interface UsersSelect<T extends boolean = true> {
 export interface TenantsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
-  subdomain?: T;
+  subscriptionId?: T;
+  icon?: T;
+  active?: T;
   deletedAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -379,87 +345,11 @@ export interface RolesSelect<T extends boolean = true> {
   tenant?: T;
   name?: T;
   description?: T;
-  projects?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  services?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  servers?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  templates?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  sshKeys?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
+  role_type?: T;
+  assign_to_new_users?: T;
+  is_default?: T;
+  order?: T;
   roles?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  backups?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  securityGroups?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  cloudProviderAccounts?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  dockerRegistries?:
-    | T
-    | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  gitProviders?:
     | T
     | {
         create?: T;

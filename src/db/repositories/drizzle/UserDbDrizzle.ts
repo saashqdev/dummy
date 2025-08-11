@@ -1,20 +1,19 @@
 import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { and, count, eq, inArray, sql, SQL } from 'drizzle-orm'
-import { tenant_user, user } from '@/db/schema'
 import { IUserDb } from '@/db/interfaces/accounts/IUserDb'
 import { UserModel, UserDto, UserWithDetailsDto } from '@/db/models'
 import { PaginationDto, SortedByDto } from '@/lib/dtos/PaginationDto'
 
 export class UserDbDrizzle implements IUserDb {
   async getAllWhereTenant(tenant_id: string): Promise<UserWithDetailsDto[]> {
-    const items = await payload.db.tables.user.findMany({
+    const items = await payload.db.tables.users.findMany({
       where: and(
         inArray(
-          user.id,
-          payload.db.tables.tenant_user
-            .select({ userId: tenant_user.user_id })
-            .where(eq(tenant_user.tenant_id, tenant_id)),
+          payload.db.tables.users.user_id,
+          payload.db.tables.tenants
+            .select({ userId: payload.db.tables.users.user_id })
+            .where(eq(payload.db.tables.tenants.id, tenant_id)),
         ),
       ),
       with: {
@@ -22,7 +21,7 @@ export class UserDbDrizzle implements IUserDb {
           with: {
             tenant: true,
           },
-          // where: (TenantUser, { eq }) => eq(TenantUser.tenant_id, tenant_id),
+          // where: (tenant_user, { eq }) => eq(tenant_user.tenant_id, tenant_id),
         },
         roles: {
           with: {
@@ -40,9 +39,9 @@ export class UserDbDrizzle implements IUserDb {
     filters?:
       | {
           email?: string
-          first_name?: string
-          last_name?: string
-          tenant_id?: string | null
+          firstName?: string
+          lastName?: string
+          tenantId?: string | null
           admin?: boolean | undefined
         }
       | undefined
@@ -53,22 +52,28 @@ export class UserDbDrizzle implements IUserDb {
     let whereConditions: SQL[] = []
 
     if (filters?.email) {
-      whereConditions.push(sql`LOWER(${user.email}) LIKE LOWER(${`%${filters.email}%`})`)
+      whereConditions.push(
+        sql`LOWER(${payload.db.tables.users.email}) LIKE LOWER(${`%${filters.email}%`})`,
+      )
     }
-    if (filters?.first_name) {
-      whereConditions.push(sql`LOWER(${user.first_name}) LIKE LOWER(${`%${filters.first_name}%`})`)
+    if (filters?.firstName) {
+      whereConditions.push(
+        sql`LOWER(${payload.db.tables.users.first_name}) LIKE LOWER(${`%${filters.firstName}%`})`,
+      )
     }
-    if (filters?.last_name) {
-      whereConditions.push(sql`LOWER(${user.last_name}) LIKE LOWER(${`%${filters.last_name}%`})`)
+    if (filters?.lastName) {
+      whereConditions.push(
+        sql`LOWER(${payload.db.tables.users.last_name}) LIKE LOWER(${`%${filters.lastName}%`})`,
+      )
     }
-    if (filters?.tenant_id) {
+    if (filters?.tenantId) {
       const tenantUserSubquery = payload.db.tables.tenant_user
-        .select({ userId: tenant_user.user_id })
-        .where(eq(tenant_user.tenant_id, filters.tenant_id))
-      whereConditions.push(inArray(user.id, tenantUserSubquery))
+        .select({ userId: payload.db.tables.users.user_id })
+        .where(eq(payload.db.tables.tenant_user.tenant_id, filters.tenantId))
+      whereConditions.push(inArray(payload.db.tables.users.user_id, tenantUserSubquery))
     }
     if (filters?.admin !== undefined) {
-      whereConditions.push(eq(user.admin, filters.admin))
+      whereConditions.push(eq(payload.db.tables.users.admin, filters.admin))
     }
 
     // let orderBy: SQL[] = [asc(User.created_at)];
@@ -77,7 +82,7 @@ export class UserDbDrizzle implements IUserDb {
     //   orderBy = pagination.sortedBy.map((s) => (s.direction === "desc" ? desc(s.name) : asc(s.name)));
     // }
 
-    const users = await payload.db.tables.user.findMany({
+    const users = await payload.db.tables.users.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         tenants: {
@@ -99,7 +104,7 @@ export class UserDbDrizzle implements IUserDb {
     const totalItems = (
       await payload.db.tables
         .select({ count: count() })
-        .from(user)
+        .from(payload.db.tables.users)
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
     )[0].count
 
@@ -114,7 +119,7 @@ export class UserDbDrizzle implements IUserDb {
     }
   }
   getAll(): Promise<UserWithDetailsDto[]> {
-    return payload.db.tables.user.findMany({
+    return payload.db.tables.users.findMany({
       with: {
         tenants: {
           with: {
@@ -132,17 +137,17 @@ export class UserDbDrizzle implements IUserDb {
   async get(userId: string): Promise<UserDto | null> {
     const items = await payload.db.tables
       .select({
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        avatar: user.avatar,
-        admin: user.admin,
-        default_tenant_id: user.default_tenant_id,
-        locale: user.locale,
+        id: payload.db.tables.users.id,
+        email: payload.db.tables.users.email,
+        firstName: payload.db.tables.users.firstName,
+        lastName: payload.db.tables.users.lastName,
+        avatar: payload.db.tables.users.avatar,
+        admin: payload.db.tables.users.admin,
+        defaultTenantId: payload.db.tables.users.defaultTenantId,
+        locale: payload.db.tables.users.locale,
       })
-      .from(user)
-      .where(eq(user.id, user_id))
+      .from(payload.db.tables.users)
+      .where(eq(payload.db.tables.users.user_id, userId))
       .execute()
     if (items.length === 0) {
       return null
@@ -152,17 +157,17 @@ export class UserDbDrizzle implements IUserDb {
   async getByEmail(email: string): Promise<UserDto | null> {
     const items = await payload.db.tables
       .select({
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        avatar: user.avatar,
-        admin: user.admin,
-        default_tenant_id: user.default_tenant_id,
-        locale: user.locale,
+        id: payload.db.tables.users.id,
+        email: payload.db.tables.users.email,
+        firstName: payload.db.tables.users.firstName,
+        lastName: payload.db.tables.users.lastName,
+        avatar: payload.db.tables.users.avatar,
+        admin: payload.db.tables.users.admin,
+        defaultTenantId: payload.db.tables.users.defaultTenantId,
+        locale: payload.db.tables.users.locale,
       })
-      .from(user)
-      .where(eq(user.email, email))
+      .from(payload.db.tables.users)
+      .where(eq(payload.db.tables.users.email, email))
       .execute()
     if (items.length === 0) {
       return null
@@ -170,8 +175,8 @@ export class UserDbDrizzle implements IUserDb {
     return items[0]
   }
   async getByEmailWithDetails(email: string): Promise<UserWithDetailsDto | null> {
-    const items = await payload.db.tables.user.findMany({
-      where: eq(user.email, email),
+    const items = await payload.db.tables.users.findMany({
+      where: eq(payload.db.tables.users.email, email),
       with: {
         tenants: {
           with: {
@@ -188,79 +193,73 @@ export class UserDbDrizzle implements IUserDb {
     return items.length === 0 ? null : items[0]
   }
   async getPasswordHash(id: string): Promise<string | null> {
-    const items = await payload.db.tables.user
-      .select({ hash: user.hash })
-      .from(user)
-      .where(eq(user.id, id))
+    const items = await payload.db.tables.users
+      .select({ passwordHash: payload.db.tables.users.passwordHash })
+      .from(payload.db.tables.users)
+      .where(eq(payload.db.tables.users.id, id))
       .execute()
-    return items.length === 0 ? null : items[0].hash
+    return items.length === 0 ? null : items[0].passwordHash
   }
   async getVerifyToken(id: string): Promise<string | null> {
-    const items = await payload.db.tables.user
-      .select({ verify_token: user.verify_token })
-      .from(user)
-      .where(eq(user.id, id))
+    const items = await payload.db.tables.users
+      .select({ verifyToken: payload.db.tables.users.verifyToken })
+      .from(payload.db.tables.users)
+      .where(eq(payload.db.tables.users.user_id, id))
       .execute()
-    return items.length === 0 ? null : items[0].verify_token
+    return items.length === 0 ? null : items[0].verifyToken
   }
   async count(): Promise<number> {
     return payload.db.tables
       .select({ count: count() })
-      .from(user)
+      .from(payload.db.tables.users)
       .execute()
       .then((items: { count: any }[]) => items[0].count)
   }
   async create(data: Omit<UserModel, 'id' | 'created_at' | 'updated_at'>): Promise<string> {
     const id = createId()
-    await payload.db.tables.user.insert({
+    await payload.db.tables.users.insert({
       id,
       created_at: new Date(),
       updated_at: new Date(),
       email: data.email,
-      hash: data.hash,
-      first_name: data.first_name,
-      last_name: data.last_name,
+      passwordHash: data.passwordHash,
+      firstName: data.firstName,
+      lastName: data.lastName,
       active: data.active,
       admin: data.admin,
       avatar: data.avatar,
       locale: data.locale,
       phone: data.phone,
-      default_tenant_id: data.default_tenant_id,
+      defaultTenantId: data.defaultTenantId,
     })
     return id
   }
   async update(
     id: string,
     data: {
-      first_name?: string
-      last_name?: string
+      firstName?: string
+      lastName?: string
       avatar?: string | null
-      locale?: string | null
-      verify_token?: string | null
-      hash?: string
-      default_tenant_id?: string | null
-      admin?: boolean
+      verifyToken?: string | null
+      passwordHash?: string
     },
   ): Promise<void> {
     await payload.db.tables
-      .update(user)
+      .update(payload.db.tables.user)
       .set({
-        first_name: data.first_name,
-        last_name: data.last_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         avatar: data.avatar,
-        locale: data.locale,
-        verify_token: data.verify_token,
-        hash: data.hash,
-        default_tenant_id: data.default_tenant_id,
-        admin: data.admin,
+        verifyToken: data.verifyToken,
+        passwordHash: data.passwordHash,
       })
-      .where(eq(user.id, id))
+      .where(eq(payload.db.tables.users.user_id, id))
       .execute()
   }
   async del(id: string): Promise<void> {
-    await payload.db.tables.user.delete().where(eq(user.id, id)).execute()
+    await payload.db.tables.users.delete().where(eq(payload.db.tables.users.id, id)).execute()
   }
   async deleteAll(): Promise<void> {
-    await payload.db.tables.user.delete().execute()
+    await payload.db.tables.users.delete().execute()
   }
 }

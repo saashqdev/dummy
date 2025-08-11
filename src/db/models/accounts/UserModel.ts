@@ -5,13 +5,13 @@ export type UserModel = {
   created_at: Date
   updated_at: Date
   email: string
-  hash: string
-  first_name: string
-  last_name: string
+  passwordHash: string
+  firstName: string
+  lastName: string
   avatar: string | null
   phone: string | null
-  default_tenant_id: string | null
-  verify_token: string | null
+  defaultTenantId: string | null
+  verifyToken: string | null
   locale: string | null
   active: boolean
   admin: boolean

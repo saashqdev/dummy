@@ -1,13 +1,12 @@
 import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { and, eq } from 'drizzle-orm'
-import { role_permission } from '@/db/schema'
 import { IRolePermissionDb } from '@/db/interfaces/permissions/IRolePermissionDb'
 import { RolePermissionWithPermissionDto } from '@/db/models'
 
 export class RolePermissionDbDrizzle implements IRolePermissionDb {
   async getAll(): Promise<RolePermissionWithPermissionDto[]> {
-    return await payload.db.tables.role_permission.findMany({
+    return await payload.db.tables.roles.findMany({
       with: {
         permission: true,
       },
@@ -18,10 +17,10 @@ export class RolePermissionDbDrizzle implements IRolePermissionDb {
     role_id: string,
     permission_id: string,
   ): Promise<RolePermissionWithPermissionDto | null> {
-    const results = await payload.db.tables.role_permission.findMany({
+    const results = await payload.db.tables.roles.findMany({
       where: and(
-        eq(role_permission.role_id, role_id),
-        eq(role_permission.permission_id, permission_id),
+        eq(payload.db.tables.roles.role_id, role_id),
+        eq(payload.db.tables.roles.permissions.id, permission_id),
       ),
       with: {
         permission: true,
@@ -34,21 +33,23 @@ export class RolePermissionDbDrizzle implements IRolePermissionDb {
 
   async create(data: { role_id: string; permission_id: string }): Promise<string> {
     const id = createId()
-    await payload.db.tables.insert(role_permission).values({
+    await payload.db.tables.insert(payload.db.tables.roles).values({
       id,
-      role_id: data.role_id,
-      permission_id: data.permission_id,
+      roleId: data.role_id,
+      permissionId: data.permission_id,
     })
     return id
   }
 
   async deleteByRoleId(role_id: string): Promise<void> {
-    await payload.db.tables.delete(role_permission).where(eq(role_permission.role_id, role_id))
+    await payload.db.tables
+      .delete(payload.db.tables.roles)
+      .where(eq(payload.db.tables.roles.role_id, role_id))
   }
 
   async deleteByPermissionId(permission_id: string): Promise<void> {
     await payload.db.tables
-      .delete(role_permission)
-      .where(eq(role_permission.permission_id, permission_id))
+      .delete(payload.db.tables.roles)
+      .where(eq(payload.db.tables.roles.permissions.id, permission_id))
   }
 }

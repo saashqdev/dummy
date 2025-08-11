@@ -1,15 +1,14 @@
 import payload from 'payload'
-import { and, eq, inArray, like, max, sql, SQL } from 'drizzle-orm'
-import { role, permission, role_permission, user } from '@/db/schema'
+import { and, eq, inArray, like, max, SQL } from 'drizzle-orm'
+import { role_permission } from '@/db/schema'
 import { IRoleDb } from '@/db/interfaces/permissions/IRoleDb'
 import { RoleWithPermissionsDto, RoleModel, RoleWithPermissionsAndUsersDto } from '@/db/models'
-import { count } from 'drizzle-orm/sql'
 import { createId } from '@paralleldrive/cuid2'
 
 export class RoleDbDrizzle implements IRoleDb {
   async getAll(type?: 'admin' | 'app'): Promise<RoleWithPermissionsDto[]> {
-    const whereConditions: SQL[] = type ? [eq(role.type, type)] : []
-    const roles = await payload.db.tables.role.findMany({
+    const whereConditions: SQL[] = type ? [eq(payload.db.tables.roles.role_type, type)] : []
+    const roles = await payload.db.tables.roles.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         permissions: {
@@ -18,7 +17,7 @@ export class RoleDbDrizzle implements IRoleDb {
           },
         },
       },
-      orderBy: [role.type, role.order],
+      orderBy: [payload.db.tables.roles.role_type, payload.db.tables.roles.role_order],
     })
     return roles
   }
@@ -29,16 +28,16 @@ export class RoleDbDrizzle implements IRoleDb {
         id: true,
         name: true,
       },
-      orderBy: [role.type, role.order],
+      orderBy: [payload.db.tables.roles.role_type, payload.db.tables.roles.role_order],
     })
     return roles
   }
 
   async getAllWithoutPermissions(type?: 'admin' | 'app'): Promise<RoleModel[]> {
-    const whereConditions: SQL[] = type ? [eq(role.type, type)] : []
-    const roles = await payload.db.tables.role.findMany({
+    const whereConditions: SQL[] = type ? [eq(payload.db.tables.roles.role_type, type)] : []
+    const roles = await payload.db.tables.roles.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
-      orderBy: [role.type, role.order],
+      orderBy: [payload.db.tables.roles.role_type, payload.db.tables.roles.role_order],
     })
     return roles
   }
@@ -52,15 +51,15 @@ export class RoleDbDrizzle implements IRoleDb {
     const whereConditions: SQL[] = []
 
     if (filters?.type) {
-      whereConditions.push(eq(role.type, filters.type))
+      whereConditions.push(eq(payload.db.tables.roles.role_type, filters.type))
     }
 
     if (filters?.name) {
-      whereConditions.push(like(role.name, `%${filters.name}%`))
+      whereConditions.push(like(payload.db.tables.roles.name, `%${filters.name}%`))
     }
 
     if (filters?.description) {
-      whereConditions.push(like(role.description, `%${filters.description}%`))
+      whereConditions.push(like(payload.db.tables.roles.description, `%${filters.description}%`))
     }
 
     if (filters?.permission_id) {
@@ -68,10 +67,10 @@ export class RoleDbDrizzle implements IRoleDb {
         .select({ role_id: role_permission.role_id })
         .from(role_permission)
         .where(eq(role_permission.permission_id, filters.permission_id))
-      whereConditions.push(inArray(role.id, permissionSubquery))
+      whereConditions.push(inArray(payload.db.tables.roles.role_id, permissionSubquery))
     }
 
-    const roles = await payload.db.tables.role.findMany({
+    const roles = await payload.db.tables.roles.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         permissions: {
@@ -85,7 +84,7 @@ export class RoleDbDrizzle implements IRoleDb {
           },
         },
       },
-      orderBy: [role.type, role.order],
+      orderBy: [payload.db.tables.roles.role_type, payload.db.tables.roles.role_order],
     })
 
     return roles
@@ -93,7 +92,7 @@ export class RoleDbDrizzle implements IRoleDb {
 
   async getAllInIds(ids: string[]): Promise<RoleWithPermissionsAndUsersDto[]> {
     const roles = await payload.db.tables.role.findMany({
-      where: inArray(role.id, ids),
+      where: inArray(payload.db.tables.roles.role_id, ids),
       with: {
         permissions: {
           with: {
@@ -106,14 +105,14 @@ export class RoleDbDrizzle implements IRoleDb {
           },
         },
       },
-      orderBy: [role.type, role.order],
+      orderBy: [payload.db.tables.roles.role_type, payload.db.tables.roles.role_order],
     })
     return roles
   }
 
   async get(id: string): Promise<RoleWithPermissionsDto | null> {
     const roles = await payload.db.tables.role.findMany({
-      where: eq(role.id, id),
+      where: eq(payload.db.tables.roles.role_id, id),
       with: {
         permissions: {
           with: {
@@ -128,7 +127,7 @@ export class RoleDbDrizzle implements IRoleDb {
 
   async getByName(name: string): Promise<RoleWithPermissionsDto | null> {
     const roles = await payload.db.tables.role.findMany({
-      where: eq(role.name, name),
+      where: eq(payload.db.tables.roles.name, name),
       with: {
         permissions: {
           with: {
@@ -142,10 +141,10 @@ export class RoleDbDrizzle implements IRoleDb {
   }
 
   async getMaxOrder(type?: 'admin' | 'app'): Promise<number> {
-    const whereConditions: SQL[] = type ? [eq(role.type, type)] : []
-    const maxOrderResult = await payload.db.tables.role
-      .select({ maxOrder: max(role.order) })
-      .from(role)
+    const whereConditions: SQL[] = type ? [eq(payload.db.tables.roles.role_type, type)] : []
+    const maxOrderResult = await payload.db.tables.roles
+      .select({ maxOrder: max(payload.db.tables.roles.role_order) })
+      .from(payload.db.tables.roles)
       .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
     if (maxOrderResult.length === 0) {
       return 0
@@ -162,7 +161,7 @@ export class RoleDbDrizzle implements IRoleDb {
     is_default: boolean
   }): Promise<string> {
     const id = createId()
-    await payload.db.tables.insert(role).values({
+    await payload.db.tables.insert(payload.db.tables.roles).values({
       id,
       created_at: new Date(),
       updated_at: new Date(),
@@ -187,18 +186,21 @@ export class RoleDbDrizzle implements IRoleDb {
     },
   ): Promise<void> {
     await payload.db.tables
-      .update(role)
+      .update(payload.db.tables.roles)
       .set({
         name: data.name,
         description: data.description,
         type: data.type,
         assign_to_new_users: data.assign_to_new_users,
       })
-      .where(eq(role.id, id))
+      .where(eq(payload.db.tables.roles.role_id, id))
       .execute()
   }
 
   async del(id: string): Promise<void> {
-    await payload.db.tables.delete(role).where(eq(role.id, id)).execute()
+    await payload.db.tables
+      .delete(payload.db.tables.roles)
+      .where(eq(payload.db.tables.roles.role_id, id))
+      .execute()
   }
 }

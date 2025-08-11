@@ -1,7 +1,6 @@
 import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { and, asc, count, desc, eq, gte, or, sql, SQL } from 'drizzle-orm'
-import { tenant, tenant_user } from '@/db/schema'
 import { ITenantDb } from '@/db/interfaces/accounts/ITenantDb'
 import { TenantWithDetailsDto, TenantDto } from '@/db/models'
 import { PaginationRequestDto, PaginationDto } from '@/lib/dtos/PaginationDto'
@@ -28,18 +27,18 @@ export class TenantDbDrizzle implements ITenantDb {
           },
         },
       },
-      orderBy: [desc(tenant.created_at)],
+      orderBy: [desc(payload.db.tables.tenants.created_at)],
     })
   }
 
   async getAllIdsAndNames(): Promise<{ id: string; name: string; slug: string }[]> {
     return payload.db.tables
       .select({
-        id: tenant.id,
-        name: tenant.name,
-        slug: tenant.slug,
+        id: payload.db.tables.tenants.tenant_id,
+        name: payload.db.tables.tenants.name,
+        slug: payload.db.tables.tenants.slug,
       })
-      .from(tenant)
+      .from(payload.db.tables.tenants)
   }
 
   async getAllWithPagination({
@@ -52,13 +51,17 @@ export class TenantDbDrizzle implements ITenantDb {
     let whereConditions: SQL[] = []
 
     if (filters?.name) {
-      whereConditions.push(sql`LOWER(${tenant.name}) LIKE LOWER(${`%${filters.name}%`})`)
+      whereConditions.push(
+        sql`LOWER(${payload.db.tables.tenants.name}) LIKE LOWER(${`%${filters.name}%`})`,
+      )
     }
     if (filters?.slug) {
-      whereConditions.push(sql`LOWER(${tenant.slug}) LIKE LOWER(${`%${filters.slug}%`})`)
+      whereConditions.push(
+        sql`LOWER(${payload.db.tables.tenants.slug}) LIKE LOWER(${`%${filters.slug}%`})`,
+      )
     }
     if (filters?.active !== undefined) {
-      whereConditions.push(eq(tenant.active, filters.active))
+      whereConditions.push(eq(payload.db.tables.tenants.active, filters.active))
     }
 
     const items = await payload.db.tables.tenant.findMany({
@@ -84,13 +87,13 @@ export class TenantDbDrizzle implements ITenantDb {
       },
       limit: pagination.pageSize,
       offset: pagination.pageSize * (pagination.page - 1),
-      orderBy: [desc(tenant.created_at)],
+      orderBy: [desc(payload.db.tables.tenant.created_at)],
     })
 
     const totalItems = (
       await payload.db.tables
         .select({ count: count() })
-        .from(tenant)
+        .from(payload.db.tables.tenants)
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
     )[0].count
 
@@ -108,21 +111,24 @@ export class TenantDbDrizzle implements ITenantDb {
   async getByUser(userId: string): Promise<TenantDto[]> {
     return payload.db.tables
       .select({
-        id: tenant.id,
-        name: tenant.name,
-        slug: tenant.slug,
-        icon: tenant.icon,
-        active: tenant.active,
+        id: payload.db.tables.tenants.tenant_id,
+        name: payload.db.tables.tenants.name,
+        slug: payload.db.tables.tenants.slug,
+        icon: payload.db.tables.tenants.icon,
+        active: payload.db.tables.tenants.active,
       })
-      .from(tenant)
-      .innerJoin(tenant_user, eq(tenant.id, tenant_user.tenant_id))
-      .where(eq(tenant_user.user_id, user_id))
-      .orderBy(asc(tenant.name))
+      .from(payload.db.tables.tenants)
+      .innerJoin(
+        payload.db.tables.tenant_user,
+        eq(payload.db.tables.tenants.tenant_id, payload.db.tables.tenant_user.tenant_id),
+      )
+      .where(eq(payload.db.tables.tenant_user.user_id, userId))
+      .orderBy(asc(payload.db.tables.tenants.name))
   }
 
   async get(id: string): Promise<TenantWithDetailsDto | null> {
     const items = await payload.db.tables.tenant.findMany({
-      where: eq(tenant.id, id),
+      where: eq(payload.db.tables.tenants.id, id),
       with: {
         users: {
           with: {
@@ -149,58 +155,65 @@ export class TenantDbDrizzle implements ITenantDb {
   async getSimple(id: string): Promise<TenantDto | null> {
     const tenants = await payload.db.tables
       .select({
-        id: tenant.id,
-        name: tenant.name,
-        slug: tenant.slug,
-        icon: tenant.icon,
-        active: tenant.active,
+        id: payload.db.tables.tenants.id,
+        name: payload.db.tables.tenants.name,
+        slug: payload.db.tables.tenants.slug,
+        icon: payload.db.tables.tenants.icon,
+        active: payload.db.tables.tenants.active,
       })
-      .from(tenant)
-      .where(eq(tenant.id, id))
+      .from(payload.db.tables.tenants)
+      .where(eq(payload.db.tables.tenants.id, id))
     return tenants.length > 0 ? tenants[0] : null
   }
 
   async getByIdOrSlug(id: string): Promise<TenantDto | null> {
     const tenants = await payload.db.tables
       .select({
-        id: tenant.id,
-        name: tenant.name,
-        slug: tenant.slug,
-        icon: tenant.icon,
-        active: tenant.active,
+        id: payload.db.tables.tenants.id,
+        name: payload.db.tables.tenants.name,
+        slug: payload.db.tables.tenants.slug,
+        icon: payload.db.tables.tenants.icon,
+        active: payload.db.tables.tenants.active,
       })
-      .from(tenant)
-      .where(or(eq(tenant.id, id), eq(tenant.slug, id)))
+      .from(payload.db.tables.tenants)
+      .where(or(eq(payload.db.tables.tenants.id, id), eq(payload.db.tables.tenants.slug, id)))
     return tenants.length > 0 ? tenants[0] : null
   }
 
   async getIdByIdOrSlug(tenantIdOrSlug: string | undefined): Promise<string | null> {
     if (!tenantIdOrSlug) return null
     const tenants = await payload.db.tables
-      .select({ id: tenant.id })
-      .from(tenant)
-      .where(or(eq(tenant.id, tenantIdOrSlug), eq(tenant.slug, tenantIdOrSlug)))
+      .select({ id: payload.db.tables.tenants.id })
+      .from(payload.db.tables.tenants)
+      .where(
+        or(
+          eq(payload.db.tables.tenants.id, tenantIdOrSlug),
+          eq(payload.db.tables.tenants.slug, tenantIdOrSlug),
+        ),
+      )
     return tenants.length > 0 ? tenants[0].id : null
   }
 
   async countCreatedSince(since: Date | undefined): Promise<number> {
     const result = await payload.db.tables
       .select({ count: count() })
-      .from(tenant)
-      .where(since ? gte(tenant.created_at, since) : undefined)
+      .from(payload.db.tables.tenants)
+      .where(since ? gte(payload.db.tables.tenants.created_at, since) : undefined)
     return result[0].count
   }
 
   async countBySlug(slug: string): Promise<number> {
     const result = await payload.db.tables
       .select({ count: count() })
-      .from(tenant)
-      .where(eq(tenant.slug, slug))
+      .from(payload.db.tables.tenants)
+      .where(eq(payload.db.tables.tenants.slug, slug))
     return result[0].count
   }
 
   async count(): Promise<number> {
-    const result = await payload.db.tables.select({ count: count() }).from(tenant)
+    const result = await payload.db.tables
+      .select({ count: count() })
+      .from(payload.db.tables.tenants)
     return result[0].count
   }
 
@@ -216,7 +229,7 @@ export class TenantDbDrizzle implements ITenantDb {
     active: boolean
   }): Promise<string> {
     const id = createId()
-    await payload.db.tables.insert(tenant).values({
+    await payload.db.tables.insert(payload.db.tables.tenants).values({
       id,
       slug,
       name,
@@ -230,21 +243,23 @@ export class TenantDbDrizzle implements ITenantDb {
 
   async update(id: string, data: { name?: string; icon?: string; slug?: string }): Promise<void> {
     await payload.db.tables
-      .update(tenant)
+      .update(payload.db.tables.tenants)
       .set({
         name: data.name,
         icon: data.icon,
         slug: data.slug,
         updated_at: new Date(),
       })
-      .where(eq(tenant.id, id))
+      .where(eq(payload.db.tables.tenants.id, id))
   }
 
   async del(id: string): Promise<void> {
-    await payload.db.tables.delete(tenant).where(eq(tenant.id, id))
+    await payload.db.tables
+      .delete(payload.db.tables.tenants)
+      .where(eq(payload.db.tables.tenants.id, id))
   }
 
   async deleteAll(): Promise<void> {
-    await payload.db.tables.delete(tenant)
+    await payload.db.tables.delete(payload.db.tables.tenants)
   }
 }

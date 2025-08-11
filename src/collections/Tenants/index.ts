@@ -30,12 +30,24 @@ export const Tenants: CollectionConfig = {
       unique: true,
     },
     {
-      name: 'subdomain',
-      label: 'Subdomain',
+      name: 'subscriptionId',
+      label: 'Subscription ID',
       type: 'text',
       index: true,
       required: true,
       unique: true,
+    },
+    {
+      name: 'icon',
+      label: 'Icon',
+      type: 'text',
+    },
+    {
+      name: 'active',
+      label: 'Active',
+      type: 'checkbox',
+      defaultValue: false,
+      required: true,
     },
   ],
 }

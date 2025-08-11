@@ -1,7 +1,6 @@
 import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { and, eq, inArray, max, asc, SQL } from 'drizzle-orm'
-import { permission, role_permission } from '@/db/schema'
 import { IPermissionDb } from '@/db/interfaces/permissions/IPermissionDb'
 import { PermissionWithRolesDto, PermissionDto } from '@/db/models'
 

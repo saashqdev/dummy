@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm'
+import payload from 'payload'
 
 import {
   pgTable,
@@ -153,6 +154,20 @@ export const credit = pgTable(
       table.tenant_id.asc().nullsLast().op('text_ops'),
       table.userId.asc().nullsLast().op('text_ops'),
     ),
+    foreignKey({
+      columns: [table.tenant_id],
+      foreignColumns: [payload.db.tables.tenants.tenant_id],
+      name: 'credit_tenant_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [payload.db.tables.users.users_id],
+      name: 'credit_user_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('set null'),
   ],
 )
 
@@ -202,6 +217,277 @@ export const subscription_price = pgTable(
       columns: [table.subscription_product_id],
       foreignColumns: [subscription_product.id],
       name: 'subscription_price_subscription_product_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const permission = pgTable(
+  'permission',
+  {
+    id: text().primaryKey().notNull(),
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updated_at: timestamp('updated_at', {
+      mode: 'string',
+      withTimezone: true,
+      precision: 3,
+    }).notNull(),
+    name: text().notNull(),
+    description: text().notNull(),
+    type: text().notNull(),
+    is_default: boolean().notNull(),
+    order: integer().notNull(),
+  } as Record<string, any>,
+  (table) => [
+    uniqueIndex('permission_name_key').using('btree', table.name.asc().nullsLast().op('text_ops')),
+  ],
+)
+
+export const role_permission = pgTable(
+  'role_permission',
+  {
+    id: text().primaryKey().notNull(),
+    role_id: text().notNull(),
+    permission_id: text().notNull(),
+  } as Record<string, any>,
+  (table) => [
+    foreignKey({
+      columns: [table.permission_id],
+      foreignColumns: [permission.id],
+      name: 'role_permission_permission_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [payload.db.tables.roles],
+      foreignColumns: [payload.db.tables.roles.role_id],
+      name: 'role_permission_role_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const tenant_user_invitation = pgTable(
+  'tenant_user_invitation',
+  {
+    id: text().primaryKey().notNull(),
+    tenant_id: text().notNull(),
+    email: text().notNull(),
+    first_name: text().notNull(),
+    last_name: text().notNull(),
+    pending: boolean().notNull(),
+    created_user_id: text(),
+    from_user_id: text(),
+  },
+  (table) => [
+    uniqueIndex('tenant_user_invitation_created_user_id_key').using(
+      'btree',
+      table.created_user_id.asc().nullsLast().op('text_ops'),
+    ),
+    foreignKey({
+      columns: [table.from_user_id],
+      foreignColumns: [payload.db.tables.users.user_id],
+      name: 'tenant_user_invitation_from_user_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('set null'),
+    foreignKey({
+      columns: [table.created_user_id],
+      foreignColumns: [payload.db.tables.users.user_id],
+      name: 'tenant_user_invitation_created_user_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('set null'),
+    foreignKey({
+      columns: [table.tenant_id],
+      foreignColumns: [payload.db.tables.tenants.tenant_id],
+      name: 'tenant_user_invitation_tenant_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const user_registration_attempt = pgTable(
+  'user_registration_attempt',
+  {
+    id: text().primaryKey().notNull(),
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    email: text().notNull(),
+    first_name: text().notNull(),
+    last_name: text().notNull(),
+    slug: text(),
+    token: text().notNull(),
+    ip_address: text(),
+    company: text(),
+    created_tenant_id: text(),
+  } as Record<string, any>,
+  (table) => [
+    uniqueIndex('user_registration_attempt_created_tenant_id_key').using(
+      'btree',
+      table.created_tenant_id.asc().nullsLast().op('text_ops'),
+    ),
+    uniqueIndex('user_registration_attempt_email_key').using(
+      'btree',
+      table.email.asc().nullsLast().op('text_ops'),
+    ),
+    uniqueIndex('user_registration_attempt_token_key').using(
+      'btree',
+      table.token.asc().nullsLast().op('text_ops'),
+    ),
+    foreignKey({
+      columns: [table.created_tenant_id],
+      foreignColumns: [payload.db.tables.tenants.tenant_id],
+      name: 'user_registration_attempt_created_tenant_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const tenant_subscription_product_price = pgTable(
+  'tenant_subscription_product_price',
+  {
+    id: text().primaryKey().notNull(),
+    tenant_subscription_product_id: text().notNull(),
+    subscription_price_id: text(),
+    subscription_usage_based_price_id: text(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.tenant_subscription_product_id],
+      foreignColumns: [tenant_subscription_product.id],
+      name: 'tenant_subscription_product_price_tenant_subscription_product_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.subscription_price_id],
+      foreignColumns: [subscription_price.id],
+      name: 'tenant_subscription_product_price_subscription_price_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('set null'),
+    foreignKey({
+      columns: [table.subscription_usage_based_price_id],
+      foreignColumns: [subscription_usage_based_price.id],
+      name: 'tenant_subscription_product_price_subscription_usage_based_price_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('set null'),
+  ],
+)
+
+export const tenant_subscription_usage_record = pgTable(
+  'tenant_subscription_usage_record',
+  {
+    id: text().primaryKey().notNull(),
+    tenant_subscription_product_price_id: text().notNull(),
+    timestamp: integer().notNull(),
+    quantity: integer().notNull(),
+    stripe_subscription_item_id: text(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.tenant_subscription_product_price_id],
+      foreignColumns: [tenant_subscription_product_price.id],
+      name: 'tenant_subscription_usage_record_tenant_subscription_product_price_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const tenant_subscription_product = pgTable(
+  'tenant_subscription_product',
+  {
+    id: text().primaryKey().notNull(),
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    tenant_subscription_id: text().notNull(),
+    subscription_product_id: text().notNull(),
+    cancelled_at: timestamp({ precision: 3, mode: 'string' }),
+    ends_at: timestamp({ precision: 3, mode: 'string' }),
+    stripe_subscription_id: text(),
+    quantity: integer(),
+    from_checkout_session_id: text(),
+    current_period_start: timestamp({ precision: 3, mode: 'string' }),
+    current_period_end: timestamp({ precision: 3, mode: 'string' }),
+  } as Record<string, any>,
+  (table) => [
+    foreignKey({
+      columns: [table.tenant_subscription_id],
+      foreignColumns: [tenant_subscription.id],
+      name: 'tenant_subscription_product_tenant_subscription_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.subscription_product_id],
+      foreignColumns: [subscription_product.id],
+      name: 'tenant_subscription_product_subscription_product_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('restrict'),
+  ],
+)
+
+export const tenant_subscription = pgTable(
+  'tenant_subscription',
+  {
+    id: text().primaryKey().notNull(),
+    tenant_id: text().notNull(),
+    stripe_customer_id: text(),
+  },
+  (table) => [
+    uniqueIndex('tenant_subscription_tenant_id_key').using(
+      'btree',
+      table.tenant_id.asc().nullsLast().op('text_ops'),
+    ),
+    foreignKey({
+      columns: [table.tenant_id],
+      foreignColumns: [payload.db.tables.tenants.tenant_id],
+      name: 'tenant_subscription_tenant_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const tenant_user = pgTable(
+  'tenant_user',
+  {
+    id: text().primaryKey().notNull(),
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    tenant_id: text().notNull(),
+    userId: text().notNull(),
+  } as Record<string, any>,
+  (table) => [
+    uniqueIndex('tenant_user_tenant_id_user_id_key').using(
+      'btree',
+      table.tenant_id.asc().nullsLast().op('text_ops'),
+      table.userId.asc().nullsLast().op('text_ops'),
+    ),
+    foreignKey({
+      columns: [table.tenant_id],
+      foreignColumns: [payload.db.tables.tenants.tenant_id],
+      name: 'tenant_user_tenant_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [payload.db.tables.users.user_id],
+      name: 'tenant_user_user_id_fk',
     })
       .onUpdate('cascade')
       .onDelete('cascade'),
