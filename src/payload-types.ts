@@ -59,215 +59,469 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji'
+  | 'Pacific/Fiji';
 
 export interface Config {
   auth: {
-    users: UserAuthOperations
-  }
-  blocks: {}
+    users: UserAuthOperations;
+  };
+  blocks: {};
   collections: {
-    users: User
-    'payload-locked-documents': PayloadLockedDocument
-    'payload-preferences': PayloadPreference
-    'payload-migrations': PayloadMigration
-  }
-  collectionsJoins: {}
+    users: User;
+    tenants: Tenant;
+    roles: Role;
+    'payload-locked-documents': PayloadLockedDocument;
+    'payload-preferences': PayloadPreference;
+    'payload-migrations': PayloadMigration;
+  };
+  collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>
-    'payload-locked-documents':
-      | PayloadLockedDocumentsSelect<false>
-      | PayloadLockedDocumentsSelect<true>
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
-  }
+    users: UsersSelect<false> | UsersSelect<true>;
+    tenants: TenantsSelect<false> | TenantsSelect<true>;
+    roles: RolesSelect<false> | RolesSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+  };
   db: {
-    defaultIDType: number
-  }
-  globals: {}
-  globalsSelect: {}
-  locale: null
+    defaultIDType: number;
+  };
+  globals: {};
+  globalsSelect: {};
+  locale: null;
   user: User & {
-    collection: 'users'
-  }
+    collection: 'users';
+  };
   jobs: {
-    tasks: unknown
-    workflows: unknown
-  }
+    tasks: unknown;
+    workflows: unknown;
+  };
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   login: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   registerFirstUser: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   unlock: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number
-  first_name?: string | null
-  last_name?: string | null
-  phone?: string | null
-  avatar_url?: string | null
-  locale?: string | null
-  default_tenant_id?: string | null
-  verify_token?: string | null
-  active?: boolean | null
-  admin?: boolean | null
-  updated_at: string
-  created_at: string
-  email: string
-  resetPasswordToken?: string | null
-  resetPasswordExpiration?: string | null
-  salt?: string | null
-  hash?: string | null
-  loginAttempts?: number | null
-  lockUntil?: string | null
+  id: number;
+  username?: string | null;
+  avatarUrl?: string | null;
+  onboarded?: boolean | null;
+  role?: ('admin' | 'user' | 'demo')[] | null;
+  tenants?:
+    | {
+        tenant: number | Tenant;
+        role: number | Role;
+        id?: string | null;
+      }[]
+    | null;
+  deletedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
   sessions?:
     | {
-        id: string
-        created_at?: string | null
-        expiresAt: string
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
       }[]
-    | null
-  password?: string | null
+    | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants".
+ */
+export interface Tenant {
+  id: number;
+  name: string;
+  slug: string;
+  subdomain: string;
+  deletedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  /**
+   * Enter the name of the role.
+   */
+  name: string;
+  /**
+   * Enter description for the role.
+   */
+  description?: string | null;
+  projects: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  services: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  servers: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  templates: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  sshKeys: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  roles: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  backups: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  securityGroups: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  cloudProviderAccounts: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  dockerRegistries: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  gitProviders: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  team: {
+    create: boolean;
+    update: boolean;
+    read: boolean;
+    delete: boolean;
+  };
+  type?: ('engineering' | 'management' | 'marketing' | 'finance' | 'sales') | null;
+  createdUser?: (number | null) | User;
+  tags?: string[] | null;
+  deletedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number
-  document?: {
-    relationTo: 'users'
-    value: number | User
-  } | null
-  globalSlug?: string | null
+  id: number;
+  document?:
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'tenants';
+        value: number | Tenant;
+      } | null)
+    | ({
+        relationTo: 'roles';
+        value: number | Role;
+      } | null);
+  globalSlug?: string | null;
   user: {
-    relationTo: 'users'
-    value: number | User
-  }
-  updated_at: string
-  created_at: string
+    relationTo: 'users';
+    value: number | User;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number
+  id: number;
   user: {
-    relationTo: 'users'
-    value: number | User
-  }
-  key?: string | null
+    relationTo: 'users';
+    value: number | User;
+  };
+  key?: string | null;
   value?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
-  updated_at: string
-  created_at: string
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number
-  name?: string | null
-  batch?: number | null
-  updated_at: string
-  created_at: string
+  id: number;
+  name?: string | null;
+  batch?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  first_name?: T
-  last_name?: T
-  phone?: T
-  avatar_url?: T
-  locale?: T
-  default_tenant_id?: T
-  verify_token?: T
-  active?: T
-  admin?: T
-  updated_at?: T
-  created_at?: T
-  email?: T
-  resetPasswordToken?: T
-  resetPasswordExpiration?: T
-  salt?: T
-  hash?: T
-  loginAttempts?: T
-  lockUntil?: T
+  username?: T;
+  avatarUrl?: T;
+  onboarded?: T;
+  role?: T;
+  tenants?:
+    | T
+    | {
+        tenant?: T;
+        role?: T;
+        id?: T;
+      };
+  deletedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
   sessions?:
     | T
     | {
-        id?: T
-        created_at?: T
-        expiresAt?: T
-      }
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants_select".
+ */
+export interface TenantsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  subdomain?: T;
+  deletedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles_select".
+ */
+export interface RolesSelect<T extends boolean = true> {
+  tenant?: T;
+  name?: T;
+  description?: T;
+  projects?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  services?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  servers?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  templates?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  sshKeys?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  roles?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  backups?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  securityGroups?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  cloudProviderAccounts?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  dockerRegistries?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  gitProviders?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  team?:
+    | T
+    | {
+        create?: T;
+        update?: T;
+        read?: T;
+        delete?: T;
+      };
+  type?: T;
+  createdUser?: T;
+  tags?: T;
+  deletedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T
-  globalSlug?: T
-  user?: T
-  updated_at?: T
-  created_at?: T
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T
-  key?: T
-  value?: T
-  updated_at?: T
-  created_at?: T
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T
-  batch?: T
-  updated_at?: T
-  created_at?: T
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown
+  [k: string]: unknown;
 }
+
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}

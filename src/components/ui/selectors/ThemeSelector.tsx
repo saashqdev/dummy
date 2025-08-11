@@ -1,8 +1,15 @@
-"use client";
+'use client'
 
-import clsx from "clsx";
-import { Fragment } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../select";
+import clsx from 'clsx'
+import { Fragment } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../select'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,44 +18,57 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
-import { Button } from "../button";
-import { actionSetTheme } from "@/app/(marketing)/actions";
-import { defaultThemeColor, defaultThemes } from "@/lib/themes";
-import { usePathname } from "next/navigation";
+} from '../dropdown-menu'
+import { Button } from '../button'
+import { actionSetTheme } from '@/app/(frontend)/(marketing)/actions'
+import { defaultThemeColor, defaultThemes } from '@/lib/themes'
+import { usePathname } from 'next/navigation'
 
 interface Props {
-  className?: string;
-  variant?: "primary" | "secondary" | "tertiary";
-  disabled?: boolean;
-  currentTheme?: string;
+  className?: string
+  variant?: 'primary' | 'secondary' | 'tertiary'
+  disabled?: boolean
+  currentTheme?: string
 }
 
-export default function ThemeSelector({ className, variant = "primary", disabled, currentTheme }: Props) {
-  const pathname = usePathname();
+export default function ThemeSelector({
+  className,
+  variant = 'primary',
+  disabled,
+  currentTheme,
+}: Props) {
+  const pathname = usePathname()
   async function select(value: string) {
-    const form = new FormData();
-    form.set("theme", value);
-    form.set("redirectTo", pathname || "/");
-    actionSetTheme(form);
+    const form = new FormData()
+    form.set('theme', value)
+    form.set('redirectTo', pathname || '/')
+    actionSetTheme(form)
   }
 
   return (
     <Fragment>
-      {variant === "primary" || variant === "secondary" ? (
+      {variant === 'primary' || variant === 'secondary' ? (
         <DropdownMenu>
-          <DropdownMenuTrigger disabled={disabled} className={clsx(className, "select-none")} asChild>
+          <DropdownMenuTrigger
+            disabled={disabled}
+            className={clsx(className, 'select-none')}
+            asChild
+          >
             <Button
               variant="ghost"
               className={clsx(
-                "flex w-10 select-none space-x-2",
+                'flex w-10 select-none space-x-2',
                 className,
-                variant === "secondary" &&
-                  "relative inline-flex h-auto w-auto items-center rounded-full border border-gray-100 bg-gray-50 p-3.5 font-medium text-gray-500 shadow-inner hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                variant === 'secondary' &&
+                  'relative inline-flex h-auto w-auto items-center rounded-full border border-gray-100 bg-gray-50 p-3.5 font-medium text-gray-500 shadow-inner hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-offset-2',
               )}
             >
-              {variant === "primary" ? (
-                <div className={clsx("inline-flex flex-shrink-0 items-center rounded-full p-1 text-xs font-medium text-primary")}>
+              {variant === 'primary' ? (
+                <div
+                  className={clsx(
+                    'inline-flex flex-shrink-0 items-center rounded-full p-1 text-xs font-medium text-primary',
+                  )}
+                >
                   <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none"></rect>
                     <line
@@ -76,9 +96,13 @@ export default function ThemeSelector({ className, variant = "primary", disabled
                   </svg>
                 </div>
               ) : (
-                variant === "secondary" && (
-                  <span className={clsx("inline-flex flex-shrink-0 items-center rounded-full bg-primary text-xs font-medium text-primary")}>
-                    <svg className={clsx("h-2 w-2")} fill="currentColor" viewBox="0 0 8 8">
+                variant === 'secondary' && (
+                  <span
+                    className={clsx(
+                      'inline-flex flex-shrink-0 items-center rounded-full bg-primary text-xs font-medium text-primary',
+                    )}
+                  >
+                    <svg className={clsx('h-2 w-2')} fill="currentColor" viewBox="0 0 8 8">
                       <circle cx={4} cy={4} r={3} />
                     </svg>
                   </span>
@@ -97,33 +121,43 @@ export default function ThemeSelector({ className, variant = "primary", disabled
                       <label
                         className={clsx(
                           `theme-${f.value}`,
-                          "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-ring focus:outline-none"
+                          'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-ring focus:outline-none',
                         )}
                       >
                         <span id="color-choice-0-label" className="sr-only">
                           {f.name}
                         </span>
-                        <span aria-hidden="true" className={clsx("h-3 w-3 rounded-full border border-border", "border-primary bg-primary")}></span>
+                        <span
+                          aria-hidden="true"
+                          className={clsx(
+                            'h-3 w-3 rounded-full border border-border',
+                            'border-primary bg-primary',
+                          )}
+                        ></span>
                       </label>
                       <div>
                         {f.name}
-                        {f.value === defaultThemeColor ? " (default)" : ""}
+                        {f.value === defaultThemeColor ? ' (default)' : ''}
                       </div>
                     </div>
                   </DropdownMenuItem>
-                );
+                )
               })}
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      ) : variant === "tertiary" ? (
+      ) : variant === 'tertiary' ? (
         <Select value={currentTheme} onValueChange={(e) => select(e.toString())}>
           <SelectTrigger className={className}>
             <SelectValue
               placeholder={
                 <div className="p-0.5">
-                  <span className={clsx("inline-flex flex-shrink-0 items-center rounded-full text-xs font-medium text-primary")}>
-                    <svg className={clsx("h-3 w-3")} fill="currentColor" viewBox="0 0 8 8">
+                  <span
+                    className={clsx(
+                      'inline-flex flex-shrink-0 items-center rounded-full text-xs font-medium text-primary',
+                    )}
+                  >
+                    <svg className={clsx('h-3 w-3')} fill="currentColor" viewBox="0 0 8 8">
                       <circle cx={4} cy={4} r={3} />
                     </svg>
                   </span>
@@ -137,14 +171,14 @@ export default function ThemeSelector({ className, variant = "primary", disabled
                 return (
                   <SelectItem key={idx} value={item.value}>
                     {item.name}
-                    {item.value === defaultThemeColor ? " (default)" : ""}
+                    {item.value === defaultThemeColor ? ' (default)' : ''}
                   </SelectItem>
-                );
+                )
               })}
             </SelectGroup>
           </SelectContent>
         </Select>
       ) : null}
     </Fragment>
-  );
+  )
 }

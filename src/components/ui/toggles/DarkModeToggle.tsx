@@ -1,23 +1,28 @@
-"use client";
+'use client'
 
-import { Button } from "../button";
-import clsx from "clsx";
-import { actionToggleScheme } from "@/app/(marketing)/actions";
-import { usePathname } from "next/navigation";
+import { Button } from '../button'
+import clsx from 'clsx'
+import { actionToggleScheme } from '@/app/(frontend)/(marketing)/actions'
+import { usePathname } from 'next/navigation'
 
 interface Props {
-  className?: string;
-  disabled?: boolean;
-  currentScheme?: string;
+  className?: string
+  disabled?: boolean
+  currentScheme?: string
 }
 export default function DarkModeToggle({ className, disabled, currentScheme }: Props) {
-  const isDarkMode = currentScheme === "dark";
-  const pathname = usePathname();
+  const isDarkMode = currentScheme === 'dark'
+  const pathname = usePathname()
 
   return (
     <form action={actionToggleScheme}>
-      <input type="hidden" name="redirectTo" value={pathname || "/"} readOnly hidden />
-      <Button type="submit" variant="ghost" disabled={disabled} className={clsx("flex w-10 space-x-2", className)}>
+      <input type="hidden" name="redirectTo" value={pathname || '/'} readOnly hidden />
+      <Button
+        type="submit"
+        variant="ghost"
+        disabled={disabled}
+        className={clsx('flex w-10 space-x-2', className)}
+      >
         <div>
           {!isDarkMode ? (
             <svg
@@ -53,5 +58,5 @@ export default function DarkModeToggle({ className, disabled, currentScheme }: P
         </div>
       </Button>
     </form>
-  );
+  )
 }

@@ -1,10 +1,3 @@
-import LogoReact from '@/assets/logos/react.png'
-import LogoTailwind from '@/assets/logos/tailwindcss.png'
-import LogoPrisma from '@/assets/logos/prisma.png'
-import LogoPrismaDark from '@/assets/logos/prisma-dark.png'
-import LogoStripe from '@/assets/logos/stripe.png'
-import LogoPostmark from '@/assets/logos/postmark.png'
-import LogoTypescript from '@/assets/logos/typescript.png'
 import ButtonEvent from '@/components/ui/buttons/ButtonEvent'
 import Image from 'next/image'
 import NextJsLight from '@/components/brand/NextJsLight'
@@ -27,7 +20,11 @@ export default function LogoCloudsVariantCustom() {
               target="_blank"
               rel="noreferrer"
             >
-              <Image className="h-10 object-cover md:h-14" src={LogoReact} alt="React" />
+              <Image
+                className="h-10 object-cover md:h-14"
+                src={'/assets/img/logo-react.png'}
+                alt="React"
+              />
             </ButtonEvent>
           </div>
 
@@ -43,7 +40,11 @@ export default function LogoCloudsVariantCustom() {
               target="_blank"
               rel="noreferrer"
             >
-              <Image className="h-10 object-cover md:h-14" src={LogoTypescript} alt="TypeScript" />
+              <Image
+                className="h-10 object-cover md:h-14"
+                src={'/assets/img/logo-typescript.png'}
+                alt="TypeScript"
+              />
             </ButtonEvent>
           </div>
 
@@ -53,20 +54,20 @@ export default function LogoCloudsVariantCustom() {
                 action: 'click',
                 category: 'logo-clouds',
                 label: 'prisma',
-                value: 'https://www.prisma.io/?via=alexandro',
+                value: 'https://www.payloadcms.com',
               }}
-              to="https://www.prisma.io/?via=alexandro"
+              to="https://www.payloadcms.com"
               target="_blank"
               rel="noreferrer"
             >
               <Image
                 className="h-10 object-cover dark:hidden md:h-14"
-                src={LogoPrisma}
+                src={'/assets/img/logo-payload.png'}
                 alt="Next"
               />
               <Image
                 className="hidden h-10 object-cover dark:block md:h-14"
-                src={LogoPrismaDark}
+                src={'/assets/img/logo-payload.png'}
                 alt="Next"
               />
             </ButtonEvent>
@@ -99,7 +100,11 @@ export default function LogoCloudsVariantCustom() {
               target="_blank"
               rel="noreferrer"
             >
-              <Image className="h-10 object-cover md:h-14" src={LogoTailwind} alt="Tailwind CSS" />
+              <Image
+                className="h-10 object-cover md:h-14"
+                src={'/assets/img/logo-tailwind.png'}
+                alt="Tailwind CSS"
+              />
             </ButtonEvent>
           </div>
 
@@ -115,7 +120,11 @@ export default function LogoCloudsVariantCustom() {
               target="_blank"
               rel="noreferrer"
             >
-              <Image className="h-10 object-cover md:h-14" src={LogoStripe} alt="Stripe" />
+              <Image
+                className="h-10 object-cover md:h-14"
+                src={'/assets/img/logo-stripe.png'}
+                alt="Stripe"
+              />
             </ButtonEvent>
           </div>
 
@@ -131,7 +140,11 @@ export default function LogoCloudsVariantCustom() {
               target="_blank"
               rel="noreferrer"
             >
-              <Image className="h-10 object-cover md:h-14" src={LogoPostmark} alt="Postmark" />
+              <Image
+                className="h-10 object-cover md:h-14"
+                src={'/assets/img/logo-postmark.png'}
+                alt="Postmark"
+              />
             </ButtonEvent>
           </div>
         </div>

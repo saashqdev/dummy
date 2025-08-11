@@ -12,10 +12,12 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_WEBSITE_URL: z.url(),
+    NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN: z.string().optional(),
     NEXT_PUBLIC_DISCORD_INVITE_URL: z.string().optional(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
+    NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN: process.env.NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN,
     DATABASE_URI: process.env.DATABASE_URI,
     PAYLOAD_SECRET: process.env.PAYLOAD_SECRET,
     REDIS_URI: process.env.REDIS_URI,
