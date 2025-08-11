@@ -2,8 +2,8 @@ export type UserRegistrationAttemptModel = {
   id: string
   created_at: Date
   email: string
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   slug: string | null
   token: string
   ipAddress: string | null

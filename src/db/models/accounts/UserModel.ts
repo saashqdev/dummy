@@ -20,8 +20,8 @@ export type UserModel = {
 export type UserDto = {
   id: string
   email: string
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   admin: boolean
   default_tenant_id: string | null
   locale: string | null

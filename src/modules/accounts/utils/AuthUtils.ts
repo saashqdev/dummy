@@ -4,8 +4,8 @@ export type RegistrationData = {
   email?: string
   password?: string
   company?: string
-  first_name?: string
-  last_name?: string
+  firstName?: string
+  lastName?: string
   avatar?: string
   slug?: string
 }
@@ -13,11 +13,11 @@ async function getRegistrationFormData(formData: FormData): Promise<Registration
   const email = formData.get('email')?.toString().toLowerCase().trim()
   const password = formData.get('password')?.toString()
   const company = formData.get('company')?.toString()
-  const first_name = formData.get('first-name')?.toString()
-  const last_name = formData.get('last-name')?.toString()
+  const firstName = formData.get('first-name')?.toString()
+  const lastName = formData.get('last-name')?.toString()
   const slug = formData.get('slug')?.toString()
 
-  return { email, password, company, first_name, last_name, slug }
+  return { email, password, company, firstName, lastName, slug }
 }
 
 const validateEmail = (email: unknown) => {

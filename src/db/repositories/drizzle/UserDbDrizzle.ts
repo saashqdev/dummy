@@ -58,12 +58,12 @@ export class UserDbDrizzle implements IUserDb {
     }
     if (filters?.firstName) {
       whereConditions.push(
-        sql`LOWER(${payload.db.tables.users.first_name}) LIKE LOWER(${`%${filters.firstName}%`})`,
+        sql`LOWER(${payload.db.tables.users.firstName}) LIKE LOWER(${`%${filters.firstName}%`})`,
       )
     }
     if (filters?.lastName) {
       whereConditions.push(
-        sql`LOWER(${payload.db.tables.users.last_name}) LIKE LOWER(${`%${filters.lastName}%`})`,
+        sql`LOWER(${payload.db.tables.users.lastName}) LIKE LOWER(${`%${filters.lastName}%`})`,
       )
     }
     if (filters?.tenantId) {
@@ -78,7 +78,7 @@ export class UserDbDrizzle implements IUserDb {
 
     // let orderBy: SQL[] = [asc(User.created_at)];
     // if (pagination?.sortedBy?.length) {
-    //   pagination.sortedBy = pagination.sortedBy.filter((s) => ["email", "first_name", "last_name", "created_at"].includes(s.name));
+    //   pagination.sortedBy = pagination.sortedBy.filter((s) => ["email", "firstName", "lastName", "created_at"].includes(s.name));
     //   orderBy = pagination.sortedBy.map((s) => (s.direction === "desc" ? desc(s.name) : asc(s.name)));
     // }
 

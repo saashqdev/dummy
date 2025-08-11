@@ -104,25 +104,25 @@ export default function UserProfileSettings({
                       />
                     </div>
                     <div className="col-span-6 md:col-span-3">
-                      <label htmlFor="first_name" className="mb-1 text-sm font-medium">
-                        {t('settings.profile.first_name')} <span className="text-red-500">*</span>
+                      <label htmlFor="firstName" className="mb-1 text-sm font-medium">
+                        {t('settings.profile.firstName')} <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        name="first_name"
-                        title={t('settings.profile.first_name')}
-                        defaultValue={user?.first_name}
+                        name="firstName"
+                        title={t('settings.profile.firstName')}
+                        defaultValue={user?.firstName}
                         required
                       />
                     </div>
 
                     <div className="col-span-6 md:col-span-3">
-                      <label htmlFor="last_name" className="mb-1 text-sm font-medium">
-                        {t('settings.profile.last_name')} <span className="text-red-500">*</span>
+                      <label htmlFor="lastName" className="mb-1 text-sm font-medium">
+                        {t('settings.profile.lastName')} <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        name="last_name"
-                        title={t('settings.profile.last_name')}
-                        defaultValue={user?.last_name}
+                        name="lastName"
+                        title={t('settings.profile.lastName')}
+                        defaultValue={user?.lastName}
                       />
                     </div>
 

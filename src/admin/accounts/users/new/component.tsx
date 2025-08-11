@@ -19,8 +19,8 @@ export default function ({ data }: { data: AdminUsersNewLoaderData }) {
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [first_name, setFirstName] = useState<string>('')
-  const [last_name, setLastName] = useState<string>('')
+  const [firstName, setFirstName] = useState<string>('')
+  const [lastName, setLastName] = useState<string>('')
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
 
   useEffect(() => {
@@ -94,23 +94,23 @@ export default function ({ data }: { data: AdminUsersNewLoaderData }) {
                 <div>
                   <label className="mb-1 text-xs font-medium">
                     {' '}
-                    {t('models.user.first_name')} <span className="text-red-500">*</span>
+                    {t('models.user.firstName')} <span className="text-red-500">*</span>
                   </label>
                   <Input
-                    name="first_name"
-                    title={t('models.user.first_name')}
-                    value={first_name}
+                    name="firstName"
+                    title={t('models.user.firstName')}
+                    value={firstName}
                     onChange={(e) => setFirstName(e.currentTarget.value)}
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 text-xs font-medium">{t('models.user.last_name')}</label>
+                  <label className="mb-1 text-xs font-medium">{t('models.user.lastName')}</label>
                   <Input
-                    name="last_name"
-                    title={t('models.user.last_name')}
-                    value={last_name}
+                    name="lastName"
+                    title={t('models.user.lastName')}
+                    value={lastName}
                     onChange={(e) => setLastName(e.currentTarget.value)}
                   />
                 </div>

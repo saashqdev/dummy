@@ -37,15 +37,15 @@ export default function ContactFormVariantSimple({ item }: { item: ContactFormBl
         <div className="mt-9 grid grid-cols-1 gap-x-1 gap-y-4 sm:grid-cols-2 sm:gap-x-4">
           <div>
             <div className="mt-1">
-              <label htmlFor="first_name" className="mb-1 text-xs font-medium">
-                {t('front.contact.first_name')} <span className="text-red-500">*</span>
+              <label htmlFor="firstName" className="mb-1 text-xs font-medium">
+                {t('front.contact.firstName')} <span className="text-red-500">*</span>
               </label>
               <Input
-                title={t('front.contact.first_name')}
+                title={t('front.contact.firstName')}
                 required
                 type="text"
-                name="first_name"
-                id="first_name"
+                name="firstName"
+                id="firstName"
                 autoComplete="given-name"
                 defaultValue=""
               />
@@ -53,14 +53,14 @@ export default function ContactFormVariantSimple({ item }: { item: ContactFormBl
           </div>
           <div>
             <div className="mt-1">
-              <label htmlFor="last_name" className="mb-1 text-xs font-medium">
-                {t('front.contact.last_name')} <span className="text-red-500">*</span>
+              <label htmlFor="lastName" className="mb-1 text-xs font-medium">
+                {t('front.contact.lastName')} <span className="text-red-500">*</span>
               </label>
               <Input
-                title={t('front.contact.last_name')}
+                title={t('front.contact.lastName')}
                 type="text"
-                name="last_name"
-                id="last_name"
+                name="lastName"
+                id="lastName"
                 autoComplete="family-name"
                 defaultValue=""
               />

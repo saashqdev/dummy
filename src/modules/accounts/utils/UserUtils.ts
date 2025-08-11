@@ -1,10 +1,10 @@
 const prefix = (user: any): string => {
   if (user) {
-    if (user.first_name && user.last_name) {
-      if (user.first_name.length > 0 && user.last_name.length > 0) {
-        return (user.first_name[0] + user.last_name[0]).toUpperCase()
-      } else if (user.first_name.length > 1) {
-        return user.first_name.substring(0, 2).toUpperCase()
+    if (user.firstName && user.lastName) {
+      if (user.firstName.length > 0 && user.lastName.length > 0) {
+        return (user.firstName[0] + user.lastName[0]).toUpperCase()
+      } else if (user.firstName.length > 1) {
+        return user.firstName.substring(0, 2).toUpperCase()
       } else if (user.email.length > 1) {
         return user.email.substring(0, 2).toUpperCase()
       }
@@ -16,11 +16,11 @@ const prefix = (user: any): string => {
 }
 
 const profileName = (
-  user: { first_name: string | null; last_name: string | null; email: string } | null | undefined,
+  user: { firstName: string | null; lastName: string | null; email: string } | null | undefined,
 ): string => {
   if (user) {
-    if (user.first_name && user.last_name) {
-      return user.first_name + ' ' + user.last_name
+    if (user.firstName && user.lastName) {
+      return user.firstName + ' ' + user.lastName
     } else {
       return user.email
     }

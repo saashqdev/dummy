@@ -208,7 +208,7 @@ export async function validateRegistration({
 }) {
   const { t } = await getServerTranslations()
   const appConfiguration = await getAppConfiguration()
-  const { email, password, company, first_name, last_name, avatar, slug } = registrationData
+  const { email, password, company, firstName, lastName, avatar, slug } = registrationData
   if (!email || !AuthUtils.validateEmail(email)) {
     throw Error(t('account.register.errors.invalidEmail'))
   }
@@ -218,16 +218,16 @@ export async function validateRegistration({
     throw Error(t('account.register.errors.organizationRequired'))
   } else if (
     appConfiguration.auth.requireName &&
-    (typeof first_name !== 'string' || typeof last_name !== 'string')
+    (typeof firstName !== 'string' || typeof lastName !== 'string')
   ) {
     throw Error(t('account.register.errors.nameRequired'))
   }
 
   if (company && company.length > 100) {
     throw Error('Maximum length for company name is 100 characters')
-  } else if (first_name && first_name.length > 50) {
+  } else if (firstName && firstName.length > 50) {
     throw Error('Maximum length for first name is 50 characters')
-  } else if (last_name && last_name.length > 50) {
+  } else if (lastName && lastName.length > 50) {
     throw Error('Maximum length for last name is 50 characters')
   }
 
@@ -252,8 +252,8 @@ export async function validateRegistration({
     email,
     password,
     company,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     stripe_customer_id,
     avatar,
     slug,
@@ -268,8 +268,8 @@ export async function validateRegistration({
 async function createRegistrationForm({
   email,
   company,
-  first_name,
-  last_name,
+  firstName,
+  lastName,
   ipAddress,
   recreateToken,
   slug,
@@ -277,8 +277,8 @@ async function createRegistrationForm({
   email: string
   ipAddress: string
   company?: string
-  first_name?: string
-  last_name?: string
+  firstName?: string
+  lastName?: string
   recreateToken?: boolean
   slug?: string
 }) {
@@ -291,8 +291,8 @@ async function createRegistrationForm({
       if (recreateToken) {
         const newToken = crypto.randomBytes(20).toString('hex')
         await db.userRegistrationAttempt.update(registration.id, {
-          first_name,
-          last_name,
+          firstName,
+          lastName,
           company,
           token: newToken,
         })
@@ -300,7 +300,7 @@ async function createRegistrationForm({
           to: email,
           ...EmailTemplates.VERIFICATION_EMAIL.parse({
             appConfiguration,
-            name: first_name,
+            name: firstName,
             action_url: (await getBaseURL()) + `/verify/` + newToken,
           }),
         })
@@ -310,8 +310,8 @@ async function createRegistrationForm({
     var token = crypto.randomBytes(20).toString('hex')
     await db.userRegistrationAttempt.create({
       email,
-      first_name: first_name ?? '',
-      last_name: last_name ?? '',
+      firstName: firstName ?? '',
+      lastName: lastName ?? '',
       company: company ?? '',
       token,
       ipAddress,
@@ -321,7 +321,7 @@ async function createRegistrationForm({
     await sendEmail({
       to: email,
       ...EmailTemplates.VERIFICATION_EMAIL.parse({
-        name: first_name,
+        name: firstName,
         action_url: (await getBaseURL()) + `/verify/` + token,
         appConfiguration,
       }),
@@ -333,8 +333,8 @@ interface CreateUserAndTenantDto {
   email: string
   password?: string
   company?: string
-  first_name?: string
-  last_name?: string
+  firstName?: string
+  lastName?: string
   stripe_customer_id?: string
   avatar?: string
   locale?: string
@@ -345,8 +345,8 @@ async function createUserAndTenant({
   email,
   password,
   company,
-  first_name,
-  last_name,
+  firstName,
+  lastName,
   stripe_customer_id,
   avatar,
   locale,
@@ -364,8 +364,8 @@ async function createUserAndTenant({
 
   const user = await createUser({
     email: email,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     password,
     avatar,
     locale,
@@ -391,7 +391,7 @@ async function createUserAndTenant({
   await sendEmail({
     to: email,
     ...EmailTemplates.WELCOME_EMAIL.parse({
-      name: first_name,
+      name: firstName,
       appConfiguration,
       action_url: (await getBaseURL()) + `/login`,
     }),

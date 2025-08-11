@@ -36,8 +36,8 @@ export const actionAdminUsersNew = async (prev: any, form: FormData) => {
   if (action === 'new-user') {
     await verifyUserHasPermission('admin.accounts.create')
     const email = form.get('email')?.toString()
-    const first_name = form.get('first_name')?.toString()
-    const last_name = form.get('last_name')?.toString()
+    const firstName = form.get('firstName')?.toString()
+    const lastName = form.get('lastName')?.toString()
     const password = form.get('password')?.toString()
 
     const arrRoles: { id: string; tenantId: string | undefined }[] = form
@@ -46,7 +46,7 @@ export const actionAdminUsersNew = async (prev: any, form: FormData) => {
         return JSON.parse(f.toString())
       })
 
-    if (!email || !password || !first_name) {
+    if (!email || !password || !firstName) {
       return { error: 'Missing required fields.' }
     }
     // if (arrRoles.length === 0) {
@@ -72,8 +72,8 @@ export const actionAdminUsersNew = async (prev: any, form: FormData) => {
 
     const { id } = await createUser({
       email,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       password,
       default_tenant_id: null,
     })

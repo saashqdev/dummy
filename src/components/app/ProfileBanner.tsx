@@ -53,7 +53,7 @@ export default function ProfileBanner({ user }: Props) {
                   })()}
                 </div>
                 <h1 className="ml-3 text-lg font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                  {t('shared.hi')} {user?.first_name && <span>{user?.first_name} 👋!</span>}
+                  {t('shared.hi')} {user?.firstName && <span>{user?.firstName} 👋!</span>}
                 </h1>
               </div>
               <dl className="flex flex-col sm:ml-3 sm:flex-row sm:flex-wrap">

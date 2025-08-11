@@ -9,8 +9,8 @@ export interface IUserRegistrationAttemptDb {
   update(
     id: string,
     data: {
-      first_name?: string
-      last_name?: string
+      firstName?: string
+      lastName?: string
       company?: string | null
       created_tenant_id?: string | null
       token?: string

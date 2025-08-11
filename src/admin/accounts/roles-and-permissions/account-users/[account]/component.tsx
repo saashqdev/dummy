@@ -35,8 +35,8 @@ export default function ({ data }: { data: AdminAccountUsersAccountLoaderData })
     return items.filter(
       (f) =>
         f.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.first_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.last_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.roles.find(
           (f) =>
             f.role.name.toUpperCase().includes(searchInput.toUpperCase()) ||

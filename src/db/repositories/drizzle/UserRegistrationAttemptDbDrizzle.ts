@@ -1,4 +1,3 @@
-// UserRegistrationAttemptDbDrizzle.ts
 import payload from 'payload'
 import { createId } from '@paralleldrive/cuid2'
 import { eq } from 'drizzle-orm'
@@ -35,8 +34,8 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
         id,
         created_at: new Date(),
         email: data.email,
-        first_name: data.first_name,
-        last_name: data.last_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         token: data.token,
         company: data.company,
         ipAddress: data.ipAddress,
@@ -49,8 +48,8 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
   async update(
     id: string,
     data: {
-      first_name?: string
-      last_name?: string
+      firstName?: string
+      lastName?: string
       company?: string | null
       created_tenant_id?: string | null
       token?: string
@@ -59,8 +58,8 @@ export class UserRegistrationAttemptDbDrizzle implements IUserRegistrationAttemp
     await payload.db.tables
       .update(user_registration_attempt)
       .set({
-        first_name: data.first_name,
-        last_name: data.last_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         company: data.company,
         created_tenant_id: data.created_tenant_id,
         token: data.token,

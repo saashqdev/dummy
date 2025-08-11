@@ -14,8 +14,8 @@ interface Props {
   isSettingUpAccount?: boolean
   data?: {
     company?: string
-    first_name?: string
-    last_name?: string
+    firstName?: string
+    lastName?: string
     email?: string
     slug?: string
   }
@@ -97,9 +97,9 @@ export const RegisterForm = ({
                     name="first-name"
                     id="first-name"
                     required
-                    defaultValue={data.first_name}
+                    defaultValue={data.firstName}
                     className="appearance-none rounded-md rounded-r-none focus:z-50"
-                    placeholder={t('account.shared.first_namePlaceholder')}
+                    placeholder={t('account.shared.firstNamePlaceholder')}
                     disabled={serverAction.pending}
                   />
                 </div>
@@ -111,10 +111,10 @@ export const RegisterForm = ({
                     type="text"
                     name="last-name"
                     id="last-name"
-                    defaultValue={data.last_name}
+                    defaultValue={data.lastName}
                     required
                     className="appearance-none rounded-md rounded-l-none"
-                    placeholder={t('account.shared.last_namePlaceholder')}
+                    placeholder={t('account.shared.lastNamePlaceholder')}
                     disabled={serverAction.pending}
                   />
                 </div>

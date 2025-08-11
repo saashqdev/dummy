@@ -277,8 +277,8 @@ export const tenant_user_invitation = pgTable(
     id: text().primaryKey().notNull(),
     tenant_id: text().notNull(),
     email: text().notNull(),
-    first_name: text().notNull(),
-    last_name: text().notNull(),
+    firstName: text().notNull(),
+    lastName: text().notNull(),
     pending: boolean().notNull(),
     created_user_id: text(),
     from_user_id: text(),
@@ -320,8 +320,8 @@ export const user_registration_attempt = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     email: text().notNull(),
-    first_name: text().notNull(),
-    last_name: text().notNull(),
+    firstName: text().notNull(),
+    lastName: text().notNull(),
     slug: text(),
     token: text().notNull(),
     ip_address: text(),
@@ -488,6 +488,42 @@ export const tenant_user = pgTable(
       columns: [table.userId],
       foreignColumns: [payload.db.tables.users.user_id],
       name: 'tenant_user_user_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+  ],
+)
+
+export const user_role = pgTable(
+  'user_role',
+  {
+    id: text().primaryKey().notNull(),
+    created_at: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    userId: text().notNull(),
+    role_id: text().notNull(),
+    tenant_id: text(),
+  } as Record<string, any>,
+  (table) => [
+    foreignKey({
+      columns: [table.role_id],
+      foreignColumns: [payload.db.tables.roles.role_id],
+      name: 'user_role_role_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.tenant_id],
+      foreignColumns: [payload.db.tables.tenants.tenant_id],
+      name: 'user_role_tenant_id_fk',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.user_id],
+      foreignColumns: [payload.db.tables.users.user_id],
+      name: 'user_role_user_id_fk',
     })
       .onUpdate('cascade')
       .onDelete('cascade'),

@@ -17,13 +17,13 @@ type ActionData = {
   passwordError?: string
   deleteError?: string
   fieldErrors?: {
-    first_name: string | undefined
-    last_name: string | undefined
+    firstName: string | undefined
+    lastName: string | undefined
   }
   fields?: {
     action: string
-    first_name: string | undefined
-    last_name: string | undefined
+    firstName: string | undefined
+    lastName: string | undefined
     avatar: string | undefined
     passwordCurrent: string | undefined
     passwordNew: string | undefined
@@ -38,8 +38,8 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
   const userInfo = await getUserInfo()
   const action = form.get('action')
 
-  const first_name = form.get('first_name')?.toString()
-  const last_name = form.get('last_name')?.toString()
+  const firstName = form.get('firstName')?.toString()
+  const lastName = form.get('lastName')?.toString()
   const avatar = form.get('avatar')?.toString()
 
   const passwordCurrent = form.get('passwordCurrent')?.toString()
@@ -59,24 +59,24 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
     case 'profile': {
       const fields = {
         action,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         avatar,
         passwordCurrent,
         passwordNew,
         passwordNewConfirm,
       }
       const fieldErrors = {
-        first_name:
-          action === 'profile' && (fields.first_name ?? '').length < 2 ? 'First name required' : '',
-        last_name:
-          action === 'profile' && (fields.last_name ?? '').length < 2 ? 'Last name required' : '',
+        firstName:
+          action === 'profile' && (fields.firstName ?? '').length < 2 ? 'First name required' : '',
+        lastName:
+          action === 'profile' && (fields.lastName ?? '').length < 2 ? 'Last name required' : '',
       }
       if (Object.values(fieldErrors).some(Boolean)) {
         return { fieldErrors, fields }
       }
 
-      if (typeof first_name !== 'string' || typeof last_name !== 'string') {
+      if (typeof firstName !== 'string' || typeof lastName !== 'string') {
         return { profileError: `Form not submitted correctly.` }
       }
 
@@ -87,7 +87,7 @@ export const actionAdminProfile = async (prev: any, form: FormData): Promise<Act
       const avatarStored = avatar
         ? await storeSupabaseFile({ bucket: 'users-icons', content: avatar, id: userInfo.userId! })
         : avatar
-      await updateUser(userInfo.userId!, { first_name, last_name, avatar: avatarStored })
+      await updateUser(userInfo.userId!, { firstName, lastName, avatar: avatarStored })
       revalidatePath('/admin/settings/profile')
       return { profileSuccess: 'Profile updated' }
     }

@@ -22,8 +22,8 @@ export default function ({ data }: { data: AdminAccountUsersLoaderData }) {
         f.users.find(
           (x) =>
             x.user.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-            x.user.first_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-            x.user.last_name?.toString().toUpperCase().includes(searchInput.toUpperCase()),
+            x.user.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+            x.user.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()),
         ),
     )
   }

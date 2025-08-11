@@ -16,6 +16,7 @@ import {
   tenant_subscription_product,
   tenant_subscription,
   tenant_user,
+  user_role,
 } from './schema'
 
 export const relations_tenant_user_invitation = relations(tenant_user_invitation, ({ one }) => ({
@@ -171,6 +172,21 @@ export const relations_tenant_user = relations(tenant_user, ({ one }) => ({
   }),
   user: one(payload.db.tables.users, {
     fields: [tenant_user.userId],
+    references: [payload.db.tables.users.user_id],
+  }),
+}))
+
+export const relations_user_role = relations(user_role, ({ one }) => ({
+  role: one(payload.db.tables.roles, {
+    fields: [payload.db.tables.user_role.role_id],
+    references: [payload.db.tables.roles.role_id],
+  }),
+  tenant: one(payload.db.tables.tenants, {
+    fields: [payload.db.tables.user_role.tenant_id],
+    references: [payload.db.tables.tenants.tenant_id],
+  }),
+  user: one(payload.db.tables.users, {
+    fields: [payload.db.tables.user_role.userId],
     references: [payload.db.tables.users.user_id],
   }),
 }))

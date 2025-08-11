@@ -82,58 +82,58 @@ export default function () {
                       </div>
                       <div className="col-span-6 md:col-span-3">
                         <label
-                          htmlFor="first_name"
+                          htmlFor="firstName"
                           className="block text-sm font-medium leading-5 text-gray-700"
                         >
-                          {t('settings.profile.first_name')}
+                          {t('settings.profile.firstName')}
                         </label>
                         <input
                           ref={inputFirstName}
-                          id="first_name"
-                          name="first_name"
+                          id="firstName"
+                          name="firstName"
                           required
-                          defaultValue={adminData.user?.first_name}
-                          aria-invalid={Boolean(actionData?.fieldErrors?.first_name)}
+                          defaultValue={adminData.user?.firstName}
+                          aria-invalid={Boolean(actionData?.fieldErrors?.firstName)}
                           aria-errormessage={
-                            actionData?.fieldErrors?.first_name ? 'first_name-error' : undefined
+                            actionData?.fieldErrors?.firstName ? 'firstName-error' : undefined
                           }
                           className="focus:shadow-outline-blue form-input mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition duration-150 ease-in-out focus:border-blue-300 focus:outline-none sm:text-sm sm:leading-5"
                         />
-                        {actionData?.fieldErrors?.first_name ? (
+                        {actionData?.fieldErrors?.firstName ? (
                           <p
                             className="py-2 text-xs text-rose-500"
                             role="alert"
-                            id="first_name-error"
+                            id="firstName-error"
                           >
-                            {actionData.fieldErrors.first_name}
+                            {actionData.fieldErrors.firstName}
                           </p>
                         ) : null}
                       </div>
 
                       <div className="col-span-6 md:col-span-3">
                         <label
-                          htmlFor="last_name"
+                          htmlFor="lastName"
                           className="block text-sm font-medium leading-5 text-gray-700"
                         >
-                          {t('settings.profile.last_name')}
+                          {t('settings.profile.lastName')}
                         </label>
                         <input
-                          id="last_name"
-                          name="last_name"
-                          defaultValue={adminData.user?.last_name}
-                          aria-invalid={Boolean(actionData?.fieldErrors?.last_name)}
+                          id="lastName"
+                          name="lastName"
+                          defaultValue={adminData.user?.lastName}
+                          aria-invalid={Boolean(actionData?.fieldErrors?.lastName)}
                           aria-errormessage={
-                            actionData?.fieldErrors?.last_name ? 'last_name-error' : undefined
+                            actionData?.fieldErrors?.lastName ? 'lastName-error' : undefined
                           }
                           className="focus:shadow-outline-blue form-input mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition duration-150 ease-in-out focus:border-blue-300 focus:outline-none sm:text-sm sm:leading-5"
                         />
-                        {actionData?.fieldErrors?.last_name ? (
+                        {actionData?.fieldErrors?.lastName ? (
                           <p
                             className="py-2 text-xs text-rose-500"
                             role="alert"
-                            id="last_name-error"
+                            id="lastName-error"
                           >
-                            {actionData.fieldErrors.last_name}
+                            {actionData.fieldErrors.lastName}
                           </p>
                         ) : null}
                       </div>

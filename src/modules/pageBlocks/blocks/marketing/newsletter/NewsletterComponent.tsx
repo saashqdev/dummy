@@ -60,24 +60,24 @@ export default function NewsletterComponent() {
                   {t('front.newsletter.email')} <span className="text-red-500">*</span>
                 </label>
                 <Input
-                  title={t('front.contact.first_name')}
+                  title={t('front.contact.firstName')}
                   required
                   type="text"
-                  name="first_name"
-                  id="first_name"
+                  name="firstName"
+                  id="firstName"
                   autoComplete="given-name"
                   defaultValue=""
                 />
               </div>
               <div>
-                <label htmlFor="last_name" className="mb-1 text-xs font-medium">
-                  {t('front.contact.last_name')} <span className="text-red-500">*</span>
+                <label htmlFor="lastName" className="mb-1 text-xs font-medium">
+                  {t('front.contact.lastName')} <span className="text-red-500">*</span>
                 </label>
                 <Input
-                  title={t('front.contact.last_name')}
+                  title={t('front.contact.lastName')}
                   type="text"
-                  name="last_name"
-                  id="last_name"
+                  name="lastName"
+                  id="lastName"
                   autoComplete="family-name"
                   defaultValue=""
                 />

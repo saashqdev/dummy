@@ -94,8 +94,8 @@ export default function UsersTable({
                 item={{
                   id: item.id,
                   email: item.email,
-                  first_name: item.first_name ?? '',
-                  last_name: item.last_name ?? '',
+                  firstName: item.firstName ?? '',
+                  lastName: item.lastName ?? '',
                   avatar: item.avatar,
                 }}
                 admin={item.admin}

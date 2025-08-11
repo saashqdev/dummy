@@ -33,6 +33,7 @@ import {
   tenant_subscription_usage_record,
   tenant_subscription_product,
   tenant_subscription,
+  user_role,
 } from '@/db/schema'
 import {
   relations_subscription_usage_based_price,
@@ -49,6 +50,7 @@ import {
   relations_tenant_subscription_usage_record,
   relations_tenant_subscription_product,
   relations_tenant_subscription,
+  relations_user_role,
 } from '@/db/relations'
 
 const filename = fileURLToPath(import.meta.url)
@@ -97,6 +99,7 @@ export default buildConfig({
             tenant_subscription_usage_record,
             tenant_subscription_product,
             tenant_subscription,
+            user_role,
           } as Record<string, any>,
           enums: {
             ...schema.enums,
@@ -117,6 +120,7 @@ export default buildConfig({
             relations_tenant_subscription_usage_record,
             relations_tenant_subscription_product,
             relations_tenant_subscription,
+            relations_user_role,
           } as Record<string, any>,
         }
       },

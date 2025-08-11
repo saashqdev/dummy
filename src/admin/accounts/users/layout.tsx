@@ -40,8 +40,8 @@ const loader = async (props: IServerComponentsProps) => {
 
   const filterableProperties: FilterablePropertyDto[] = [
     { name: 'email', title: t('models.user.email') },
-    { name: 'first_name', title: t('models.user.first_name') },
-    { name: 'last_name', title: t('models.user.last_name') },
+    { name: 'firstName', title: t('models.user.firstName') },
+    { name: 'lastName', title: t('models.user.lastName') },
     {
       name: 'tenantId',
       title: t('models.tenant.object'),
@@ -62,8 +62,8 @@ const loader = async (props: IServerComponentsProps) => {
   ]
   const filters = {
     email: getStringFilter(searchParams, 'email'),
-    first_name: getStringFilter(searchParams, 'first_name'),
-    last_name: getStringFilter(searchParams, 'last_name'),
+    firstName: getStringFilter(searchParams, 'firstName'),
+    lastName: getStringFilter(searchParams, 'lastName'),
     tenantId: getNullableStringFilter(searchParams, 'tenantId'),
     admin: getBooleanFilter(searchParams, 'isAdmin'),
   }

@@ -22,8 +22,8 @@ const ADMIN_EMAIL = 'admin@email.com'
 async function seed() {
   console.log('🌱 Seeding admin user', 1)
   const admin = await createUser({
-    first_name: 'Admin',
-    last_name: 'User',
+    firstName: 'Admin',
+    lastName: 'User',
     email: ADMIN_EMAIL,
     password: 'password',
     admin: true,
@@ -31,15 +31,15 @@ async function seed() {
 
   console.log('🌱 Creating users with tenants', 2)
   const user1 = await createUser({
-    first_name: 'John',
-    last_name: 'Doe',
+    firstName: 'John',
+    lastName: 'Doe',
     email: 'john.doe@company.com',
     password: 'password',
     admin: false,
   })
   const user2 = await createUser({
-    first_name: 'Luna',
-    last_name: 'Davis',
+    firstName: 'Luna',
+    lastName: 'Davis',
     email: 'luna.davis@company.com',
     password: 'password',
     admin: false,
@@ -61,14 +61,14 @@ async function seed() {
 }
 
 async function createUser({
-  first_name,
-  last_name,
+  firstName,
+  lastName,
   email,
   password,
   admin,
 }: {
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   email: string
   password: string
   admin: boolean
@@ -79,8 +79,8 @@ async function createUser({
     const user_id = await db.user.create({
       email,
       hash: passwordHash,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       avatar: null,
       phone: null,
       default_tenant_id: null,

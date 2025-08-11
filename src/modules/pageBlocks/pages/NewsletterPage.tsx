@@ -30,8 +30,8 @@ export namespace NewsletterPage {
     formData: FormData,
   ): Promise<{ error?: string; success?: string }> {
     const submission = {
-      first_name: formData.get('first_name')?.toString() ?? '',
-      last_name: formData.get('last_name')?.toString() ?? '',
+      firstName: formData.get('firstName')?.toString() ?? '',
+      lastName: formData.get('lastName')?.toString() ?? '',
       email: formData.get('email')?.toString() ?? '',
       source: formData.get('source')?.toString() ?? '',
       honeypot: formData.get('codeId')?.toString() ?? '',
@@ -53,8 +53,8 @@ export namespace NewsletterPage {
         to: defaultAppConfiguration.email.support_email,
         subject: 'New newsletter subscription',
         body: `
-                <p>First Name: ${submission.first_name}</p>
-                <p>Last Name: ${submission.last_name}</p>
+                <p>First Name: ${submission.firstName}</p>
+                <p>Last Name: ${submission.lastName}</p>
                 <p>Email: ${submission.email}</p>
                 `,
       }).catch(() => {})
@@ -69,8 +69,8 @@ export namespace NewsletterPage {
         method: 'post',
         body: JSON.stringify({
           email: submission.email,
-          first_name: submission.last_name,
-          last_name: submission.last_name,
+          firstName: submission.lastName,
+          lastName: submission.lastName,
           api_key: API_KEY,
         }),
         headers: {

@@ -84,7 +84,7 @@ export default function NewMember({ featurePlanUsage, serverAction }: Props) {
               className="block truncate text-xs font-medium text-gray-700"
             >
               <div className="flex space-x-1 truncate">
-                <div>{t('models.user.first_name')}</div>
+                <div>{t('models.user.firstName')}</div>
                 <div className="ml-1 text-red-500">*</div>
               </div>
             </label>
@@ -108,7 +108,7 @@ export default function NewMember({ featurePlanUsage, serverAction }: Props) {
           {/*User Last Name */}
           <div>
             <label htmlFor="last-name" className="block truncate text-xs font-medium text-gray-700">
-              {t('models.user.last_name')}
+              {t('models.user.lastName')}
             </label>
             <div className="mt-1 flex w-full rounded-md shadow-sm">
               <input

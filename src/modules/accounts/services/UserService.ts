@@ -35,21 +35,21 @@ export async function getDefaultTenant(user: {
 
 export async function createUser(data: {
   email: string
-  first_name?: string
-  last_name?: string
+  firstName?: string
+  lastName?: string
   password?: string
   active?: boolean
   avatar?: string | null
   locale?: string | null
   default_tenant_id?: string | null
 }) {
-  const { email, password, first_name, last_name, active, avatar, locale, default_tenant_id } = data
+  const { email, password, firstName, lastName, active, avatar, locale, default_tenant_id } = data
   const passwordHash = password ? await bcrypt.hash(password, 10) : ''
   const id = await db.user.create({
     email,
     hash: passwordHash,
-    first_name: first_name || '',
-    last_name: last_name || '',
+    firstName: firstName || '',
+    lastName: lastName || '',
     avatar: avatar || null,
     locale: locale || null,
     default_tenant_id: default_tenant_id || null,
@@ -69,8 +69,8 @@ export async function updateUser(
   id: string,
   data: {
     passwordHash?: string
-    first_name?: string
-    last_name?: string
+    firstName?: string
+    lastName?: string
     avatar?: string
     phone?: string
     default_tenant_id?: string
@@ -84,8 +84,8 @@ export async function updateUser(
   }
   return await db.user
     .update(id, {
-      first_name: data.first_name,
-      last_name: data.last_name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       avatar: data.avatar,
       locale: data.locale,
       verify_token: data.verify_token,

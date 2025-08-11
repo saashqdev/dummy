@@ -132,8 +132,8 @@ export default function MemberInvitationsListAndTable({
                             item={{
                               id: '',
                               email: item.email,
-                              first_name: item.first_name,
-                              last_name: item.last_name,
+                              firstName: item.firstName,
+                              lastName: item.lastName,
                             }}
                           />
                         </td>

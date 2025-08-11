@@ -10,8 +10,8 @@ interface Props {
   item: {
     id: string
     email: string
-    first_name: string
-    last_name: string
+    firstName: string
+    lastName: string
     avatar?: string | null
   }
   admin?: boolean | null
@@ -56,7 +56,7 @@ function Item({ item, admin, withEmail = true, withAvatar, showCurrent, href, ro
           {href ? (
             <Link href={href} className="group-hover:underline">
               <span>
-                {item.first_name} {item.last_name}{' '}
+                {item.firstName} {item.lastName}{' '}
                 {withEmail && (
                   <span className="text-xs font-normal italic opacity-80">({item.email})</span>
                 )}
@@ -64,7 +64,7 @@ function Item({ item, admin, withEmail = true, withAvatar, showCurrent, href, ro
             </Link>
           ) : (
             <span>
-              {item.first_name} {item.last_name}{' '}
+              {item.firstName} {item.lastName}{' '}
               {withEmail && (
                 <span className="text-xs font-normal italic opacity-80">({item.email})</span>
               )}
@@ -79,7 +79,7 @@ function Item({ item, admin, withEmail = true, withAvatar, showCurrent, href, ro
               {href ? (
                 <Link href={href} className="group-hover:underline">
                   <span className="truncate">
-                    {item.first_name} {item.last_name}{' '}
+                    {item.firstName} {item.lastName}{' '}
                     {isAdmin() && (
                       <span className="text-xs text-teal-500">({t('shared.adminAccess')})</span>
                     )}{' '}
@@ -87,7 +87,7 @@ function Item({ item, admin, withEmail = true, withAvatar, showCurrent, href, ro
                 </Link>
               ) : (
                 <span className="truncate">
-                  {item.first_name} {item.last_name}{' '}
+                  {item.firstName} {item.lastName}{' '}
                   {isAdmin() && (
                     <span className="text-xs text-teal-500">({t('shared.adminAccess')})</span>
                   )}{' '}

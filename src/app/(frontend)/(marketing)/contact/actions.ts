@@ -8,8 +8,8 @@ import { getEmailConfig, sendEmail } from '@/modules/emails/services/EmailServic
 export async function actionContact(prev: any, form: FormData) {
   const { t } = await getServerTranslations()
   const submission = {
-    first_name: form.get('first_name')?.toString() ?? '',
-    last_name: form.get('last_name')?.toString() ?? '',
+    firstName: form.get('firstName')?.toString() ?? '',
+    lastName: form.get('lastName')?.toString() ?? '',
     email: form.get('email')?.toString() ?? '',
     company: form.get('company')?.toString() ?? '',
     jobTitle: form.get('jobTitle')?.toString() ?? '',
@@ -32,7 +32,7 @@ export async function actionContact(prev: any, form: FormData) {
         subject: 'New contact form submission',
         body: `
                 <p>
-                  <b>Name</b>: ${submission.first_name} ${submission.last_name}<br/>
+                  <b>Name</b>: ${submission.firstName} ${submission.lastName}<br/>
                   <b>Email</b>: ${submission.email}<br/>
                   ${submission.company && `<b>Company</b>: ${submission.company}<br/>`}
                   ${submission.jobTitle && `<b>Job Title</b>: ${submission.jobTitle}<br/>`}
@@ -52,6 +52,6 @@ export async function actionContact(prev: any, form: FormData) {
   }
 
   return {
-    success: t('front.contact.success', { 0: submission.first_name }),
+    success: t('front.contact.success', { 0: submission.firstName }),
   }
 }

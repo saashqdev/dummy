@@ -48,8 +48,8 @@ export default function ({
 
     interface UserItem {
       email?: string
-      first_name?: string
-      last_name?: string
+      firstName?: string
+      lastName?: string
       tenants: Tenant[]
       roles: Role[]
     }
@@ -57,8 +57,8 @@ export default function ({
     return items.filter(
       (f: UserItem) =>
         f.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.first_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.last_name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.tenants.find((f: Tenant) =>
           f.tenant.name.toUpperCase().includes(searchInput.toUpperCase()),
         ) ||

@@ -6,8 +6,8 @@ export interface IUserDb {
   getAllWithPagination(params: {
     filters: {
       email?: string
-      first_name?: string
-      last_name?: string
+      firstName?: string
+      lastName?: string
       tenant_id?: string | null
       admin?: boolean
     }
@@ -24,8 +24,8 @@ export interface IUserDb {
   update(
     id: string,
     data: {
-      first_name?: string
-      last_name?: string
+      firstName?: string
+      lastName?: string
       avatar?: string | null
       locale?: string | null
       verify_token?: string | null

@@ -31,8 +31,8 @@ export const actionAdminEmails = async (prev: any, form: FormData) => {
         to: email,
         ...template.parse({
           appConfiguration,
-          name: user?.first_name,
-          invite_sender_name: user?.first_name,
+          name: user?.firstName,
+          invite_sender_name: user?.firstName,
           invite_sender_organization: '{Account Name}',
         }),
       })
