@@ -98,7 +98,8 @@ export const signUpAction = publicClient
       data: {
         name: username,
         slug: username,
-        subdomain: username,
+        active: true, // or set to the appropriate value
+        subscriptionId: '', // or set to the appropriate value
       },
     })
 
@@ -109,6 +110,9 @@ export const signUpAction = publicClient
         email,
         password,
         onboarded: false,
+        active: false, // or set to the appropriate value
+        passwordHash: '', // or generate/set the hash if required by your logic
+        admin: false, // or set to false if not admin
       },
     })
 
@@ -116,61 +120,7 @@ export const signUpAction = publicClient
       collection: 'roles',
       data: {
         name: 'Admin',
-        backups: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        cloudProviderAccounts: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        dockerRegistries: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        gitProviders: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        projects: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
         roles: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        securityGroups: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        servers: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        services: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
-        sshKeys: {
           create: true,
           delete: true,
           read: true,
@@ -182,17 +132,15 @@ export const signUpAction = publicClient
           read: true,
           update: true,
         },
-        templates: {
-          create: true,
-          delete: true,
-          read: true,
-          update: true,
-        },
         type: 'management',
         description: 'Full access to manage projects, services, and all other features.',
         tags: ['Admin', 'Full Access'],
         tenant: tenant,
         createdUser: user,
+        role_type: 'admin', // or the appropriate value for your schema
+        assign_to_new_users: true, // or false, as needed
+        is_default: true, // or false, as needed
+        order: 1, // or the appropriate order value
       },
     })
 

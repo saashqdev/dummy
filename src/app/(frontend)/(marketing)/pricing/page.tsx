@@ -5,7 +5,6 @@ import { PricingBlockService } from '@/modules/pageBlocks/blocks/marketing/prici
 import { getServerTranslations } from '@/i18n/server'
 import { IServerComponentsProps } from '@/lib/dtos/ServerComponentsProps'
 import { PricingPage } from '@/modules/pageBlocks/pages/PricingPage'
-import { revalidatePath } from 'next/cache'
 import { getAppConfiguration } from '@/modules/core/services/AppConfigurationService'
 import { redirect } from 'next/navigation'
 
@@ -30,16 +29,6 @@ const loader = async (props: IServerComponentsProps) => {
     pricingBlockData: await PricingBlockService.load({ searchParams }),
   }
   return data
-}
-
-export const actionPricing = async (prev: any, form: FormData) => {
-  const { t } = await getServerTranslations()
-  const action = form.get('action')
-  if (action === 'subscribe') {
-    const response = await PricingBlockService.subscribe({ form, t })
-    revalidatePath('/pricing')
-    return response
-  }
 }
 
 export default async function (props: IServerComponentsProps) {
