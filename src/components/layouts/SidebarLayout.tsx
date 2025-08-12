@@ -112,11 +112,16 @@ export default function SidebarLayout({ layout, children, appData }: Props) {
                       <Link href={'/'}>
                         {appConfiguration.branding.logo_dark_mode ||
                         appConfiguration.branding.logo ? (
-                          <img
+                          <Image
                             className={'mx-auto h-8 w-auto'}
                             src={
-                              appConfiguration.branding.logo_dark_mode ||
-                              appConfiguration.branding.logo
+                              appConfiguration.branding.logo_dark_mode &&
+                              appConfiguration.branding.logo_dark_mode.length > 0
+                                ? (appConfiguration.branding.logo_dark_mode as string)
+                                : appConfiguration.branding.logo &&
+                                    appConfiguration.branding.logo.length > 0
+                                  ? (appConfiguration.branding.logo as string)
+                                  : '/assets/img/logo-dark.png'
                             }
                             alt="Logo"
                           />
@@ -162,19 +167,32 @@ export default function SidebarLayout({ layout, children, appData }: Props) {
               <nav className="flex-1 select-none space-y-3 bg-gray-900 px-2 py-4">
                 <div className="flex flex-col space-y-2">
                   <Link href={'/'}>
-                    {appConfiguration.branding.logo_dark_mode || appConfiguration.branding.logo ? (
-                      <img
+                    {(appConfiguration.branding.logo_dark_mode &&
+                      appConfiguration.branding.logo_dark_mode.length > 0) ||
+                    (appConfiguration.branding.logo &&
+                      appConfiguration.branding.logo.length > 0) ? (
+                      <Image
                         className={'mx-auto h-8 w-auto'}
                         src={
-                          appConfiguration.branding.logo_dark_mode || appConfiguration.branding.logo
+                          appConfiguration.branding.logo_dark_mode &&
+                          appConfiguration.branding.logo_dark_mode.length > 0
+                            ? (appConfiguration.branding.logo_dark_mode as string)
+                            : appConfiguration.branding.logo &&
+                                appConfiguration.branding.logo.length > 0
+                              ? (appConfiguration.branding.logo as string)
+                              : '/assets/img/logo-dark.png'
                         }
                         alt="Logo"
+                        width={32}
+                        height={32}
                       />
                     ) : (
                       <Image
                         className={'mx-auto h-8 w-auto'}
                         src={'/assets/img/logo-dark.png'}
                         alt="Logo"
+                        width={32}
+                        height={32}
                       />
                     )}
                   </Link>

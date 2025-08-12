@@ -1,20 +1,23 @@
-"use client";
+'use client'
 
-import clsx from "clsx";
-import { useTranslation } from "react-i18next";
-import ButtonEvent from "@/components/ui/buttons/ButtonEvent";
-import { TestimonialsBlockDto } from "@/modules/pageBlocks/blocks/marketing/testimonials/TestimonialsBlockDto";
-import DateUtils from "@/lib/shared/DateUtils";
-import LinkOrAhref from "@/components/ui/buttons/LinkOrAhref";
+import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
+import ButtonEvent from '@/components/ui/buttons/ButtonEvent'
+import { TestimonialsBlockDto } from '@/modules/pageBlocks/blocks/marketing/testimonials/TestimonialsBlockDto'
+import DateUtils from '@/lib/shared/DateUtils'
+import LinkOrAhref from '@/components/ui/buttons/LinkOrAhref'
+import Image from 'next/image'
 
 export default function TestimonialsVariantSimple({ item }: { item: TestimonialsBlockDto }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <section className="">
       <div className="container mx-auto space-y-12 px-5 py-24">
         {(item.headline || item.subheadline) && (
           <div className="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
-            <h2 className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">{t(item.headline)}</h2>
+            <h2 className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">
+              {t(item.headline)}
+            </h2>
             <p className="text-center text-xl">{t(item.subheadline)}</p>
           </div>
         )}
@@ -24,11 +27,11 @@ export default function TestimonialsVariantSimple({ item }: { item: Testimonials
               <div
                 key={idx}
                 className={clsx(
-                  "w-full p-4",
-                  item.items.length === 1 && "mx-auto max-w-xl md:w-full",
-                  item.items.length === 2 && "md:w-1/2",
-                  item.items.length === 3 && "md:w-1/3",
-                  item.items.length > 3 && "md:w-1/2"
+                  'w-full p-4',
+                  item.items.length === 1 && 'mx-auto max-w-xl md:w-full',
+                  item.items.length === 2 && 'md:w-1/2',
+                  item.items.length === 3 && 'md:w-1/3',
+                  item.items.length > 3 && 'md:w-1/2',
                 )}
               >
                 <div className="group: h-full rounded-lg bg-secondary p-6">
@@ -66,9 +69,9 @@ export default function TestimonialsVariantSimple({ item }: { item: Testimonials
                         target="_blank"
                         className="hover:underline"
                         event={{
-                          action: "click",
-                          category: "testimonials",
-                          label: "quote",
+                          action: 'click',
+                          category: 'testimonials',
+                          label: 'quote',
                           value: testimonial.name,
                         }}
                       >
@@ -80,14 +83,21 @@ export default function TestimonialsVariantSimple({ item }: { item: Testimonials
                   </p>
                   <div className="inline-flex items-center gap-4">
                     {testimonial.avatar && (
-                      <img alt="testimonial" src={testimonial.avatar} className="h-12 w-12 flex-shrink-0 rounded-full object-cover object-center" />
+                      <Image
+                        alt="testimonial"
+                        src={testimonial.avatar}
+                        className="h-12 w-12 flex-shrink-0 rounded-full object-cover object-center"
+                      />
                     )}
                     <span className="flex flex-grow flex-col">
                       <LinkOrAhref
                         to={testimonial.personalWebsite}
                         target="_blank"
                         rel="noreferrer"
-                        className={clsx("title-font text-left font-medium", testimonial.personalWebsite && "hover:underline")}
+                        className={clsx(
+                          'title-font text-left font-medium',
+                          testimonial.personalWebsite && 'hover:underline',
+                        )}
                         // event={{ action: "click", category: "testimonial-user", label: testimonial.name, value: testimonial.personalWebsite ?? "" }}
                       >
                         {testimonial.name}
@@ -104,7 +114,12 @@ export default function TestimonialsVariantSimple({ item }: { item: Testimonials
                                   target="_blank"
                                   rel="noreferrer"
                                   className="hover:underline"
-                                  event={{ action: "click", category: "testimonial-company", label: testimonial.company, value: testimonial.companyUrl ?? "" }}
+                                  event={{
+                                    action: 'click',
+                                    category: 'testimonial-company',
+                                    label: testimonial.company,
+                                    value: testimonial.companyUrl ?? '',
+                                  }}
                                 >
                                   {testimonial.company}
                                 </ButtonEvent>
@@ -115,7 +130,10 @@ export default function TestimonialsVariantSimple({ item }: { item: Testimonials
                           </>
                         )}
                         {testimonial.createdAt && (
-                          <time dateTime={DateUtils.dateYMDHMSMS(testimonial.createdAt)} title={DateUtils.dateYMDHMSMS(testimonial.createdAt)}>
+                          <time
+                            dateTime={DateUtils.dateYMDHMSMS(testimonial.createdAt)}
+                            title={DateUtils.dateYMDHMSMS(testimonial.createdAt)}
+                          >
                             {DateUtils.dateAgo(testimonial.createdAt)}
                           </time>
                         )}
@@ -124,10 +142,10 @@ export default function TestimonialsVariantSimple({ item }: { item: Testimonials
                   </div>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </section>
-  );
+  )
 }

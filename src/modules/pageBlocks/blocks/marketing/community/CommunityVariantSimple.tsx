@@ -1,32 +1,35 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import clsx from "clsx";
-import { useTranslation } from "react-i18next";
-import GridBlockUtils from "../../shared/grid/GridBlockUtils";
-import { CommunityBlockDto } from "./CommunityBlockDto";
+import Link from 'next/link'
+import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
+import GridBlockUtils from '../../shared/grid/GridBlockUtils'
+import { CommunityBlockDto } from './CommunityBlockDto'
+import Image from 'next/image'
 
 export default function CommunityVariantSimple({ item }: { item: CommunityBlockDto }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <div>
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-24">
         <div className="space-y-8 text-center sm:space-y-12">
           <div className="space-y-5 sm:mx-auto sm:space-y-4">
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t(item.headline)}</h2>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+              {t(item.headline)}
+            </h2>
             <p className="text-xl text-gray-500">{t(item.subheadline)}</p>
             {item.cta && (
               <div className="flex flex-col justify-center space-y-1 sm:flex-row sm:space-x-2 sm:space-y-0">
                 {item.cta.map((item) => {
                   return (
                     <div key={item.href} className="rounded-md">
-                      {item.href.startsWith("http") ? (
+                      {item.href.startsWith('http') ? (
                         <a
                           href={item.href}
                           target="_blank"
                           rel="noreferrer"
                           className={clsx(
-                            "group flex w-full items-center justify-center space-x-2 truncate rounded-md border px-8 py-3 text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-900 md:px-4 md:py-2"
+                            'group flex w-full items-center justify-center space-x-2 truncate rounded-md border px-8 py-3 text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-900 md:px-4 md:py-2',
                           )}
                         >
                           {t(item.text)}
@@ -35,26 +38,30 @@ export default function CommunityVariantSimple({ item }: { item: CommunityBlockD
                         <Link
                           href={item.href}
                           className={clsx(
-                            "group flex w-full items-center justify-center space-x-2 truncate rounded-md border px-8 py-3 text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-900 md:px-4 md:py-2"
+                            'group flex w-full items-center justify-center space-x-2 truncate rounded-md border px-8 py-3 text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-900 md:px-4 md:py-2',
                           )}
                         >
                           {t(item.text)}
                         </Link>
                       )}
                     </div>
-                  );
+                  )
                 })}
               </div>
             )}
           </div>
           {item.data?.members && (
             <div className="mx-auto">
-              <ul className={item.grid ? GridBlockUtils.getClasses(item.grid) : "flex flex-wrap justify-center"}>
+              <ul
+                className={
+                  item.grid ? GridBlockUtils.getClasses(item.grid) : 'flex flex-wrap justify-center'
+                }
+              >
                 {item.data.members.map((member) => {
                   const card = (
                     <li key={member.user}>
                       <div className="space-y-4">
-                        <img
+                        <Image
                           className="mx-auto h-10 w-10 flex-shrink-0 rounded-full sm:h-12 sm:w-12 lg:h-14 lg:w-14"
                           src={member.avatar_url}
                           alt={member.user}
@@ -68,15 +75,20 @@ export default function CommunityVariantSimple({ item }: { item: CommunityBlockD
                         )}
                       </div>
                     </li>
-                  );
+                  )
                   if (member.url) {
                     return (
-                      <Link key={member.user} href={member.url} className="hover:underline" target="_blank">
+                      <Link
+                        key={member.user}
+                        href={member.url}
+                        className="hover:underline"
+                        target="_blank"
+                      >
                         {card}
                       </Link>
-                    );
+                    )
                   }
-                  return card;
+                  return card
                 })}
               </ul>
             </div>
@@ -84,5 +96,5 @@ export default function CommunityVariantSimple({ item }: { item: CommunityBlockD
         </div>
       </div>
     </div>
-  );
+  )
 }

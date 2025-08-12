@@ -10,6 +10,7 @@ import { actionAdminProfile } from './actions'
 import { languages } from '@/i18n/settings'
 import i18next from 'i18next'
 import LoadingButton from '@/components/ui/buttons/LoadingButton'
+import Image from 'next/image'
 
 export default function () {
   const adminData = useAdminData()
@@ -155,7 +156,7 @@ export default function () {
                           <div className="h-12 w-12 overflow-hidden rounded-md bg-gray-100">
                             {(() => {
                               if (avatar) {
-                                return <img id="avatar" alt="Avatar" src={avatar} />
+                                return <Image id="avatar" alt="Avatar" src={avatar} />
                               } else {
                                 return (
                                   <svg

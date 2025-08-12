@@ -1,21 +1,22 @@
-import SlideOver from "../slideOvers/SlideOver";
-import { useState } from "react";
-import UploadFile from "./UploadFile";
+import SlideOver from '../slideOvers/SlideOver'
+import { useState } from 'react'
+import UploadFile from './UploadFile'
+import Image from 'next/image'
 
 interface Props {
-  title: string;
-  initialImage?: string;
-  onLoaded: (image: string, file: File) => void;
-  onClose: () => void;
+  title: string
+  initialImage?: string
+  onLoaded: (image: string, file: File) => void
+  onClose: () => void
 }
 
-export default function UploadImage({ title = "", initialImage, onLoaded, onClose }: Props) {
-  const [image, setImage] = useState(initialImage);
+export default function UploadImage({ title = '', initialImage, onLoaded, onClose }: Props) {
+  const [image, setImage] = useState(initialImage)
 
   function onChange(base64: string, file: File) {
-    setImage(base64);
-    onLoaded(base64, file);
-    onClose();
+    setImage(base64)
+    onLoaded(base64, file)
+    onClose()
   }
 
   return (
@@ -25,15 +26,20 @@ export default function UploadImage({ title = "", initialImage, onLoaded, onClos
         title={title}
         content={
           <div className="space-y-2">
-            <UploadFile accept="image/png, image/jpg, image/jpeg" description={title} onDropped={onChange} className="h-12" />
+            <UploadFile
+              accept="image/png, image/jpg, image/jpeg"
+              description={title}
+              onDropped={onChange}
+              className="h-12"
+            />
             {image && (
               <div>
-                <img className="h-auto w-full" alt="Uploaded" src={image} />
+                <Image className="h-auto w-full" alt="Uploaded" src={image} />
               </div>
             )}
           </div>
         }
       ></SlideOver>
     </div>
-  );
+  )
 }

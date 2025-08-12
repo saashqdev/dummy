@@ -2,6 +2,7 @@
 
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
+import Image from 'next/image'
 import UserUtils from '@/modules/accounts/utils/UserUtils'
 import UrlUtils from '@/lib/utils/UrlUtils'
 import { UserDto } from '@/db/models'
@@ -22,10 +23,12 @@ export default function ProfileBanner({ user }: Props) {
           <div className="flex items-center">
             <Link href={UrlUtils.currentTenantUrl(params, `settings/profile`)}>
               {user?.avatar && (
-                <img
+                <Image
                   className="hidden h-12 w-12 rounded-full sm:block"
                   src={user?.avatar}
                   alt="Profile"
+                  width={48}
+                  height={48}
                 />
               )}
             </Link>
@@ -35,10 +38,12 @@ export default function ProfileBanner({ user }: Props) {
                   {(() => {
                     if (user?.avatar) {
                       return (
-                        <img
+                        <Image
                           className="h-12 w-12 rounded-sm sm:hidden"
                           src={user?.avatar}
                           alt="Avatar"
+                          width={48}
+                          height={48}
                         />
                       )
                     } else {

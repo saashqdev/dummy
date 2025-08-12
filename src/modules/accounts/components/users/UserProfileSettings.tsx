@@ -15,6 +15,7 @@ import { languages } from '@/i18n/settings'
 import { IServerAction } from '@/lib/dtos/ServerComponentsProps'
 import { useRouter } from 'next/navigation'
 import i18next from 'i18next'
+import Image from 'next/image'
 
 export default function UserProfileSettings({
   user,
@@ -138,7 +139,7 @@ export default function UserProfileSettings({
                         <div className="h-12 w-12 overflow-hidden rounded-md bg-gray-100">
                           {(() => {
                             if (avatar) {
-                              return <img id="avatar" alt="Avatar" src={avatar} />
+                              return <Image id="avatar" alt="Avatar" src={avatar} />
                             } else {
                               return (
                                 <svg
