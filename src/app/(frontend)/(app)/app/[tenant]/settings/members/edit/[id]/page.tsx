@@ -50,36 +50,6 @@ type ActionData = {
   }
 }
 
-export const actionAppSettingsMembersEdit = async (prev: any, form: FormData) => {
-  const tenantSlug = await requireTenantSlug()
-  const tenantId = await getTenantIdFromUrl(tenantSlug)
-  await verifyUserHasPermission('app.settings.members.update', tenantId)
-  const { t } = await getServerTranslations()
-
-  const id = form.get('id')?.toString()
-  if (!id) {
-    return { error: t('shared.notFound') }
-  }
-  const action = form.get('action')?.toString()
-
-  if (action === 'edit') {
-    const tenantUser = await db.tenantUser.getById(id)
-    if (!tenantUser) {
-      return { error: t('shared.notFound') }
-    }
-
-    return redirect(`/app/${tenantSlug}/settings/members`)
-  } else if (action === 'delete') {
-    await verifyUserHasPermission('app.settings.members.delete', tenantId)
-    try {
-      await db.tenantUser.del(id)
-    } catch (e: any) {
-      return { error: e.toString() }
-    }
-    return redirect(`/app/${tenantSlug}/settings/members`)
-  }
-}
-
 export default async function (props: IServerComponentsProps) {
   const data = await loader(props)
   return <Component data={data} />

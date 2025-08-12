@@ -1,7 +1,8 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
-import { actionAppSubscribeTenant, AppSubscribeTenantLoaderData } from './page'
+import { AppSubscribeTenantLoaderData } from './page'
+import { actionAppSubscribeTenant } from './actions'
 import { useActionState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'

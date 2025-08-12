@@ -17,7 +17,7 @@ import {
   TenantSubscriptionWithDetailsDto,
 } from '@/db/models'
 import { useActionState, useEffect } from 'react'
-import { actionAppSettingsSubscription } from '@/app/(frontend)/(app)/fred/[tenant]/settings/subscription/page'
+import { actionAppSettingsSubscription } from '@/app/(frontend)/(app)/app/[tenant]/actions'
 import { toast } from 'sonner'
 
 export default function SubscriptionSettings({
