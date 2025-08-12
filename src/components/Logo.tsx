@@ -33,8 +33,7 @@ const Logo = ({
   const lightMode = branding?.logo?.lightMode
   const darkMode = branding?.logo?.darkMode
 
-  const logoUrl =
-    theme === 'dark' ? extractLogoUrl(darkMode) : extractLogoUrl(lightMode)
+  const logoUrl = theme === 'dark' ? extractLogoUrl(darkMode) : extractLogoUrl(lightMode)
 
   // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
@@ -53,13 +52,10 @@ const Logo = ({
         width={200}
         height={32}
         key={theme}
-        className={cn(
-          `h-full max-h-8 w-full max-w-24 object-contain`,
-          className,
-        )}
+        className={cn(`h-full max-h-8 w-full max-w-24 object-contain`, className)}
       />
 
-      {showText && !logoUrl?.url && <p className='hidden sm:block'>dFlow</p>}
+      {showText && !logoUrl?.url && <p className="hidden sm:block">dFlow</p>}
     </>
   )
 }

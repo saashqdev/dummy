@@ -1,7 +1,6 @@
 export type IServerComponentsProps = {
   params?: Promise<{ [key: string]: string }>
   searchParams?: Promise<ISearchParams>
-  //  children?: React.ReactNode;
 }
 
 export type ISearchParams = {

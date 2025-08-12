@@ -59,360 +59,506 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | 'Pacific/Fiji'
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
-  };
-  blocks: {};
+    users: UserAuthOperations
+  }
+  blocks: {}
   collections: {
-    users: User;
-    tenants: Tenant;
-    roles: Role;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
-  };
-  collectionsJoins: {};
+    users: User
+    tenants: Tenant
+    roles: Role
+    'payload-locked-documents': PayloadLockedDocument
+    'payload-preferences': PayloadPreference
+    'payload-migrations': PayloadMigration
+  }
+  collectionsJoins: {}
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    tenants: TenantsSelect<false> | TenantsSelect<true>;
-    roles: RolesSelect<false> | RolesSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
-  };
+    users: UsersSelect<false> | UsersSelect<true>
+    tenants: TenantsSelect<false> | TenantsSelect<true>
+    roles: RolesSelect<false> | RolesSelect<true>
+    'payload-locked-documents':
+      | PayloadLockedDocumentsSelect<false>
+      | PayloadLockedDocumentsSelect<true>
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
+  }
   db: {
-    defaultIDType: number;
-  };
-  globals: {};
-  globalsSelect: {};
-  locale: null;
+    defaultIDType: number
+  }
+  globals: {
+    branding: Branding
+  }
+  globalsSelect: {
+    branding: BrandingSelect<false> | BrandingSelect<true>
+  }
+  locale: null
   user: User & {
-    collection: 'users';
-  };
+    collection: 'users'
+  }
   jobs: {
-    tasks: unknown;
-    workflows: unknown;
-  };
+    tasks: unknown
+    workflows: unknown
+  }
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   login: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   registerFirstUser: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   unlock: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
-  username?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  phone?: string | null;
-  avatarUrl?: string | null;
-  defaultTenantId?: string | null;
-  locale?: string | null;
-  verifyToken?: string | null;
-  passwordHash: string;
-  onboarded?: boolean | null;
-  role?: ('admin' | 'user' | 'demo')[] | null;
+  id: number
+  username?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  avatarUrl?: string | null
+  defaultTenantId?: string | null
+  locale?: string | null
+  verifyToken?: string | null
+  passwordHash: string
+  onboarded?: boolean | null
+  role?: ('admin' | 'user' | 'demo')[] | null
   tenants?:
     | {
-        tenant: number | Tenant;
-        role: number | Role;
-        id?: string | null;
+        tenant: number | Tenant
+        role: number | Role
+        id?: string | null
       }[]
-    | null;
-  admin: boolean;
-  active: boolean;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  enableAPIKey?: boolean | null;
-  apiKey?: string | null;
-  apiKeyIndex?: string | null;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
+    | null
+  admin: boolean
+  active: boolean
+  deletedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  enableAPIKey?: boolean | null
+  apiKey?: string | null
+  apiKeyIndex?: string | null
+  email: string
+  resetPasswordToken?: string | null
+  resetPasswordExpiration?: string | null
+  salt?: string | null
+  hash?: string | null
+  loginAttempts?: number | null
+  lockUntil?: string | null
   sessions?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        id: string
+        createdAt?: string | null
+        expiresAt: string
       }[]
-    | null;
-  password?: string | null;
+    | null
+  password?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tenants".
  */
 export interface Tenant {
-  id: number;
-  name: string;
-  slug: string;
-  subscriptionId: string;
-  icon?: string | null;
-  active: boolean;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  name: string
+  slug: string
+  subscriptionId: string
+  icon?: string | null
+  active: boolean
+  deletedAt?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "roles".
  */
 export interface Role {
-  id: number;
-  tenant?: (number | null) | Tenant;
+  id: number
+  tenant?: (number | null) | Tenant
   /**
    * Enter the name of the role.
    */
-  name: string;
+  name: string
   /**
    * Enter description for the role.
    */
-  description?: string | null;
-  role_type: string;
-  assign_to_new_users: boolean;
-  is_default: boolean;
-  order: number;
+  description?: string | null
+  role_type: string
+  assign_to_new_users: boolean
+  is_default: boolean
+  order: number
   roles: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
+    create: boolean
+    update: boolean
+    read: boolean
+    delete: boolean
+  }
   team: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  type?: ('engineering' | 'management' | 'marketing' | 'finance' | 'sales') | null;
-  createdUser?: (number | null) | User;
-  tags?: string[] | null;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
+    create: boolean
+    update: boolean
+    read: boolean
+    delete: boolean
+  }
+  type?: ('engineering' | 'management' | 'marketing' | 'finance' | 'sales') | null
+  createdUser?: (number | null) | User
+  tags?: string[] | null
+  deletedAt?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: number
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'users'
+        value: number | User
       } | null)
     | ({
-        relationTo: 'tenants';
-        value: number | Tenant;
+        relationTo: 'tenants'
+        value: number | Tenant
       } | null)
     | ({
-        relationTo: 'roles';
-        value: number | Role;
-      } | null);
-  globalSlug?: string | null;
+        relationTo: 'roles'
+        value: number | Role
+      } | null)
+  globalSlug?: string | null
   user: {
-    relationTo: 'users';
-    value: number | User;
-  };
-  updatedAt: string;
-  createdAt: string;
+    relationTo: 'users'
+    value: number | User
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: number
   user: {
-    relationTo: 'users';
-    value: number | User;
-  };
-  key?: string | null;
+    relationTo: 'users'
+    value: number | User
+  }
+  key?: string | null
   value?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
-  name?: string | null;
-  batch?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  name?: string | null
+  batch?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  username?: T;
-  firstName?: T;
-  lastName?: T;
-  phone?: T;
-  avatarUrl?: T;
-  defaultTenantId?: T;
-  locale?: T;
-  verifyToken?: T;
-  passwordHash?: T;
-  onboarded?: T;
-  role?: T;
+  username?: T
+  firstName?: T
+  lastName?: T
+  phone?: T
+  avatarUrl?: T
+  defaultTenantId?: T
+  locale?: T
+  verifyToken?: T
+  passwordHash?: T
+  onboarded?: T
+  role?: T
   tenants?:
     | T
     | {
-        tenant?: T;
-        role?: T;
-        id?: T;
-      };
-  admin?: T;
-  active?: T;
-  deletedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  enableAPIKey?: T;
-  apiKey?: T;
-  apiKeyIndex?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+        tenant?: T
+        role?: T
+        id?: T
+      }
+  admin?: T
+  active?: T
+  deletedAt?: T
+  updatedAt?: T
+  createdAt?: T
+  enableAPIKey?: T
+  apiKey?: T
+  apiKeyIndex?: T
+  email?: T
+  resetPasswordToken?: T
+  resetPasswordExpiration?: T
+  salt?: T
+  hash?: T
+  loginAttempts?: T
+  lockUntil?: T
   sessions?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+        id?: T
+        createdAt?: T
+        expiresAt?: T
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tenants_select".
  */
 export interface TenantsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  subscriptionId?: T;
-  icon?: T;
-  active?: T;
-  deletedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  slug?: T
+  subscriptionId?: T
+  icon?: T
+  active?: T
+  deletedAt?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "roles_select".
  */
 export interface RolesSelect<T extends boolean = true> {
-  tenant?: T;
-  name?: T;
-  description?: T;
-  role_type?: T;
-  assign_to_new_users?: T;
-  is_default?: T;
-  order?: T;
+  tenant?: T
+  name?: T
+  description?: T
+  role_type?: T
+  assign_to_new_users?: T
+  is_default?: T
+  order?: T
   roles?:
     | T
     | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
+        create?: T
+        update?: T
+        read?: T
+        delete?: T
+      }
   team?:
     | T
     | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  type?: T;
-  createdUser?: T;
-  tags?: T;
-  deletedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
+        create?: T
+        update?: T
+        read?: T
+        delete?: T
+      }
+  type?: T
+  createdUser?: T
+  tags?: T
+  deletedAt?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  document?: T
+  globalSlug?: T
+  user?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  user?: T
+  key?: T
+  value?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  batch?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
-
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
+}
+
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "branding".
+ */
+export interface Branding {
+  id: string
+  /**
+   * The title of your site, displayed in the browser tab and search results.
+   */
+  title: string
+  /**
+   * A self-hosted platform for deploying and managing applications, similar to Vercel, Railway, or Heroku. dFlow provides automated deployment workflows, container orchestration, and infrastructure management capabilities while giving you full control over your infrastructure and data.
+   */
+  description: string
+  /**
+   * Keywords for SEO, separated by commas. These help search engines understand the content of your site.
+   */
+  keywords?: string[] | null
+  /**
+   * Recommended size: 32x32px
+   */
+  favicon?: {
+    lightMode?: (string | null) | Media
+    darkMode?: (string | null) | Media
+  }
+  logo?: {
+    lightMode?: (string | null) | Media
+    darkMode?: (string | null) | Media
+  }
+  /**
+   * Recommended size: 1200x630px
+   */
+  ogImage?: (string | null) | Media
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "branding_select".
+ */
+export interface BrandingSelect<T extends boolean = true> {
+  title?: T
+  description?: T
+  keywords?: T
+  favicon?:
+    | T
+    | {
+        lightMode?: T
+        darkMode?: T
+      }
+  logo?:
+    | T
+    | {
+        lightMode?: T
+        darkMode?: T
+      }
+  ogImage?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string
+  alt: string
+  updatedAt: string
+  createdAt: string
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
+  sizes?: {
+    thumbnail?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    square?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    small?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    medium?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    large?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    xlarge?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    og?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+  }
 }

@@ -9,9 +9,17 @@ export async function generateMetadata() {
   return await LandingPage.metatags({ t })
 }
 
-export default async function (props: IServerComponentsProps) {
+export default async function (
+  props: IServerComponentsProps,
+  { children }: { children: React.ReactNode },
+) {
   const searchParams = await props.searchParams
   const { t } = await getServerTranslations()
   const pricingBlockData = await PricingBlockService.load({ searchParams })
-  return <PageBlocks items={LandingPage.blocks({ data: { pricingBlockData }, t })} />
+  return (
+    <>
+      <PageBlocks items={LandingPage.blocks({ data: { pricingBlockData }, t })} />
+      <>{children}</>
+    </>
+  )
 }

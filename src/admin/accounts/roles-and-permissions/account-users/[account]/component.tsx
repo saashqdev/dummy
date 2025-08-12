@@ -1,6 +1,5 @@
 'use client'
 
-import { useTranslation } from 'react-i18next'
 import { useActionState, useEffect, useState } from 'react'
 import { actionAdminAccountUsersAccount, AdminAccountUsersAccountLoaderData } from './page'
 import InputSearch from '@/components/ui/input/InputSearch'

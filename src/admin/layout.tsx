@@ -41,11 +41,14 @@ const loader = async ({}: IServerComponentsProps): Promise<AdminDataDto> => {
   return data
 }
 
-export default async function (props: IServerComponentsProps) {
+export default async function (
+  props: IServerComponentsProps,
+  { children }: { children: React.ReactNode },
+) {
   const adminData = await loader(props)
   return (
     <AdminDataLayout data={adminData}>
-      <SidebarLayout layout="admin">{props.children}</SidebarLayout>
+      <SidebarLayout layout="admin">{children}</SidebarLayout>
     </AdminDataLayout>
   )
 }

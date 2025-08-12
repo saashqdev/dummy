@@ -38,7 +38,7 @@ export const RegisterForm = ({
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? undefined
   const showPasswordInput =
-    !appConfiguration.auth.requireEmailVerification || isVerifyingEmail || isSettingUpAccount
+    !appConfiguration.auth.require_email_verification || isVerifyingEmail || isSettingUpAccount
 
   useEffect(() => {
     try {
@@ -63,7 +63,7 @@ export const RegisterForm = ({
         )}
         <div className="w-full space-y-3">
           {/* Tenant */}
-          {appConfiguration.auth.requireOrganization && (
+          {appConfiguration.auth.require_organization && (
             <div>
               <label htmlFor="company" className="mb-1 text-xs font-medium">
                 {t('models.tenant.object')} <span className="text-red-500">*</span>
@@ -84,7 +84,7 @@ export const RegisterForm = ({
           {/* Tenant: End  */}
 
           {/* Personal Info */}
-          {appConfiguration.auth.requireName && (
+          {appConfiguration.auth.require_name && (
             <div className="flex items-end -space-x-px">
               <div className="w-1/2">
                 <div>

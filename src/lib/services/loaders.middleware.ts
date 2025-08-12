@@ -18,12 +18,12 @@ export async function requireAuth(options?: { tenantSlug?: string }) {
     const userInfo = await getUserInfo()
     const tenantSlug = options?.tenantSlug || (await requireTenantSlug())
     const tenantId = await getTenantIdFromUrl(tenantSlug)
-    if (!userInfo.user_id || !tenantId) {
+    if (!userInfo.userId || !tenantId) {
       throw new Error('Unauthorized')
     }
-    const member = await db.tenantUser.get({ userId: userInfo.user_id, tenant_id: tenantId })
+    const member = await db.tenantUser.get({ userId: userInfo.userId, tenant_id: tenantId })
     if (!member) {
-      const user = await db.user.get(userInfo.user_id)
+      const user = await db.user.get(userInfo.userId)
       if (!user?.admin) {
         throw new Error('Unauthorized')
       }
@@ -35,10 +35,10 @@ export async function requireAuth(options?: { tenantSlug?: string }) {
 
 async function requireAdmin() {
   const userInfo = await getUserInfo()
-  if (!userInfo.user_id) {
+  if (!userInfo.userId) {
     throw new Error('Unauthorized')
   }
-  const user = await db.user.get(userInfo.user_id)
+  const user = await db.user.get(userInfo.userId)
   if (!user?.admin) {
     throw new Error('Unauthorized')
   }

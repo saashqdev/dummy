@@ -10,7 +10,7 @@ import { RootDataDto } from '../state/useRootData'
 
 export async function getRootData(): Promise<RootDataDto> {
   const userInfo = await getUserInfo()
-  const user = userInfo.user_id ? await getUser(userInfo.user_id) : null
+  const user = userInfo.userId ? await getUser(userInfo.userId) : null
   const appConfiguration = await getAppConfiguration()
 
   return {
@@ -26,7 +26,7 @@ export async function getRootData(): Promise<RootDataDto> {
     serverUrl: await getBaseURL(),
     domainName: await getDomainName(),
     userSession: userInfo,
-    authenticated: !!userInfo.user_id,
+    authenticated: !!userInfo.userId,
     debug: process.env.NODE_ENV === 'development',
     isStripeTest: process.env.STRIPE_SK?.toString().startsWith('sk_test_') ?? true,
     chatWebsiteId: process.env.CRISP_CHAT_WEBSITE_ID?.toString(),

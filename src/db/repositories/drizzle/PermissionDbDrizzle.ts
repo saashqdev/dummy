@@ -3,6 +3,7 @@ import { createId } from '@paralleldrive/cuid2'
 import { and, eq, inArray, max, asc, SQL } from 'drizzle-orm'
 import { IPermissionDb } from '@/db/interfaces/permissions/IPermissionDb'
 import { PermissionWithRolesDto, PermissionDto } from '@/db/models'
+import { permission, role_permission } from '@/db/schema'
 
 export class PermissionDbDrizzle implements IPermissionDb {
   async getAll(filters?: {

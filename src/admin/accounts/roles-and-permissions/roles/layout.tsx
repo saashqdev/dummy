@@ -55,7 +55,10 @@ const loader = async (props: IServerComponentsProps) => {
   return data
 }
 
-export default async function ({ searchParams, children }: IServerComponentsProps) {
+export default async function (
+  { searchParams }: IServerComponentsProps,
+  { children }: { children: React.ReactNode },
+) {
   const data = await loader({ searchParams })
   return <Component data={data}>{children}</Component>
 }

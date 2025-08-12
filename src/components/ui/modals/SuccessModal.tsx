@@ -1,57 +1,61 @@
-"use client";
+'use client'
 
-import { forwardRef, Fragment, Ref, useEffect, useImperativeHandle, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import clsx from "clsx";
-import { useTranslation } from "react-i18next";
+import { forwardRef, Fragment, Ref, useEffect, useImperativeHandle, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 
 export interface RefSuccessModal {
-  show: (title?: string, description?: string) => void;
+  show: (title?: string, description?: string) => void
 }
 
 interface Props {
-  className?: string;
-  onClosed?: () => void;
+  className?: string
+  onClosed?: () => void
 }
 
 const SuccessModal = ({ className, onClosed }: Props, ref: Ref<RefSuccessModal>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState<string>();
-  const [description, setDescription] = useState<string>();
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState<string>()
+  const [description, setDescription] = useState<string>()
 
-  const [closeText, setCloseText] = useState<string>();
+  const [closeText, setCloseText] = useState<string>()
 
   useEffect(() => {
-    setTitle(t("shared.success").toString());
-    setCloseText(t("shared.close"));
+    setTitle(t('shared.success').toString())
+    setCloseText(t('shared.close'))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   function close() {
-    setOpen(false);
+    setOpen(false)
     if (onClosed) {
-      onClosed();
+      onClosed()
     }
   }
 
-  useImperativeHandle(ref, () => ({ show }));
+  useImperativeHandle(ref, () => ({ show }))
 
   function show(_title?: string, _description?: string) {
     if (_title) {
-      setTitle(_title);
+      setTitle(_title)
     }
     if (_description) {
-      setDescription(_description);
+      setDescription(_description)
     }
-    setOpen(true);
+    setOpen(true)
   }
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className={clsx(className, "fixed inset-0 z-10 overflow-y-auto")} onClose={setOpen}>
+    <Transition show={open} as={Fragment}>
+      <Dialog
+        as="div"
+        className={clsx(className, 'fixed inset-0 z-10 overflow-y-auto')}
+        onClose={setOpen}
+      >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-          <Transition.Child
+          <Transition
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -60,14 +64,17 @@ const SuccessModal = ({ className, onClosed }: Props, ref: Ref<RefSuccessModal>)
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-          </Transition.Child>
+            <Dialog
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              onClose={close}
+            />
+          </Transition>
 
           {/* This element is to trick the browser into centering the modal contents. */}
           <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">
             &#8203;
           </span>
-          <Transition.Child
+          <Transition
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -87,13 +94,15 @@ const SuccessModal = ({ className, onClosed }: Props, ref: Ref<RefSuccessModal>)
                     stroke="currentColor"
                     strokeWidth="2"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <div className="mt-3 text-center sm:mt-5">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-foreground">
-                    {title}
-                  </Dialog.Title>
+                  <h3 className="text-lg font-medium leading-6 text-foreground">{title}</h3>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">{description}</p>
                   </div>
@@ -109,11 +118,11 @@ const SuccessModal = ({ className, onClosed }: Props, ref: Ref<RefSuccessModal>)
                 </button>
               </div>
             </div>
-          </Transition.Child>
+          </Transition>
         </div>
       </Dialog>
-    </Transition.Root>
-  );
-};
+    </Transition>
+  )
+}
 
-export default forwardRef(SuccessModal);
+export default forwardRef(SuccessModal)

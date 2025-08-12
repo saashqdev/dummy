@@ -123,7 +123,10 @@ export const actionAdminUsers = async (prev: any, form: FormData) => {
   }
 }
 
-export default async function ({ searchParams, children }: IServerComponentsProps) {
+export default async function (
+  { searchParams }: IServerComponentsProps,
+  { children }: { children: React.ReactNode },
+) {
   const data = await loader({ searchParams })
   return <Component data={data}>{children}</Component>
 }

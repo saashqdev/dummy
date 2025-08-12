@@ -44,11 +44,11 @@ async function getUserSession(): Promise<UserSessionDto | null> {
 
 export async function getUserInfo(): Promise<UserSessionDto> {
   const session = await getUserSession()
-  const user_id = session?.user_id ?? null
+  const userId = session?.userId ?? null
   const scheme = session?.scheme || defaultThemeScheme
   const theme = session?.theme ?? defaultThemeColor
   return {
-    user_id,
+    userId,
     scheme,
     theme,
   }

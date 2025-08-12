@@ -4,6 +4,7 @@ import { getUserInfo, createUserSession } from '@/lib/services/session.server'
 import { getServerTranslations } from '@/i18n/server'
 import { revalidatePath } from 'next/cache'
 import { PricingBlockService } from '@/modules/pageBlocks/blocks/marketing/pricing/PricingBlockService.server'
+import JsonPropertiesUtils from '@/modules/jsonProperties/utils/JsonPropertiesUtils'
 
 export async function actionToggleScheme(formData: FormData) {
   const redirectTo = formData.get('redirectTo') as string
@@ -50,4 +51,12 @@ export async function actionPricing(form: FormData): Promise<any> {
     revalidatePath('/pricing')
     return response
   }
+}
+
+export async function actionMarketingForms(form: FormData): Promise<{ success: string }> {
+  const attributes = JsonPropertiesUtils.getValuesFromForm({
+    properties: JsonPropertiesUtils.allProperties,
+    form,
+  })
+  return { success: JSON.stringify(attributes, null, 2) }
 }

@@ -1,91 +1,102 @@
-"use client";
+'use client'
 
-import { forwardRef, Fragment, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { useTranslation } from "react-i18next";
-import ButtonSecondary from "../buttons/ButtonSecondary";
-import ButtonPrimary from "../buttons/ButtonPrimary";
+import { forwardRef, Fragment, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { useTranslation } from 'react-i18next'
+import ButtonSecondary from '../buttons/ButtonSecondary'
+import ButtonPrimary from '../buttons/ButtonPrimary'
 
 export interface RefConfirmModal {
-  setDestructive: (destructive: boolean) => void;
-  setValue: (value: any) => void;
-  show: (_question: string, _yesTitle?: string, _noTitle?: string, _description?: string, _inputString?: string) => void;
+  setDestructive: (destructive: boolean) => void
+  setValue: (value: any) => void
+  show: (
+    _question: string,
+    _yesTitle?: string,
+    _noTitle?: string,
+    _description?: string,
+    _inputString?: string,
+  ) => void
 }
 
 interface Props {
-  destructive?: boolean;
-  inputType?: string;
-  onYes?: (value: any) => void;
-  onNo?: () => void;
-  placeholder?: string;
+  destructive?: boolean
+  inputType?: string
+  onYes?: (value: any) => void
+  onNo?: () => void
+  placeholder?: string
 }
 
 const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState<string>();
-  const [value, setValue] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [inputString, setInputString] = useState<string | undefined>("");
-  const [yesTitle, setYesTitle] = useState<string>("");
-  const [noTitle, setNoTitle] = useState<string>("");
-  const [isDestructive, setDestructive] = useState<boolean>(props.destructive || false);
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState<string>()
+  const [value, setValue] = useState<string>()
+  const [description, setDescription] = useState<string>()
+  const [inputString, setInputString] = useState<string | undefined>('')
+  const [yesTitle, setYesTitle] = useState<string>('')
+  const [noTitle, setNoTitle] = useState<string>('')
+  const [isDestructive, setDestructive] = useState<boolean>(props.destructive || false)
 
-  const inputValue = useRef<HTMLInputElement>(null);
+  const inputValue = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    setTitle(t("shared.confirm").toString());
+    setTitle(t('shared.confirm').toString())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   function no() {
-    setOpen(false);
+    setOpen(false)
     if (props.onNo) {
-      props.onNo();
+      props.onNo()
     }
   }
 
   function yes() {
-    setOpen(false);
+    setOpen(false)
     if (props.onYes) {
-      props.onYes(value ?? inputString);
+      props.onYes(value ?? inputString)
     }
   }
 
-  useImperativeHandle(ref, () => ({ show, setValue, setDestructive }));
+  useImperativeHandle(ref, () => ({ show, setValue, setDestructive }))
 
   function show(
     _question: string,
-    _yesTitle: string = t("shared.confirm").toString(),
-    _noTitle: string = t("shared.back").toString(),
+    _yesTitle: string = t('shared.confirm').toString(),
+    _noTitle: string = t('shared.back').toString(),
     _description?: string,
-    _inputString?: string
+    _inputString?: string,
   ) {
-    setTitle(_question.toString());
+    setTitle(_question.toString())
     if (_yesTitle) {
-      setYesTitle(_yesTitle);
+      setYesTitle(_yesTitle)
     }
     if (_noTitle) {
-      setNoTitle(_noTitle);
+      setNoTitle(_noTitle)
     }
     if (_description) {
-      setDescription(_description);
+      setDescription(_description)
     }
     setTimeout(() => {
-      if ((props.inputType === "email" || props.inputType === "string" || props.inputType === "slug") && inputValue.current) {
-        inputValue.current.focus();
-        inputValue.current.select();
+      if (
+        (props.inputType === 'email' ||
+          props.inputType === 'string' ||
+          props.inputType === 'slug') &&
+        inputValue.current
+      ) {
+        inputValue.current.focus()
+        inputValue.current.select()
       }
-    }, 0);
-    setOpen(true);
-    setInputString(_inputString);
+    }, 0)
+    setOpen(true)
+    setInputString(_inputString)
   }
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog autoFocus as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={setOpen}>
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-          <Transition.Child
+          <Transition
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -94,14 +105,19 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-          </Transition.Child>
+            <Dialog
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              onClose={function (value: boolean): void {
+                throw new Error('Function not implemented.')
+              }}
+            />
+          </Transition>
 
           {/* This element is to trick the browser into centering the modal contents. */}
           <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">
             &#8203;
           </span>
-          <Transition.Child
+          <Transition
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -129,19 +145,32 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
                   </svg>
                 </div>
                 <div className="mt-3 text-center sm:mt-5">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-foreground">
+                  <Dialog
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-foreground"
+                    onClose={close}
+                  >
                     {title}
-                  </Dialog.Title>
+                  </Dialog>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">{description}</p>
                   </div>
-                  {props.inputType === "email" && (
+                  {props.inputType === 'email' && (
                     <div className="mt-4">
-                      <label htmlFor="value" className="block text-sm font-medium text-gray-700"></label>
+                      <label
+                        htmlFor="value"
+                        className="block text-sm font-medium text-gray-700"
+                      ></label>
                       <div className="relative mt-1 rounded-md shadow-sm">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                           {/*Heroicon name: solid/mail */}
-                          <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <svg
+                            className="h-5 w-5 text-gray-400"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                             <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                           </svg>
@@ -159,9 +188,12 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
                       </div>
                     </div>
                   )}
-                  {props.inputType === "string" && (
+                  {props.inputType === 'string' && (
                     <div className="mt-4">
-                      <label htmlFor="value" className="block text-sm font-medium text-gray-700"></label>
+                      <label
+                        htmlFor="value"
+                        className="block text-sm font-medium text-gray-700"
+                      ></label>
                       <div className="relative mt-1 rounded-md shadow-sm">
                         <input
                           value={inputString}
@@ -176,9 +208,12 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
                       </div>
                     </div>
                   )}
-                  {props.inputType === "slug" && (
+                  {props.inputType === 'slug' && (
                     <div className="mt-4">
-                      <label htmlFor="value" className="block text-sm font-medium text-gray-700"></label>
+                      <label
+                        htmlFor="value"
+                        className="block text-sm font-medium text-gray-700"
+                      ></label>
                       <div className="relative mt-1 rounded-md shadow-sm">
                         <input
                           value={inputString}
@@ -213,11 +248,11 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
                 </ButtonPrimary>
               </div>
             </div>
-          </Transition.Child>
+          </Transition>
         </div>
       </Dialog>
-    </Transition.Root>
-  );
-};
+    </Transition>
+  )
+}
 
-export default forwardRef(ConfirmModal);
+export default forwardRef(ConfirmModal)
