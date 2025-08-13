@@ -1,8 +1,8 @@
-import type { Administrator } from "@/payload-types";
-import type { AccessArgs } from "payload";
+import type { Administrator } from '@/payload-types'
+import type { AccessArgs } from 'payload'
 
-type isAuthenticated = (args: AccessArgs<Administrator>) => boolean;
+type isAuthenticated = (args: AccessArgs<Administrator>) => boolean
 
 export const authenticated: isAuthenticated = ({ req: { user } }) => {
-  return Boolean(user?.collection === "administrators");
-};
+  return Boolean(user?.collection === 'administrators')
+}

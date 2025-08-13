@@ -26,7 +26,7 @@ export class CreditDbDrizzle implements ICreditDb {
     }
 
     if (filters.user_id) {
-      whereConditions.push(eq(credit.user_id, filters.user_id))
+      whereConditions.push(eq(credit.userId, filters.user_id))
     }
 
     if (filters.type) {

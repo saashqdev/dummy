@@ -16,8 +16,8 @@ import {
   serial,
   varchar,
   timestamp,
-  numeric,
   boolean,
+  numeric,
   jsonb,
   pgEnum,
 } from '@payloadcms/db-postgres/drizzle/pg-core'
@@ -106,6 +106,9 @@ export const administrators = pgTable(
     createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
+    enableAPIKey: boolean('enable_a_p_i_key'),
+    apiKey: varchar('api_key'),
+    apiKeyIndex: varchar('api_key_index'),
     email: varchar('email').notNull(),
     resetPasswordToken: varchar('reset_password_token'),
     resetPasswordExpiration: timestamp('reset_password_expiration', {

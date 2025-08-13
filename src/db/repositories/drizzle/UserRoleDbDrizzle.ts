@@ -11,7 +11,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     role_id: string
     tenant_id: string | null
   }): Promise<UserRoleModel | null> {
-    const conditions = [eq(user_role.user_id, params.userId), eq(user_role.role_id, params.role_id)]
+    const conditions = [eq(user_role.userId, params.userId), eq(user_role.role_id, params.role_id)]
 
     if (params.tenant_id === null) {
       conditions.push(isNull(user_role.tenant_id))
@@ -38,7 +38,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
       .innerJoin(payload.db.tables.roles, eq(user_role.role_id, payload.db.tables.roles.role_id))
       .where(
         and(
-          eq(user_role.user_id, userId),
+          eq(user_role.userId, userId),
           eq(user_role.tenant_id, tenant_id),
           eq(payload.db.tables.roles.name, role_name),
         ),
@@ -54,7 +54,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
       .innerJoin(payload.db.tables.roles, eq(user_role.role_id, payload.db.tables.roles.role_id))
       .where(
         and(
-          eq(user_role.user_id, userId),
+          eq(user_role.userId, userId),
           isNull(user_role.tenant_id),
           eq(payload.db.tables.roles.name, role_name),
         ),
@@ -67,7 +67,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
     userId: string,
     tenant_id: string | null,
   ): Promise<UserRoleWithDetailsDto[]> {
-    const conditions = [eq(user_role.user_id, userId)]
+    const conditions = [eq(user_role.userId, userId)]
     if (tenant_id === null) {
       conditions.push(isNull(user_role.tenant_id))
     } else {
@@ -100,7 +100,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
       .from(user_role)
       .where(
         and(
-          eq(user_role.user_id, userId),
+          eq(user_role.userId, userId),
           tenant_id === null ? isNull(user_role.tenant_id) : eq(user_role.tenant_id, tenant_id),
         ),
       )
@@ -151,7 +151,7 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
   async del(userId: string, role_id: string): Promise<void> {
     await payload.db.tables
       .delete(user_role)
-      .where(and(eq(user_role.user_id, userId), eq(user_role.role_id, role_id)))
+      .where(and(eq(user_role.userId, userId), eq(user_role.role_id, role_id)))
   }
 
   async deleteAllByUser(userId: string, type: string): Promise<void> {
@@ -162,6 +162,6 @@ export class UserRoleDbDrizzle implements IUserRoleDb {
 
     await payload.db.tables
       .delete(user_role)
-      .where(and(eq(user_role.user_id, userId), inArray(user_role.role_id, subquery)))
+      .where(and(eq(user_role.userId, userId), inArray(user_role.role_id, subquery)))
   }
 }

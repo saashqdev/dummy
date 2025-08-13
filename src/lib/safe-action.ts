@@ -10,6 +10,7 @@ import { Role, Tenant } from '@/payload-types'
 
 import { getTenant } from './get-tenant'
 import { assertRolePermission } from './permissions/utils'
+import { users } from '@/payload-generated-schema'
 
 type UserTenant = {
   tenant: Tenant
@@ -88,15 +89,20 @@ export const protectedClient = publicClient.use(async ({ next, ctx, metadata }) 
     forbidden()
   }
 
-  const matchedTenantEntry = user?.tenants?.find((entry) => {
-    const tenantId =
-      typeof entry.tenant === 'string'
-        ? entry.tenant
-        : typeof entry.tenant === 'number'
+  let matchedTenantEntry: UserTenant | undefined
+
+  // Type guard to check if user is of type 'User'
+  if (user && 'tenant' in user && Array.isArray((user as any).tenant)) {
+    matchedTenantEntry = (user as any).tenant.find((entry: any) => {
+      const tenantId =
+        typeof entry.tenant === 'string'
           ? entry.tenant
-          : entry.tenant.id
-    return tenantId === tenant.id
-  })
+          : typeof entry.tenant === 'number'
+            ? entry.tenant
+            : entry.tenant.id
+      return tenantId === tenant.id
+    })
+  }
 
   if (!Boolean(matchedTenantEntry)) {
     forbidden()

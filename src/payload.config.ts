@@ -142,6 +142,10 @@ export default buildConfig({
     supportedLanguages: { en, es },
     fallbackLanguage: 'en',
   },
+  localization: {
+    locales: ['en', 'es'],
+    defaultLocale: 'en',
+  },
   plugins: [
     multiTenantPlugin({
       collections: {

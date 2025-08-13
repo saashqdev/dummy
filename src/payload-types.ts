@@ -59,832 +59,840 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | 'Pacific/Fiji'
 
 export interface Config {
   auth: {
-    administrators: AdministratorAuthOperations;
-    users: UserAuthOperations;
-  };
-  blocks: {};
+    administrators: AdministratorAuthOperations
+    users: UserAuthOperations
+  }
+  blocks: {}
   collections: {
-    administrators: Administrator;
-    users: User;
-    tenants: Tenant;
-    roles: Role;
-    media: Media;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
-  };
-  collectionsJoins: {};
+    administrators: Administrator
+    users: User
+    tenants: Tenant
+    roles: Role
+    media: Media
+    'payload-locked-documents': PayloadLockedDocument
+    'payload-preferences': PayloadPreference
+    'payload-migrations': PayloadMigration
+  }
+  collectionsJoins: {}
   collectionsSelect: {
-    administrators: AdministratorsSelect<false> | AdministratorsSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    tenants: TenantsSelect<false> | TenantsSelect<true>;
-    roles: RolesSelect<false> | RolesSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
-  };
+    administrators: AdministratorsSelect<false> | AdministratorsSelect<true>
+    users: UsersSelect<false> | UsersSelect<true>
+    tenants: TenantsSelect<false> | TenantsSelect<true>
+    roles: RolesSelect<false> | RolesSelect<true>
+    media: MediaSelect<false> | MediaSelect<true>
+    'payload-locked-documents':
+      | PayloadLockedDocumentsSelect<false>
+      | PayloadLockedDocumentsSelect<true>
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
+  }
   db: {
-    defaultIDType: number;
-  };
+    defaultIDType: string
+  }
   globals: {
-    paywalls: Paywall;
-    branding: Branding;
-    theme: Theme;
-  };
+    paywalls: Paywall
+    branding: Branding
+    theme: Theme
+  }
   globalsSelect: {
-    paywalls: PaywallsSelect<false> | PaywallsSelect<true>;
-    branding: BrandingSelect<false> | BrandingSelect<true>;
-    theme: ThemeSelect<false> | ThemeSelect<true>;
-  };
-  locale: null;
+    paywalls: PaywallsSelect<false> | PaywallsSelect<true>
+    branding: BrandingSelect<false> | BrandingSelect<true>
+    theme: ThemeSelect<false> | ThemeSelect<true>
+  }
+  locale: 'en' | 'es'
   user:
     | (Administrator & {
-        collection: 'administrators';
+        collection: 'administrators'
       })
     | (User & {
-        collection: 'users';
-      });
+        collection: 'users'
+      })
   jobs: {
-    tasks: unknown;
-    workflows: unknown;
-  };
+    tasks: unknown
+    workflows: unknown
+  }
 }
 export interface AdministratorAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   login: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   registerFirstUser: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   unlock: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   login: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   registerFirstUser: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   unlock: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "administrators".
  */
 export interface Administrator {
-  id: number;
-  username?: string | null;
-  role?: ('admin' | 'user' | 'demo')[] | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
+  id: number
+  username?: string | null
+  role?: ('admin' | 'user' | 'demo')[] | null
+  updatedAt: string
+  createdAt: string
+  enableAPIKey?: boolean | null
+  apiKey?: string | null
+  apiKeyIndex?: string | null
+  email: string
+  resetPasswordToken?: string | null
+  resetPasswordExpiration?: string | null
+  salt?: string | null
+  hash?: string | null
+  loginAttempts?: number | null
+  lockUntil?: string | null
   sessions?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        id: string
+        createdAt?: string | null
+        expiresAt: string
       }[]
-    | null;
-  password?: string | null;
+    | null
+  password?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
-  username?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  phone?: string | null;
-  avatarUrl?: string | null;
-  defaultTenantId?: string | null;
-  locale?: string | null;
-  verifyToken?: string | null;
-  passwordHash: string;
-  onboarded?: boolean | null;
-  role?: ('admin' | 'user' | 'demo')[] | null;
+  id: number
+  username?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  avatarUrl?: string | null
+  defaultTenantId?: string | null
+  locale?: string | null
+  verifyToken?: string | null
+  passwordHash: string
+  onboarded?: boolean | null
+  role?: ('admin' | 'user' | 'demo')[] | null
   tenants?:
     | {
-        tenant: number | Tenant;
-        role: number | Role;
-        id?: string | null;
+        tenant: number | Tenant
+        role: number | Role
+        id?: string | null
       }[]
-    | null;
-  admin: boolean;
-  active: boolean;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  enableAPIKey?: boolean | null;
-  apiKey?: string | null;
-  apiKeyIndex?: string | null;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
+    | null
+  admin: boolean
+  active: boolean
+  deletedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  enableAPIKey?: boolean | null
+  apiKey?: string | null
+  apiKeyIndex?: string | null
+  email: string
+  resetPasswordToken?: string | null
+  resetPasswordExpiration?: string | null
+  salt?: string | null
+  hash?: string | null
+  loginAttempts?: number | null
+  lockUntil?: string | null
   sessions?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        id: string
+        createdAt?: string | null
+        expiresAt: string
       }[]
-    | null;
-  password?: string | null;
+    | null
+  password?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tenants".
  */
 export interface Tenant {
-  id: number;
-  name: string;
-  slug: string;
-  subscriptionId: string;
-  icon?: string | null;
-  active: boolean;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  name: string
+  slug: string
+  subscriptionId: string
+  icon?: string | null
+  active: boolean
+  deletedAt?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "roles".
  */
 export interface Role {
-  id: number;
-  tenant?: (number | null) | Tenant;
+  id: number
+  tenant?: (number | null) | Tenant
   /**
    * Enter the name of the role.
    */
-  name: string;
+  name: string
   /**
    * Enter description for the role.
    */
-  description?: string | null;
-  role_type: string;
-  assign_to_new_users: boolean;
-  is_default: boolean;
-  order: number;
+  description?: string | null
+  role_type: string
+  assign_to_new_users: boolean
+  is_default: boolean
+  order: number
   roles: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
+    create: boolean
+    update: boolean
+    read: boolean
+    delete: boolean
+  }
   team: {
-    create: boolean;
-    update: boolean;
-    read: boolean;
-    delete: boolean;
-  };
-  type?: ('engineering' | 'management' | 'marketing' | 'finance' | 'sales') | null;
-  createdUser?: (number | null) | User;
-  tags?: string[] | null;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
+    create: boolean
+    update: boolean
+    read: boolean
+    delete: boolean
+  }
+  type?: ('engineering' | 'management' | 'marketing' | 'finance' | 'sales') | null
+  createdUser?: (number | null) | User
+  tags?: string[] | null
+  deletedAt?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  id: number
+  alt: string
+  updatedAt: string
+  createdAt: string
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
   sizes?: {
     thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     square?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     small?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     medium?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     large?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     xlarge?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     og?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: number
   document?:
     | ({
-        relationTo: 'administrators';
-        value: number | Administrator;
+        relationTo: 'administrators'
+        value: number | Administrator
       } | null)
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'users'
+        value: number | User
       } | null)
     | ({
-        relationTo: 'tenants';
-        value: number | Tenant;
+        relationTo: 'tenants'
+        value: number | Tenant
       } | null)
     | ({
-        relationTo: 'roles';
-        value: number | Role;
+        relationTo: 'roles'
+        value: number | Role
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null);
-  globalSlug?: string | null;
+        relationTo: 'media'
+        value: number | Media
+      } | null)
+  globalSlug?: string | null
   user:
     | {
-        relationTo: 'administrators';
-        value: number | Administrator;
+        relationTo: 'administrators'
+        value: number | Administrator
       }
     | {
-        relationTo: 'users';
-        value: number | User;
-      };
-  updatedAt: string;
-  createdAt: string;
+        relationTo: 'users'
+        value: number | User
+      }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: number
   user:
     | {
-        relationTo: 'administrators';
-        value: number | Administrator;
+        relationTo: 'administrators'
+        value: number | Administrator
       }
     | {
-        relationTo: 'users';
-        value: number | User;
-      };
-  key?: string | null;
+        relationTo: 'users'
+        value: number | User
+      }
+  key?: string | null
   value?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
-  name?: string | null;
-  batch?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  name?: string | null
+  batch?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "administrators_select".
  */
 export interface AdministratorsSelect<T extends boolean = true> {
-  username?: T;
-  role?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+  username?: T
+  role?: T
+  updatedAt?: T
+  createdAt?: T
+  enableAPIKey?: T
+  apiKey?: T
+  apiKeyIndex?: T
+  email?: T
+  resetPasswordToken?: T
+  resetPasswordExpiration?: T
+  salt?: T
+  hash?: T
+  loginAttempts?: T
+  lockUntil?: T
   sessions?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+        id?: T
+        createdAt?: T
+        expiresAt?: T
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  username?: T;
-  firstName?: T;
-  lastName?: T;
-  phone?: T;
-  avatarUrl?: T;
-  defaultTenantId?: T;
-  locale?: T;
-  verifyToken?: T;
-  passwordHash?: T;
-  onboarded?: T;
-  role?: T;
+  username?: T
+  firstName?: T
+  lastName?: T
+  phone?: T
+  avatarUrl?: T
+  defaultTenantId?: T
+  locale?: T
+  verifyToken?: T
+  passwordHash?: T
+  onboarded?: T
+  role?: T
   tenants?:
     | T
     | {
-        tenant?: T;
-        role?: T;
-        id?: T;
-      };
-  admin?: T;
-  active?: T;
-  deletedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  enableAPIKey?: T;
-  apiKey?: T;
-  apiKeyIndex?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+        tenant?: T
+        role?: T
+        id?: T
+      }
+  admin?: T
+  active?: T
+  deletedAt?: T
+  updatedAt?: T
+  createdAt?: T
+  enableAPIKey?: T
+  apiKey?: T
+  apiKeyIndex?: T
+  email?: T
+  resetPasswordToken?: T
+  resetPasswordExpiration?: T
+  salt?: T
+  hash?: T
+  loginAttempts?: T
+  lockUntil?: T
   sessions?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+        id?: T
+        createdAt?: T
+        expiresAt?: T
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tenants_select".
  */
 export interface TenantsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  subscriptionId?: T;
-  icon?: T;
-  active?: T;
-  deletedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  slug?: T
+  subscriptionId?: T
+  icon?: T
+  active?: T
+  deletedAt?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "roles_select".
  */
 export interface RolesSelect<T extends boolean = true> {
-  tenant?: T;
-  name?: T;
-  description?: T;
-  role_type?: T;
-  assign_to_new_users?: T;
-  is_default?: T;
-  order?: T;
+  tenant?: T
+  name?: T
+  description?: T
+  role_type?: T
+  assign_to_new_users?: T
+  is_default?: T
+  order?: T
   roles?:
     | T
     | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
+        create?: T
+        update?: T
+        read?: T
+        delete?: T
+      }
   team?:
     | T
     | {
-        create?: T;
-        update?: T;
-        read?: T;
-        delete?: T;
-      };
-  type?: T;
-  createdUser?: T;
-  tags?: T;
-  deletedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
+        create?: T
+        update?: T
+        read?: T
+        delete?: T
+      }
+  type?: T
+  createdUser?: T
+  tags?: T
+  deletedAt?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  alt?: T
+  updatedAt?: T
+  createdAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
   sizes?:
     | T
     | {
         thumbnail?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         square?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         small?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         medium?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         large?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         xlarge?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         og?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  document?: T
+  globalSlug?: T
+  user?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  user?: T
+  key?: T
+  value?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  batch?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "paywalls".
  */
 export interface Paywall {
-  id: number;
-  paywall: 'stripe' | 'autopay' | 'p24';
+  id: number
+  paywall: 'stripe' | 'autopay' | 'p24'
   /**
    * If you want to use test environment, you can also provide test keys here.
    */
   stripe?: {
-    secret: string;
-    webhookSecret: string;
-    public?: string | null;
-  };
+    secret: string
+    webhookSecret: string
+    public?: string | null
+  }
   /**
    * If you want to use test environment, you can also provide test keys here.
    */
   autopay?: {
-    serviceID: string;
-    hashKey: string;
-    endpoint: string;
-  };
+    serviceID: string
+    hashKey: string
+    endpoint: string
+  }
   /**
    * If you want to use test environment, you can also provide test keys here.
    */
   p24?: {
-    posId: string;
-    crc: string;
-    secretId: string;
-    endpoint: string;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+    posId: string
+    crc: string
+    secretId: string
+    endpoint: string
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "branding".
  */
 export interface Branding {
-  id: number;
+  id: number
   /**
    * The title of your site, displayed in the browser tab and search results.
    */
-  title: string;
+  title: string
   /**
    * A self-hosted platform for deploying and managing applications, similar to Vercel, Railway, or Heroku. dFlow provides automated deployment workflows, container orchestration, and infrastructure management capabilities while giving you full control over your infrastructure and data.
    */
-  description: string;
+  description: string
   /**
    * Keywords for SEO, separated by commas. These help search engines understand the content of your site.
    */
-  keywords?: string[] | null;
+  keywords?: string[] | null
   /**
    * Recommended size: 32x32px
    */
   favicon?: {
-    lightMode?: (number | null) | Media;
-    darkMode?: (number | null) | Media;
-  };
+    lightMode?: (number | null) | Media
+    darkMode?: (number | null) | Media
+  }
   logo?: {
-    lightMode?: (number | null) | Media;
-    darkMode?: (number | null) | Media;
-  };
+    lightMode?: (number | null) | Media
+    darkMode?: (number | null) | Media
+  }
   /**
    * Recommended size: 1200x630px
    */
-  ogImage?: (number | null) | Media;
-  updatedAt?: string | null;
-  createdAt?: string | null;
+  ogImage?: (number | null) | Media
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "theme".
  */
 export interface Theme {
-  id: number;
+  id: number
   lightMode: {
-    background: string;
-    foreground: string;
-    card: string;
-    cardForeground: string;
-    popover: string;
-    popoverForeground: string;
-    primary: string;
-    primaryForeground: string;
-    secondary: string;
-    secondaryForeground: string;
-    muted: string;
-    mutedForeground: string;
-    accent: string;
-    accentForeground: string;
-    destructive: string;
-    destructiveForeground: string;
-    border: string;
-    input: string;
-    ring: string;
-    sidebar: string;
-    sidebarForeground: string;
-    sidebarPrimary: string;
-    sidebarPrimaryForeground: string;
-    sidebarAccent: string;
-    sidebarAccentForeground: string;
-    sidebarBorder: string;
-    sidebarRing: string;
-  };
+    background: string
+    foreground: string
+    card: string
+    cardForeground: string
+    popover: string
+    popoverForeground: string
+    primary: string
+    primaryForeground: string
+    secondary: string
+    secondaryForeground: string
+    muted: string
+    mutedForeground: string
+    accent: string
+    accentForeground: string
+    destructive: string
+    destructiveForeground: string
+    border: string
+    input: string
+    ring: string
+    sidebar: string
+    sidebarForeground: string
+    sidebarPrimary: string
+    sidebarPrimaryForeground: string
+    sidebarAccent: string
+    sidebarAccentForeground: string
+    sidebarBorder: string
+    sidebarRing: string
+  }
   darkMode: {
-    background: string;
-    foreground: string;
-    card: string;
-    cardForeground: string;
-    popover: string;
-    popoverForeground: string;
-    primary: string;
-    primaryForeground: string;
-    secondary: string;
-    secondaryForeground: string;
-    muted: string;
-    mutedForeground: string;
-    accent: string;
-    accentForeground: string;
-    destructive: string;
-    destructiveForeground: string;
-    border: string;
-    input: string;
-    ring: string;
-    sidebar: string;
-    sidebarForeground: string;
-    sidebarPrimary: string;
-    sidebarPrimaryForeground: string;
-    sidebarAccent: string;
-    sidebarAccentForeground: string;
-    sidebarBorder: string;
-    sidebarRing: string;
-  };
+    background: string
+    foreground: string
+    card: string
+    cardForeground: string
+    popover: string
+    popoverForeground: string
+    primary: string
+    primaryForeground: string
+    secondary: string
+    secondaryForeground: string
+    muted: string
+    mutedForeground: string
+    accent: string
+    accentForeground: string
+    destructive: string
+    destructiveForeground: string
+    border: string
+    input: string
+    ring: string
+    sidebar: string
+    sidebarForeground: string
+    sidebarPrimary: string
+    sidebarPrimaryForeground: string
+    sidebarAccent: string
+    sidebarAccentForeground: string
+    sidebarBorder: string
+    sidebarRing: string
+  }
   fonts: {
     display: {
-      type: 'customFont' | 'googleFont';
-      customFont?: (number | null) | Media;
-      remoteFont?: string | null;
-      fontName?: string | null;
-    };
+      type: 'customFont' | 'googleFont'
+      customFont?: (number | null) | Media
+      remoteFont?: string | null
+      fontName?: string | null
+    }
     body: {
-      type: 'customFont' | 'googleFont';
-      customFont?: (number | null) | Media;
-      remoteFont?: string | null;
-      fontName?: string | null;
-    };
-  };
-  radius: 'none' | 'small' | 'medium' | 'large' | 'full';
-  updatedAt?: string | null;
-  createdAt?: string | null;
+      type: 'customFont' | 'googleFont'
+      customFont?: (number | null) | Media
+      remoteFont?: string | null
+      fontName?: string | null
+    }
+  }
+  radius: 'none' | 'small' | 'medium' | 'large' | 'full'
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "paywalls_select".
  */
 export interface PaywallsSelect<T extends boolean = true> {
-  paywall?: T;
+  paywall?: T
   stripe?:
     | T
     | {
-        secret?: T;
-        webhookSecret?: T;
-        public?: T;
-      };
+        secret?: T
+        webhookSecret?: T
+        public?: T
+      }
   autopay?:
     | T
     | {
-        serviceID?: T;
-        hashKey?: T;
-        endpoint?: T;
-      };
+        serviceID?: T
+        hashKey?: T
+        endpoint?: T
+      }
   p24?:
     | T
     | {
-        posId?: T;
-        crc?: T;
-        secretId?: T;
-        endpoint?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        posId?: T
+        crc?: T
+        secretId?: T
+        endpoint?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "branding_select".
  */
 export interface BrandingSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  keywords?: T;
+  title?: T
+  description?: T
+  keywords?: T
   favicon?:
     | T
     | {
-        lightMode?: T;
-        darkMode?: T;
-      };
+        lightMode?: T
+        darkMode?: T
+      }
   logo?:
     | T
     | {
-        lightMode?: T;
-        darkMode?: T;
-      };
-  ogImage?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        lightMode?: T
+        darkMode?: T
+      }
+  ogImage?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -894,98 +902,97 @@ export interface ThemeSelect<T extends boolean = true> {
   lightMode?:
     | T
     | {
-        background?: T;
-        foreground?: T;
-        card?: T;
-        cardForeground?: T;
-        popover?: T;
-        popoverForeground?: T;
-        primary?: T;
-        primaryForeground?: T;
-        secondary?: T;
-        secondaryForeground?: T;
-        muted?: T;
-        mutedForeground?: T;
-        accent?: T;
-        accentForeground?: T;
-        destructive?: T;
-        destructiveForeground?: T;
-        border?: T;
-        input?: T;
-        ring?: T;
-        sidebar?: T;
-        sidebarForeground?: T;
-        sidebarPrimary?: T;
-        sidebarPrimaryForeground?: T;
-        sidebarAccent?: T;
-        sidebarAccentForeground?: T;
-        sidebarBorder?: T;
-        sidebarRing?: T;
-      };
+        background?: T
+        foreground?: T
+        card?: T
+        cardForeground?: T
+        popover?: T
+        popoverForeground?: T
+        primary?: T
+        primaryForeground?: T
+        secondary?: T
+        secondaryForeground?: T
+        muted?: T
+        mutedForeground?: T
+        accent?: T
+        accentForeground?: T
+        destructive?: T
+        destructiveForeground?: T
+        border?: T
+        input?: T
+        ring?: T
+        sidebar?: T
+        sidebarForeground?: T
+        sidebarPrimary?: T
+        sidebarPrimaryForeground?: T
+        sidebarAccent?: T
+        sidebarAccentForeground?: T
+        sidebarBorder?: T
+        sidebarRing?: T
+      }
   darkMode?:
     | T
     | {
-        background?: T;
-        foreground?: T;
-        card?: T;
-        cardForeground?: T;
-        popover?: T;
-        popoverForeground?: T;
-        primary?: T;
-        primaryForeground?: T;
-        secondary?: T;
-        secondaryForeground?: T;
-        muted?: T;
-        mutedForeground?: T;
-        accent?: T;
-        accentForeground?: T;
-        destructive?: T;
-        destructiveForeground?: T;
-        border?: T;
-        input?: T;
-        ring?: T;
-        sidebar?: T;
-        sidebarForeground?: T;
-        sidebarPrimary?: T;
-        sidebarPrimaryForeground?: T;
-        sidebarAccent?: T;
-        sidebarAccentForeground?: T;
-        sidebarBorder?: T;
-        sidebarRing?: T;
-      };
+        background?: T
+        foreground?: T
+        card?: T
+        cardForeground?: T
+        popover?: T
+        popoverForeground?: T
+        primary?: T
+        primaryForeground?: T
+        secondary?: T
+        secondaryForeground?: T
+        muted?: T
+        mutedForeground?: T
+        accent?: T
+        accentForeground?: T
+        destructive?: T
+        destructiveForeground?: T
+        border?: T
+        input?: T
+        ring?: T
+        sidebar?: T
+        sidebarForeground?: T
+        sidebarPrimary?: T
+        sidebarPrimaryForeground?: T
+        sidebarAccent?: T
+        sidebarAccentForeground?: T
+        sidebarBorder?: T
+        sidebarRing?: T
+      }
   fonts?:
     | T
     | {
         display?:
           | T
           | {
-              type?: T;
-              customFont?: T;
-              remoteFont?: T;
-              fontName?: T;
-            };
+              type?: T
+              customFont?: T
+              remoteFont?: T
+              fontName?: T
+            }
         body?:
           | T
           | {
-              type?: T;
-              customFont?: T;
-              remoteFont?: T;
-              fontName?: T;
-            };
-      };
-  radius?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+              type?: T
+              customFont?: T
+              remoteFont?: T
+              fontName?: T
+            }
+      }
+  radius?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
-
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}

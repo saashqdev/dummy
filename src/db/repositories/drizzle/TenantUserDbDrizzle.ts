@@ -32,7 +32,7 @@ export class TenantUserDbDrizzle implements ITenantUserDb {
     userId: string
   }): Promise<TenantUserModel | null> {
     const items = await payload.db.tables.tenant_user.findMany({
-      where: and(eq(tenant_user.tenant_id, tenant_id), eq(tenant_user.user_id, userId)),
+      where: and(eq(tenant_user.tenant_id, tenant_id), eq(tenant_user.userId, userId)),
     })
     return items.length === 0 ? null : items[0]
   }
@@ -68,8 +68,8 @@ export class TenantUserDbDrizzle implements ITenantUserDb {
       .where(
         and(
           eq(tenant_user.tenant_id, tenant_id),
-          gte(tenant_user.created_at, created_at.gte),
-          lt(tenant_user.created_at, created_at.lt),
+          gte(tenant_user.created_at, created_at.gte.toISOString()),
+          lt(tenant_user.created_at, created_at.lt.toISOString()),
         ),
       )
     return result[0].count
