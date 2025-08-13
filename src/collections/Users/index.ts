@@ -78,7 +78,7 @@ export const Users: CollectionConfig = {
     admin: ({ req }) => {
       const { user } = req
 
-      if (user?.role?.includes('admin')) {
+      if ('role' in (user || {}) && Array.isArray(user?.role) && user.role.includes('admin')) {
         return true
       }
 

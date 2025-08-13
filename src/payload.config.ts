@@ -10,10 +10,15 @@ import sharp from 'sharp'
 import { env } from 'env'
 import { en } from '@payloadcms/translations/languages/en'
 import { es } from '@payloadcms/translations/languages/es'
+import { Media } from './collections/Media'
 import { Roles } from './collections/Roles'
 import { Tenants } from './collections/Tenants'
 import { Users } from './collections/Users'
 import { addBeforeOperationHook, softDeletePluginConfigCollections } from './soft-delete'
+import { Paywalls } from './globals/(ecommerce)/Paywalls/config'
+import { Administrators } from './collections/Administrators'
+import { Branding } from './globals/Branding'
+import { Theme } from './globals/Theme'
 
 import {
   app_configuration,
@@ -34,8 +39,6 @@ import {
   tenant_subscription_product,
   tenant_subscription,
   user_role,
-} from '@/db/schema'
-import {
   relations_subscription_usage_based_price,
   relations_subscription_product,
   relations_usage_based_tier,
@@ -51,12 +54,17 @@ import {
   relations_tenant_subscription_product,
   relations_tenant_subscription,
   relations_user_role,
-} from '@/db/relations'
+} from '@/db/schema'
+
+import { PgTableWithColumns } from 'drizzle-orm/pg-core'
+
+// Define GenericRelation type if not available from a package
+type GenericRelation = any
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const collectionsWithHook = addBeforeOperationHook([Users, Tenants, Roles])
+const collectionsWithHook = addBeforeOperationHook([Administrators, Users, Tenants, Roles, Media])
 
 export default buildConfig({
   routes: {
@@ -77,9 +85,8 @@ export default buildConfig({
   },
   db: postgresAdapter({
     beforeSchemaInit: [
-      ({ schema, adapter }) => {
+      ({ schema }) => {
         return {
-          ...adapter.schema,
           tables: {
             ...schema.tables,
             app_configuration,
@@ -100,7 +107,7 @@ export default buildConfig({
             tenant_subscription_product,
             tenant_subscription,
             user_role,
-          } as Record<string, any>,
+          } as Record<string, PgTableWithColumns<any> | GenericRelation>,
           enums: {
             ...schema.enums,
           },
@@ -121,7 +128,7 @@ export default buildConfig({
             relations_tenant_subscription_product,
             relations_tenant_subscription,
             relations_user_role,
-          } as Record<string, any>,
+          } as Record<string, PgTableWithColumns<any> | GenericRelation>,
         }
       },
     ],
@@ -129,6 +136,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
+  globals: [Paywalls, Branding, Theme],
   sharp,
   i18n: {
     supportedLanguages: { en, es },
@@ -139,7 +147,10 @@ export default buildConfig({
       collections: {
         roles: {},
       },
-      userHasAccessToAllTenants: (user) => Boolean(user?.role?.includes('admin')),
+      userHasAccessToAllTenants: (user) =>
+        'role' in user && Array.isArray((user as any).role)
+          ? (user as any).role.includes('admin')
+          : false,
       enabled: true,
       tenantsArrayField: {
         includeDefaultField: false,

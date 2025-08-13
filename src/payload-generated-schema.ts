@@ -16,12 +16,17 @@ import {
   serial,
   varchar,
   timestamp,
-  boolean,
   numeric,
+  boolean,
   jsonb,
   pgEnum,
 } from '@payloadcms/db-postgres/drizzle/pg-core'
 import { sql, relations } from '@payloadcms/db-postgres/drizzle'
+export const enum_administrators_role = pgEnum('enum_administrators_role', [
+  'admin',
+  'user',
+  'demo',
+])
 export const enum_users_role = pgEnum('enum_users_role', ['admin', 'user', 'demo'])
 export const enum_roles_type = pgEnum('enum_roles_type', [
   'engineering',
@@ -30,6 +35,96 @@ export const enum_roles_type = pgEnum('enum_roles_type', [
   'finance',
   'sales',
 ])
+export const enum_paywalls_paywall = pgEnum('enum_paywalls_paywall', ['stripe', 'autopay', 'p24'])
+export const enum_theme_fonts_display_type = pgEnum('enum_theme_fonts_display_type', [
+  'customFont',
+  'googleFont',
+])
+export const enum_theme_fonts_body_type = pgEnum('enum_theme_fonts_body_type', [
+  'customFont',
+  'googleFont',
+])
+export const enum_theme_radius = pgEnum('enum_theme_radius', [
+  'none',
+  'small',
+  'medium',
+  'large',
+  'full',
+])
+
+export const administrators_role = pgTable(
+  'administrators_role',
+  {
+    order: integer('order').notNull(),
+    parent: integer('parent_id').notNull(),
+    value: enum_administrators_role('value'),
+    id: serial('id').primaryKey(),
+  },
+  (columns) => ({
+    orderIdx: index('administrators_role_order_idx').on(columns.order),
+    parentIdx: index('administrators_role_parent_idx').on(columns.parent),
+    parentFk: foreignKey({
+      columns: [columns['parent']],
+      foreignColumns: [administrators.id],
+      name: 'administrators_role_parent_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const administrators_sessions = pgTable(
+  'administrators_sessions',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+    expiresAt: timestamp('expires_at', {
+      mode: 'string',
+      withTimezone: true,
+      precision: 3,
+    }).notNull(),
+  },
+  (columns) => ({
+    _orderIdx: index('administrators_sessions_order_idx').on(columns._order),
+    _parentIDIdx: index('administrators_sessions_parent_id_idx').on(columns._parentID),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [administrators.id],
+      name: 'administrators_sessions_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const administrators = pgTable(
+  'administrators',
+  {
+    id: serial('id').primaryKey(),
+    username: varchar('username'),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    email: varchar('email').notNull(),
+    resetPasswordToken: varchar('reset_password_token'),
+    resetPasswordExpiration: timestamp('reset_password_expiration', {
+      mode: 'string',
+      withTimezone: true,
+      precision: 3,
+    }),
+    salt: varchar('salt'),
+    hash: varchar('hash'),
+    loginAttempts: numeric('login_attempts').default('0'),
+    lockUntil: timestamp('lock_until', { mode: 'string', withTimezone: true, precision: 3 }),
+  },
+  (columns) => ({
+    administrators_username_idx: uniqueIndex('administrators_username_idx').on(columns.username),
+    administrators_updated_at_idx: index('administrators_updated_at_idx').on(columns.updatedAt),
+    administrators_created_at_idx: index('administrators_created_at_idx').on(columns.createdAt),
+    administrators_email_idx: uniqueIndex('administrators_email_idx').on(columns.email),
+  }),
+)
 
 export const users_role = pgTable(
   'users_role',
@@ -237,6 +332,97 @@ export const roles_texts = pgTable(
   }),
 )
 
+export const media = pgTable(
+  'media',
+  {
+    id: serial('id').primaryKey(),
+    alt: varchar('alt').notNull(),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    url: varchar('url'),
+    thumbnailURL: varchar('thumbnail_u_r_l'),
+    filename: varchar('filename'),
+    mimeType: varchar('mime_type'),
+    filesize: numeric('filesize'),
+    width: numeric('width'),
+    height: numeric('height'),
+    focalX: numeric('focal_x'),
+    focalY: numeric('focal_y'),
+    sizes_thumbnail_url: varchar('sizes_thumbnail_url'),
+    sizes_thumbnail_width: numeric('sizes_thumbnail_width'),
+    sizes_thumbnail_height: numeric('sizes_thumbnail_height'),
+    sizes_thumbnail_mimeType: varchar('sizes_thumbnail_mime_type'),
+    sizes_thumbnail_filesize: numeric('sizes_thumbnail_filesize'),
+    sizes_thumbnail_filename: varchar('sizes_thumbnail_filename'),
+    sizes_square_url: varchar('sizes_square_url'),
+    sizes_square_width: numeric('sizes_square_width'),
+    sizes_square_height: numeric('sizes_square_height'),
+    sizes_square_mimeType: varchar('sizes_square_mime_type'),
+    sizes_square_filesize: numeric('sizes_square_filesize'),
+    sizes_square_filename: varchar('sizes_square_filename'),
+    sizes_small_url: varchar('sizes_small_url'),
+    sizes_small_width: numeric('sizes_small_width'),
+    sizes_small_height: numeric('sizes_small_height'),
+    sizes_small_mimeType: varchar('sizes_small_mime_type'),
+    sizes_small_filesize: numeric('sizes_small_filesize'),
+    sizes_small_filename: varchar('sizes_small_filename'),
+    sizes_medium_url: varchar('sizes_medium_url'),
+    sizes_medium_width: numeric('sizes_medium_width'),
+    sizes_medium_height: numeric('sizes_medium_height'),
+    sizes_medium_mimeType: varchar('sizes_medium_mime_type'),
+    sizes_medium_filesize: numeric('sizes_medium_filesize'),
+    sizes_medium_filename: varchar('sizes_medium_filename'),
+    sizes_large_url: varchar('sizes_large_url'),
+    sizes_large_width: numeric('sizes_large_width'),
+    sizes_large_height: numeric('sizes_large_height'),
+    sizes_large_mimeType: varchar('sizes_large_mime_type'),
+    sizes_large_filesize: numeric('sizes_large_filesize'),
+    sizes_large_filename: varchar('sizes_large_filename'),
+    sizes_xlarge_url: varchar('sizes_xlarge_url'),
+    sizes_xlarge_width: numeric('sizes_xlarge_width'),
+    sizes_xlarge_height: numeric('sizes_xlarge_height'),
+    sizes_xlarge_mimeType: varchar('sizes_xlarge_mime_type'),
+    sizes_xlarge_filesize: numeric('sizes_xlarge_filesize'),
+    sizes_xlarge_filename: varchar('sizes_xlarge_filename'),
+    sizes_og_url: varchar('sizes_og_url'),
+    sizes_og_width: numeric('sizes_og_width'),
+    sizes_og_height: numeric('sizes_og_height'),
+    sizes_og_mimeType: varchar('sizes_og_mime_type'),
+    sizes_og_filesize: numeric('sizes_og_filesize'),
+    sizes_og_filename: varchar('sizes_og_filename'),
+  },
+  (columns) => ({
+    media_updated_at_idx: index('media_updated_at_idx').on(columns.updatedAt),
+    media_created_at_idx: index('media_created_at_idx').on(columns.createdAt),
+    media_filename_idx: uniqueIndex('media_filename_idx').on(columns.filename),
+    media_sizes_thumbnail_sizes_thumbnail_filename_idx: index(
+      'media_sizes_thumbnail_sizes_thumbnail_filename_idx',
+    ).on(columns.sizes_thumbnail_filename),
+    media_sizes_square_sizes_square_filename_idx: index(
+      'media_sizes_square_sizes_square_filename_idx',
+    ).on(columns.sizes_square_filename),
+    media_sizes_small_sizes_small_filename_idx: index(
+      'media_sizes_small_sizes_small_filename_idx',
+    ).on(columns.sizes_small_filename),
+    media_sizes_medium_sizes_medium_filename_idx: index(
+      'media_sizes_medium_sizes_medium_filename_idx',
+    ).on(columns.sizes_medium_filename),
+    media_sizes_large_sizes_large_filename_idx: index(
+      'media_sizes_large_sizes_large_filename_idx',
+    ).on(columns.sizes_large_filename),
+    media_sizes_xlarge_sizes_xlarge_filename_idx: index(
+      'media_sizes_xlarge_sizes_xlarge_filename_idx',
+    ).on(columns.sizes_xlarge_filename),
+    media_sizes_og_sizes_og_filename_idx: index('media_sizes_og_sizes_og_filename_idx').on(
+      columns.sizes_og_filename,
+    ),
+  }),
+)
+
 export const payload_locked_documents = pgTable(
   'payload_locked_documents',
   {
@@ -269,14 +455,19 @@ export const payload_locked_documents_rels = pgTable(
     order: integer('order'),
     parent: integer('parent_id').notNull(),
     path: varchar('path').notNull(),
+    administratorsID: integer('administrators_id'),
     usersID: integer('users_id'),
     tenantsID: integer('tenants_id'),
     rolesID: integer('roles_id'),
+    mediaID: integer('media_id'),
   },
   (columns) => ({
     order: index('payload_locked_documents_rels_order_idx').on(columns.order),
     parentIdx: index('payload_locked_documents_rels_parent_idx').on(columns.parent),
     pathIdx: index('payload_locked_documents_rels_path_idx').on(columns.path),
+    payload_locked_documents_rels_administrators_id_idx: index(
+      'payload_locked_documents_rels_administrators_id_idx',
+    ).on(columns.administratorsID),
     payload_locked_documents_rels_users_id_idx: index(
       'payload_locked_documents_rels_users_id_idx',
     ).on(columns.usersID),
@@ -286,10 +477,18 @@ export const payload_locked_documents_rels = pgTable(
     payload_locked_documents_rels_roles_id_idx: index(
       'payload_locked_documents_rels_roles_id_idx',
     ).on(columns.rolesID),
+    payload_locked_documents_rels_media_id_idx: index(
+      'payload_locked_documents_rels_media_id_idx',
+    ).on(columns.mediaID),
     parentFk: foreignKey({
       columns: [columns['parent']],
       foreignColumns: [payload_locked_documents.id],
       name: 'payload_locked_documents_rels_parent_fk',
+    }).onDelete('cascade'),
+    administratorsIdFk: foreignKey({
+      columns: [columns['administratorsID']],
+      foreignColumns: [administrators.id],
+      name: 'payload_locked_documents_rels_administrators_fk',
     }).onDelete('cascade'),
     usersIdFk: foreignKey({
       columns: [columns['usersID']],
@@ -305,6 +504,11 @@ export const payload_locked_documents_rels = pgTable(
       columns: [columns['rolesID']],
       foreignColumns: [roles.id],
       name: 'payload_locked_documents_rels_roles_fk',
+    }).onDelete('cascade'),
+    mediaIdFk: foreignKey({
+      columns: [columns['mediaID']],
+      foreignColumns: [media.id],
+      name: 'payload_locked_documents_rels_media_fk',
     }).onDelete('cascade'),
   }),
 )
@@ -340,12 +544,16 @@ export const payload_preferences_rels = pgTable(
     order: integer('order'),
     parent: integer('parent_id').notNull(),
     path: varchar('path').notNull(),
+    administratorsID: integer('administrators_id'),
     usersID: integer('users_id'),
   },
   (columns) => ({
     order: index('payload_preferences_rels_order_idx').on(columns.order),
     parentIdx: index('payload_preferences_rels_parent_idx').on(columns.parent),
     pathIdx: index('payload_preferences_rels_path_idx').on(columns.path),
+    payload_preferences_rels_administrators_id_idx: index(
+      'payload_preferences_rels_administrators_id_idx',
+    ).on(columns.administratorsID),
     payload_preferences_rels_users_id_idx: index('payload_preferences_rels_users_id_idx').on(
       columns.usersID,
     ),
@@ -353,6 +561,11 @@ export const payload_preferences_rels = pgTable(
       columns: [columns['parent']],
       foreignColumns: [payload_preferences.id],
       name: 'payload_preferences_rels_parent_fk',
+    }).onDelete('cascade'),
+    administratorsIdFk: foreignKey({
+      columns: [columns['administratorsID']],
+      foreignColumns: [administrators.id],
+      name: 'payload_preferences_rels_administrators_fk',
     }).onDelete('cascade'),
     usersIdFk: foreignKey({
       columns: [columns['usersID']],
@@ -385,6 +598,275 @@ export const payload_migrations = pgTable(
   }),
 )
 
+export const paywalls = pgTable('paywalls', {
+  id: serial('id').primaryKey(),
+  paywall: enum_paywalls_paywall('paywall').notNull().default('stripe'),
+  stripe_secret: varchar('stripe_secret'),
+  stripe_webhookSecret: varchar('stripe_webhook_secret'),
+  stripe_public: varchar('stripe_public'),
+  autopay_serviceID: varchar('autopay_service_i_d'),
+  autopay_hashKey: varchar('autopay_hash_key'),
+  autopay_endpoint: varchar('autopay_endpoint'),
+  p24_posId: varchar('p24_pos_id'),
+  p24_crc: varchar('p24_crc'),
+  p24_secretId: varchar('p24_secret_id'),
+  p24_endpoint: varchar('p24_endpoint'),
+  updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
+  createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+})
+
+export const branding = pgTable(
+  'branding',
+  {
+    id: serial('id').primaryKey(),
+    title: varchar('title').notNull().default('dFlow'),
+    description: varchar('description').notNull().default('dFlow'),
+    favicon_lightMode: integer('favicon_light_mode_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    favicon_darkMode: integer('favicon_dark_mode_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    logo_lightMode: integer('logo_light_mode_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    logo_darkMode: integer('logo_dark_mode_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    ogImage: integer('og_image_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+  },
+  (columns) => ({
+    branding_favicon_favicon_light_mode_idx: index('branding_favicon_favicon_light_mode_idx').on(
+      columns.favicon_lightMode,
+    ),
+    branding_favicon_favicon_dark_mode_idx: index('branding_favicon_favicon_dark_mode_idx').on(
+      columns.favicon_darkMode,
+    ),
+    branding_logo_logo_light_mode_idx: index('branding_logo_logo_light_mode_idx').on(
+      columns.logo_lightMode,
+    ),
+    branding_logo_logo_dark_mode_idx: index('branding_logo_logo_dark_mode_idx').on(
+      columns.logo_darkMode,
+    ),
+    branding_og_image_idx: index('branding_og_image_idx').on(columns.ogImage),
+  }),
+)
+
+export const branding_texts = pgTable(
+  'branding_texts',
+  {
+    id: serial('id').primaryKey(),
+    order: integer('order').notNull(),
+    parent: integer('parent_id').notNull(),
+    path: varchar('path').notNull(),
+    text: varchar('text'),
+  },
+  (columns) => ({
+    orderParentIdx: index('branding_texts_order_parent_idx').on(columns.order, columns.parent),
+    parentFk: foreignKey({
+      columns: [columns['parent']],
+      foreignColumns: [branding.id],
+      name: 'branding_texts_parent_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const theme = pgTable(
+  'theme',
+  {
+    id: serial('id').primaryKey(),
+    lightMode_background: varchar('light_mode_background')
+      .notNull()
+      .default('hsl(240, 100.0000%, 98.0392%)'),
+    lightMode_foreground: varchar('light_mode_foreground')
+      .notNull()
+      .default('hsl(240, 27.5862%, 22.7451%)'),
+    lightMode_card: varchar('light_mode_card').notNull().default('hsl(0, 0%, 100%)'),
+    lightMode_cardForeground: varchar('light_mode_card_foreground')
+      .notNull()
+      .default('hsl(240, 27.5862%, 22.7451%)'),
+    lightMode_popover: varchar('light_mode_popover').notNull().default('hsl(0, 0%, 100%)'),
+    lightMode_popoverForeground: varchar('light_mode_popover_foreground')
+      .notNull()
+      .default('hsl(240, 27.5862%, 22.7451%)'),
+    lightMode_primary: varchar('light_mode_primary')
+      .notNull()
+      .default('hsl(251.9008, 55.7604%, 57.4510%)'),
+    lightMode_primaryForeground: varchar('light_mode_primary_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 100%)'),
+    lightMode_secondary: varchar('light_mode_secondary')
+      .notNull()
+      .default('hsl(249.3750, 100%, 93.7255%)'),
+    lightMode_secondaryForeground: varchar('light_mode_secondary_foreground')
+      .notNull()
+      .default('hsl(249.3750, 33.3333%, 37.6471%)'),
+    lightMode_muted: varchar('light_mode_muted').notNull().default('hsl(240, 50.0000%, 96.0784%)'),
+    lightMode_mutedForeground: varchar('light_mode_muted_foreground')
+      .notNull()
+      .default('hsl(240, 12.1951%, 48.2353%)'),
+    lightMode_accent: varchar('light_mode_accent')
+      .notNull()
+      .default('hsl(218.4615, 100.0000%, 92.3529%)'),
+    lightMode_accentForeground: varchar('light_mode_accent_foreground')
+      .notNull()
+      .default('hsl(240, 27.5862%, 22.7451%)'),
+    lightMode_destructive: varchar('light_mode_destructive')
+      .notNull()
+      .default('hsl(350.1754, 100%, 66.4706%)'),
+    lightMode_destructiveForeground: varchar('light_mode_destructive_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 100%)'),
+    lightMode_border: varchar('light_mode_border')
+      .notNull()
+      .default('hsl(240, 34.7826%, 90.9804%)'),
+    lightMode_input: varchar('light_mode_input').notNull().default('hsl(240, 34.7826%, 90.9804%)'),
+    lightMode_ring: varchar('light_mode_ring')
+      .notNull()
+      .default('hsl(251.9008, 55.7604%, 57.4510%)'),
+    lightMode_sidebar: varchar('light_mode_sidebar')
+      .notNull()
+      .default('hsl(240, 50.0000%, 96.0784%)'),
+    lightMode_sidebarForeground: varchar('light_mode_sidebar_foreground')
+      .notNull()
+      .default('hsl(240, 27.5862%, 22.7451%)'),
+    lightMode_sidebarPrimary: varchar('light_mode_sidebar_primary')
+      .notNull()
+      .default('hsl(251.9008, 55.7604%, 57.4510%)'),
+    lightMode_sidebarPrimaryForeground: varchar('light_mode_sidebar_primary_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 100%)'),
+    lightMode_sidebarAccent: varchar('light_mode_sidebar_accent')
+      .notNull()
+      .default('hsl(218.4615, 100.0000%, 92.3529%)'),
+    lightMode_sidebarAccentForeground: varchar('light_mode_sidebar_accent_foreground')
+      .notNull()
+      .default('hsl(240, 27.5862%, 22.7451%)'),
+    lightMode_sidebarBorder: varchar('light_mode_sidebar_border')
+      .notNull()
+      .default('hsl(240, 34.7826%, 90.9804%)'),
+    lightMode_sidebarRing: varchar('light_mode_sidebar_ring')
+      .notNull()
+      .default('hsl(251.9008, 55.7604%, 57.4510%)'),
+    darkMode_background: varchar('dark_mode_background').notNull().default('hsl(221, 50%, 11%)'),
+    darkMode_foreground: varchar('dark_mode_foreground')
+      .notNull()
+      .default('hsl(240, 66.67%, 94.12%)'),
+    darkMode_card: varchar('dark_mode_card').notNull().default('hsl(240, 27.59%, 22.75%)'),
+    darkMode_cardForeground: varchar('dark_mode_card_foreground')
+      .notNull()
+      .default('hsl(240, 100%, 97.06%)'),
+    darkMode_popover: varchar('dark_mode_popover').notNull().default('hsl(217, 33%, 17%)'),
+    darkMode_popoverForeground: varchar('dark_mode_popover_foreground')
+      .notNull()
+      .default('hsl(240, 66.67%, 94.12%)'),
+    darkMode_primary: varchar('dark_mode_primary').notNull().default('hsl(258, 71%, 61%)'),
+    darkMode_primaryForeground: varchar('dark_mode_primary_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 100%)'),
+    darkMode_secondary: varchar('dark_mode_secondary')
+      .notNull()
+      .default('hsl(235, 31.49%, 35.49%)'),
+    darkMode_secondaryForeground: varchar('dark_mode_secondary_foreground')
+      .notNull()
+      .default('hsl(240, 34.78%, 90.98%)'),
+    darkMode_muted: varchar('dark_mode_muted').notNull().default('hsl(240, 27.59%, 22.75%)'),
+    darkMode_mutedForeground: varchar('dark_mode_muted_foreground')
+      .notNull()
+      .default('hsl(215, 20%, 65%)'),
+    darkMode_accent: varchar('dark_mode_accent').notNull().default('hsl(217, 19, 27)'),
+    darkMode_accentForeground: varchar('dark_mode_accent_foreground')
+      .notNull()
+      .default('hsl(240, 66.67%, 94.12%)'),
+    darkMode_destructive: varchar('dark_mode_destructive')
+      .notNull()
+      .default('hsl(0, 73.46%, 41.37%)'),
+    darkMode_destructiveForeground: varchar('dark_mode_destructive_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 100%)'),
+    darkMode_border: varchar('dark_mode_border').notNull().default('hsl(215, 25%, 27%)'),
+    darkMode_input: varchar('dark_mode_input').notNull().default('hsl(215, 25%, 27%)'),
+    darkMode_ring: varchar('dark_mode_ring').notNull().default('hsl(291, 63.72%, 42.16%)'),
+    darkMode_sidebar: varchar('dark_mode_sidebar').notNull().default('hsl(30, 3.3333%, 11.7647%)'),
+    darkMode_sidebarForeground: varchar('dark_mode_sidebar_foreground')
+      .notNull()
+      .default('hsl(240, 100%, 90.78%)'),
+    darkMode_sidebarPrimary: varchar('dark_mode_sidebar_primary')
+      .notNull()
+      .default('hsl(262, 51.87%, 47.25%)'),
+    darkMode_sidebarPrimaryForeground: varchar('dark_mode_sidebar_primary_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 100%)'),
+    darkMode_sidebarAccent: varchar('dark_mode_sidebar_accent')
+      .notNull()
+      .default('hsl(240, 24.49%, 38.43%)'),
+    darkMode_sidebarAccentForeground: varchar('dark_mode_sidebar_accent_foreground')
+      .notNull()
+      .default('hsl(0, 0%, 87.84%)'),
+    darkMode_sidebarBorder: varchar('dark_mode_sidebar_border')
+      .notNull()
+      .default('hsl(240, 24.49%, 38.43%)'),
+    darkMode_sidebarRing: varchar('dark_mode_sidebar_ring')
+      .notNull()
+      .default('hsl(291, 63.72%, 42.16%)'),
+    fonts_display_type: enum_theme_fonts_display_type('fonts_display_type')
+      .notNull()
+      .default('googleFont'),
+    fonts_display_customFont: integer('fonts_display_custom_font_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    fonts_display_remoteFont: varchar('fonts_display_remote_font').default(
+      'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap',
+    ),
+    fonts_display_fontName: varchar('fonts_display_font_name').default('Geist'),
+    fonts_body_type: enum_theme_fonts_body_type('fonts_body_type').notNull().default('googleFont'),
+    fonts_body_customFont: integer('fonts_body_custom_font_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    fonts_body_remoteFont: varchar('fonts_body_remote_font').default(
+      'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap',
+    ),
+    fonts_body_fontName: varchar('fonts_body_font_name').default('Roboto'),
+    radius: enum_theme_radius('radius').notNull().default('medium'),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+  },
+  (columns) => ({
+    theme_fonts_display_fonts_display_custom_font_idx: index(
+      'theme_fonts_display_fonts_display_custom_font_idx',
+    ).on(columns.fonts_display_customFont),
+    theme_fonts_body_fonts_body_custom_font_idx: index(
+      'theme_fonts_body_fonts_body_custom_font_idx',
+    ).on(columns.fonts_body_customFont),
+  }),
+)
+
+export const relations_administrators_role = relations(administrators_role, ({ one }) => ({
+  parent: one(administrators, {
+    fields: [administrators_role.parent],
+    references: [administrators.id],
+    relationName: 'role',
+  }),
+}))
+export const relations_administrators_sessions = relations(administrators_sessions, ({ one }) => ({
+  _parentID: one(administrators, {
+    fields: [administrators_sessions._parentID],
+    references: [administrators.id],
+    relationName: 'sessions',
+  }),
+}))
+export const relations_administrators = relations(administrators, ({ many }) => ({
+  role: many(administrators_role, {
+    relationName: 'role',
+  }),
+  sessions: many(administrators_sessions, {
+    relationName: 'sessions',
+  }),
+}))
 export const relations_users_role = relations(users_role, ({ one }) => ({
   parent: one(users, {
     fields: [users_role.parent],
@@ -450,6 +932,7 @@ export const relations_roles = relations(roles, ({ one, many }) => ({
     relationName: '_texts',
   }),
 }))
+export const relations_media = relations(media, () => ({}))
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
   ({ one }) => ({
@@ -457,6 +940,11 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.parent],
       references: [payload_locked_documents.id],
       relationName: '_rels',
+    }),
+    administratorsID: one(administrators, {
+      fields: [payload_locked_documents_rels.administratorsID],
+      references: [administrators.id],
+      relationName: 'administrators',
     }),
     usersID: one(users, {
       fields: [payload_locked_documents_rels.usersID],
@@ -472,6 +960,11 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.rolesID],
       references: [roles.id],
       relationName: 'roles',
+    }),
+    mediaID: one(media, {
+      fields: [payload_locked_documents_rels.mediaID],
+      references: [media.id],
+      relationName: 'media',
     }),
   }),
 )
@@ -491,6 +984,11 @@ export const relations_payload_preferences_rels = relations(
       references: [payload_preferences.id],
       relationName: '_rels',
     }),
+    administratorsID: one(administrators, {
+      fields: [payload_preferences_rels.administratorsID],
+      references: [administrators.id],
+      relationName: 'administrators',
+    }),
     usersID: one(users, {
       fields: [payload_preferences_rels.usersID],
       references: [users.id],
@@ -504,10 +1002,68 @@ export const relations_payload_preferences = relations(payload_preferences, ({ m
   }),
 }))
 export const relations_payload_migrations = relations(payload_migrations, () => ({}))
+export const relations_paywalls = relations(paywalls, () => ({}))
+export const relations_branding_texts = relations(branding_texts, ({ one }) => ({
+  parent: one(branding, {
+    fields: [branding_texts.parent],
+    references: [branding.id],
+    relationName: '_texts',
+  }),
+}))
+export const relations_branding = relations(branding, ({ one, many }) => ({
+  favicon_lightMode: one(media, {
+    fields: [branding.favicon_lightMode],
+    references: [media.id],
+    relationName: 'favicon_lightMode',
+  }),
+  favicon_darkMode: one(media, {
+    fields: [branding.favicon_darkMode],
+    references: [media.id],
+    relationName: 'favicon_darkMode',
+  }),
+  logo_lightMode: one(media, {
+    fields: [branding.logo_lightMode],
+    references: [media.id],
+    relationName: 'logo_lightMode',
+  }),
+  logo_darkMode: one(media, {
+    fields: [branding.logo_darkMode],
+    references: [media.id],
+    relationName: 'logo_darkMode',
+  }),
+  ogImage: one(media, {
+    fields: [branding.ogImage],
+    references: [media.id],
+    relationName: 'ogImage',
+  }),
+  _texts: many(branding_texts, {
+    relationName: '_texts',
+  }),
+}))
+export const relations_theme = relations(theme, ({ one }) => ({
+  fonts_display_customFont: one(media, {
+    fields: [theme.fonts_display_customFont],
+    references: [media.id],
+    relationName: 'fonts_display_customFont',
+  }),
+  fonts_body_customFont: one(media, {
+    fields: [theme.fonts_body_customFont],
+    references: [media.id],
+    relationName: 'fonts_body_customFont',
+  }),
+}))
 
 type DatabaseSchema = {
+  enum_administrators_role: typeof enum_administrators_role
   enum_users_role: typeof enum_users_role
   enum_roles_type: typeof enum_roles_type
+  enum_paywalls_paywall: typeof enum_paywalls_paywall
+  enum_theme_fonts_display_type: typeof enum_theme_fonts_display_type
+  enum_theme_fonts_body_type: typeof enum_theme_fonts_body_type
+  enum_theme_radius: typeof enum_theme_radius
+  administrators_role: typeof administrators_role
+  administrators_sessions: typeof administrators_sessions
+  administrators: typeof administrators
   users_role: typeof users_role
   users_tenants: typeof users_tenants
   users_sessions: typeof users_sessions
@@ -515,11 +1071,19 @@ type DatabaseSchema = {
   tenants: typeof tenants
   roles: typeof roles
   roles_texts: typeof roles_texts
+  media: typeof media
   payload_locked_documents: typeof payload_locked_documents
   payload_locked_documents_rels: typeof payload_locked_documents_rels
   payload_preferences: typeof payload_preferences
   payload_preferences_rels: typeof payload_preferences_rels
   payload_migrations: typeof payload_migrations
+  paywalls: typeof paywalls
+  branding: typeof branding
+  branding_texts: typeof branding_texts
+  theme: typeof theme
+  relations_administrators_role: typeof relations_administrators_role
+  relations_administrators_sessions: typeof relations_administrators_sessions
+  relations_administrators: typeof relations_administrators
   relations_users_role: typeof relations_users_role
   relations_users_tenants: typeof relations_users_tenants
   relations_users_sessions: typeof relations_users_sessions
@@ -527,11 +1091,16 @@ type DatabaseSchema = {
   relations_tenants: typeof relations_tenants
   relations_roles_texts: typeof relations_roles_texts
   relations_roles: typeof relations_roles
+  relations_media: typeof relations_media
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels
   relations_payload_locked_documents: typeof relations_payload_locked_documents
   relations_payload_preferences_rels: typeof relations_payload_preferences_rels
   relations_payload_preferences: typeof relations_payload_preferences
   relations_payload_migrations: typeof relations_payload_migrations
+  relations_paywalls: typeof relations_paywalls
+  relations_branding_texts: typeof relations_branding_texts
+  relations_branding: typeof relations_branding
+  relations_theme: typeof relations_theme
 }
 
 declare module '@payloadcms/db-postgres' {
