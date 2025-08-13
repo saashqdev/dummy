@@ -1,16 +1,12 @@
 import { autosubscribeToTrialOrFreePlan } from '@/modules/subscriptions/services/PricingService'
 import UrlUtils from '@/lib/utils/UrlUtils'
 import { db } from '@/db'
-import {
-  createTenantSubscription,
-  updateTenantSubscription,
-} from '@/modules/subscriptions/services/TenantSubscriptionService'
+import { createTenantSubscription } from '@/modules/subscriptions/services/TenantSubscriptionService'
 import { stripeService } from '@/modules/subscriptions/services/StripeService'
 import { createUserRole } from '@/modules/permissions/services/UserRolesService'
 import { RoleModel, TenantDto, TenantModel, TenantWithDetailsDto } from '@/db/models'
 import { cachified, clearCacheKey } from '@/lib/services/cache.server'
 import { deleteUser, getUser, updateUser } from './UserService'
-import { requireTenantSlug } from '@/lib/services/url.server'
 
 export async function getTenant(id: string): Promise<TenantWithDetailsDto | null> {
   return await cachified({

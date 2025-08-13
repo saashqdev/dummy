@@ -7,33 +7,38 @@ import { clearSubscriptionsCache } from '@/modules/subscriptions/services/Subscr
 import { getServerTranslations } from '@/i18n/server'
 import { NextResponse } from 'next/server'
 
-const stripe = new Stripe(process.env.STRIPE_SK?.toString() ?? '', {
-  apiVersion: '2025-07-30.basil',
-})
+import { getCachedGlobal } from '@/utilities/getGlobals'
 
 export async function POST(request: Request) {
   const { t } = await getServerTranslations()
-  const secret = process.env.STRIPE_WEBHOOK_SIGNING_SECRET?.toString() ?? ''
+
   const sig = request.headers.get('stripe-signature')
   if (!sig) {
     return NextResponse.json('No signature', { status: 400 })
   }
+
+  const { stripe: stripeOptions } = await getCachedGlobal('paywalls', 'en', 1)()
+  const secret = stripeOptions?.secret
+
+  const endpointSecret = stripeOptions?.webhookSecret ?? ''
+
+  if (!secret) {
+    return Response.json({ status: 400 })
+  }
+
+  const rawBody = await request.text()
+
+  const stripe = new Stripe(secret)
+
   let event
-  const payload = await request.text()
 
   try {
-    event = stripe.webhooks.constructEvent(payload, sig, secret)
-  } catch (err: any) {
-    // eslint-disable-next-line no-console
-    console.log(`⚠️  Webhook signature verification failed`, {
-      err: err.message,
-      sig,
-      payload,
-      secret,
-    })
-    return NextResponse.json(err.message, {
-      status: 400,
-    })
+    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret)
+  } catch (error) {
+    if (error instanceof Error) {
+      return new Response(`Webhook Error: ${error.message}`, { status: 400 })
+    }
+    return new Response('Webhook Error: Unknown error', { status: 400 })
   }
 
   // eslint-disable-next-line no-console

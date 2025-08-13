@@ -22,29 +22,14 @@ const commonCollectionConfig = {
   softDeleteAccess: isAdmin,
 }
 
-export const softDeletePluginConfigCollections: SoftDeletePluginOptions['collections'] =
-  {
-    projects: commonCollectionConfig,
-    backups: commonCollectionConfig,
-    deployments: commonCollectionConfig,
-    cloudProviderAccounts: commonCollectionConfig,
-    dockerRegistries: commonCollectionConfig,
-    gitProviders: commonCollectionConfig,
-    securityGroups: commonCollectionConfig,
-    servers: commonCollectionConfig,
-    services: commonCollectionConfig,
-    sshKeys: commonCollectionConfig,
-    templates: commonCollectionConfig,
-    tenants: commonCollectionConfig,
-    users: commonCollectionConfig,
-    traefik: commonCollectionConfig,
-    roles: commonCollectionConfig,
-  }
+export const softDeletePluginConfigCollections: SoftDeletePluginOptions['collections'] = {
+  tenants: commonCollectionConfig,
+  users: commonCollectionConfig,
+  roles: commonCollectionConfig,
+}
 
-export const addBeforeOperationHook = (
-  collections: CollectionConfig[],
-): CollectionConfig[] => {
-  return collections.map(collection => ({
+export const addBeforeOperationHook = (collections: CollectionConfig[]): CollectionConfig[] => {
+  return collections.map((collection) => ({
     ...collection,
     hooks: {
       ...collection.hooks,

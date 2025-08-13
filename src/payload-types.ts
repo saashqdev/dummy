@@ -90,11 +90,13 @@ export interface Config {
   }
   globals: {
     branding: Branding
+    paywalls: Paywall
   }
   globalsSelect: {
     branding: BrandingSelect<false> | BrandingSelect<true>
+    paywalls: PaywallsSelect<false> | PaywallsSelect<true>
   }
-  locale: null
+  locale: 'en' | 'es'
   user: User & {
     collection: 'users'
   }
@@ -561,4 +563,73 @@ export interface Media {
       filename?: string | null
     }
   }
+}
+
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paywalls".
+ */
+export interface Paywall {
+  id: string
+  paywall: 'stripe' | 'autopay' | 'p24'
+  /**
+   * If you want to use test environment, you can also provide test keys here.
+   */
+  stripe?: {
+    secret: string
+    webhookSecret: string
+    public?: string | null
+  }
+  /**
+   * If you want to use test environment, you can also provide test keys here.
+   */
+  autopay?: {
+    serviceID: string
+    hashKey: string
+    endpoint: string
+  }
+  /**
+   * If you want to use test environment, you can also provide test keys here.
+   */
+  p24?: {
+    posId: string
+    crc: string
+    secretId: string
+    endpoint: string
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paywalls_select".
+ */
+export interface PaywallsSelect<T extends boolean = true> {
+  paywall?: T
+  stripe?:
+    | T
+    | {
+        secret?: T
+        webhookSecret?: T
+        public?: T
+      }
+  autopay?:
+    | T
+    | {
+        serviceID?: T
+        hashKey?: T
+        endpoint?: T
+      }
+  p24?:
+    | T
+    | {
+        posId?: T
+        crc?: T
+        secretId?: T
+        endpoint?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }

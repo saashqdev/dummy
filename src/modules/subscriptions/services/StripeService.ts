@@ -420,4 +420,4 @@ class StripeService {
   }
 }
 
-export const stripeService = new StripeService(process.env.STRIPE_SK || '')
+export const stripeService = new StripeService(process.env.STRIPE_SECRET_KEY || '')

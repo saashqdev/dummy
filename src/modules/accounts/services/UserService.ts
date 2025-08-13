@@ -47,16 +47,16 @@ export async function createUser(data: {
   const passwordHash = password ? await bcrypt.hash(password, 10) : ''
   const id = await db.user.create({
     email,
-    hash: passwordHash,
+    passwordHash: passwordHash,
     firstName: firstName || '',
     lastName: lastName || '',
     avatar: avatar || null,
     locale: locale || null,
-    default_tenant_id: default_tenant_id || null,
+    defaultTenantId: default_tenant_id || null,
     active: active !== undefined ? active : true,
     phone: null,
     admin: false,
-    verify_token: null,
+    verifyToken: null,
   })
   const user = await getUser(id)
   if (!user) {

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useActionState, useEffect, useRef, useState } from 'react'
 import LoadingButton from '@/components/ui/buttons/LoadingButton'
 import { Input } from '@/components/ui/input'
-import { actionNewAccount } from '@/app/(frontend)/(app)/new-account/page'
+import { actionNewAccount } from '@/app/(frontend)/(app)/new-account/actions'
 import toast from 'react-hot-toast'
 
 export default function TenantNewForm() {

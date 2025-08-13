@@ -78,13 +78,13 @@ async function createUser({
   if (!user) {
     const user_id = await db.user.create({
       email,
-      hash: passwordHash,
+      passwordHash: passwordHash,
       firstName,
       lastName,
       avatar: null,
       phone: null,
-      default_tenant_id: null,
-      verify_token: null,
+      defaultTenantId: null,
+      verifyToken: null,
       locale: null,
       active: true,
       admin,

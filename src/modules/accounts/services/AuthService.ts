@@ -212,12 +212,12 @@ export async function validateRegistration({
   if (!email || !AuthUtils.validateEmail(email)) {
     throw Error(t('account.register.errors.invalidEmail'))
   }
-  if (!appConfiguration.auth.requireEmailVerification && !AuthUtils.validatePassword(password)) {
+  if (!appConfiguration.auth.require_email_verification && !AuthUtils.validatePassword(password)) {
     throw Error(t('account.register.errors.passwordRequired'))
-  } else if (appConfiguration.auth.requireOrganization && typeof company !== 'string') {
+  } else if (appConfiguration.auth.require_organization && typeof company !== 'string') {
     throw Error(t('account.register.errors.organizationRequired'))
   } else if (
-    appConfiguration.auth.requireName &&
+    appConfiguration.auth.require_name &&
     (typeof firstName !== 'string' || typeof lastName !== 'string')
   ) {
     throw Error(t('account.register.errors.nameRequired'))
@@ -245,7 +245,7 @@ export async function validateRegistration({
     throw Error(t('api.errors.userAlreadyRegistered'))
   }
 
-  if (checkEmailVerification && appConfiguration.auth.requireEmailVerification) {
+  if (checkEmailVerification && appConfiguration.auth.require_email_verification) {
     return { email, ipAddress, verificationRequired: true }
   }
   const registered = await createUserAndTenant({
